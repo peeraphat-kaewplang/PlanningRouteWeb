@@ -1,0 +1,51 @@
+﻿ 
+<RadzenDropDown 
+    class="dropdown-sm fw-bold"
+    Style="width: 100%;"
+    TValue="string"
+    TextProperty="PRODUCTNAME"
+    ValueProperty="PRODUCTCODE" 
+    @bind-Value=@ProductCode
+    Change="@(args => Change(args))"
+    Data=@options />
+
+@inject IChangeProductService ChangeProductService
+@code {
+    [Parameter]
+    public string RawProductCode { get; set; } = string.Empty;
+    [Parameter]
+    public string ProductCode { get; set; } = string.Empty;
+    [Parameter]
+    public int index { get; set; }
+    [Parameter]
+    public ChangeProductRequest ItemModal { get; set; } = new();
+
+    [Parameter]
+    public EventCallback<(RawproductDetail2, int)> SelectDetailCallback { get; set; }
+
+    public List<RawproductDetail2> options = new();
+
+   
+
+    protected override async Task OnParametersSetAsync()
+    {
+        options = await LoadProductDetail();
+        StateHasChanged();
+    }
+
+    private async Task<List<RawproductDetail2>> LoadProductDetail()
+    {
+        var body = new RawproductDetail2Request { 
+            RawProductCode = RawProductCode, ORG = ItemModal.ORG , Location = ItemModal.Location ,Machine = ItemModal.Machine };
+        var res = await ChangeProductService.GetRawproductDetail2(body);
+
+        return res.Data;
+    }
+
+    private async Task Change(object args)
+    {
+        var item = options.Find(x => x.PRODUCTCODE == $"{args}");
+        await SelectDetailCallback.InvokeAsync((item!, index));
+    }
+
+}

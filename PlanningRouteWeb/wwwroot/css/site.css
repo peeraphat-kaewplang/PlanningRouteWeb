@@ -1,0 +1,370 @@
+#blazor-error-ui {
+  background: lightyellow;
+  bottom: 0;
+  box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+  display: none;
+  left: 0;
+  padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+}
+
+#blazor-error-ui .dismiss {
+  cursor: pointer;
+  position: absolute;
+  right: 3.5rem;
+  top: 0.5rem;
+}
+
+.blazor-error-boundary {
+  background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYiIGhlaWdodD0iNDkiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIG92ZXJmbG93PSJoaWRkZW4iPjxkZWZzPjxjbGlwUGF0aCBpZD0iY2xpcDAiPjxyZWN0IHg9IjIzNSIgeT0iNTEiIHdpZHRoPSI1NiIgaGVpZ2h0PSI0OSIvPjwvY2xpcFBhdGg+PC9kZWZzPjxnIGNsaXAtcGF0aD0idXJsKCNjbGlwMCkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yMzUgLTUxKSI+PHBhdGggZD0iTTI2My41MDYgNTFDMjY0LjcxNyA1MSAyNjUuODEzIDUxLjQ4MzcgMjY2LjYwNiA1Mi4yNjU4TDI2Ny4wNTIgNTIuNzk4NyAyNjcuNTM5IDUzLjYyODMgMjkwLjE4NSA5Mi4xODMxIDI5MC41NDUgOTIuNzk1IDI5MC42NTYgOTIuOTk2QzI5MC44NzcgOTMuNTEzIDI5MSA5NC4wODE1IDI5MSA5NC42NzgyIDI5MSA5Ny4wNjUxIDI4OS4wMzggOTkgMjg2LjYxNyA5OUwyNDAuMzgzIDk5QzIzNy45NjMgOTkgMjM2IDk3LjA2NTEgMjM2IDk0LjY3ODIgMjM2IDk0LjM3OTkgMjM2LjAzMSA5NC4wODg2IDIzNi4wODkgOTMuODA3MkwyMzYuMzM4IDkzLjAxNjIgMjM2Ljg1OCA5Mi4xMzE0IDI1OS40NzMgNTMuNjI5NCAyNTkuOTYxIDUyLjc5ODUgMjYwLjQwNyA1Mi4yNjU4QzI2MS4yIDUxLjQ4MzcgMjYyLjI5NiA1MSAyNjMuNTA2IDUxWk0yNjMuNTg2IDY2LjAxODNDMjYwLjczNyA2Ni4wMTgzIDI1OS4zMTMgNjcuMTI0NSAyNTkuMzEzIDY5LjMzNyAyNTkuMzEzIDY5LjYxMDIgMjU5LjMzMiA2OS44NjA4IDI1OS4zNzEgNzAuMDg4N0wyNjEuNzk1IDg0LjAxNjEgMjY1LjM4IDg0LjAxNjEgMjY3LjgyMSA2OS43NDc1QzI2Ny44NiA2OS43MzA5IDI2Ny44NzkgNjkuNTg3NyAyNjcuODc5IDY5LjMxNzkgMjY3Ljg3OSA2Ny4xMTgyIDI2Ni40NDggNjYuMDE4MyAyNjMuNTg2IDY2LjAxODNaTTI2My41NzYgODYuMDU0N0MyNjEuMDQ5IDg2LjA1NDcgMjU5Ljc4NiA4Ny4zMDA1IDI1OS43ODYgODkuNzkyMSAyNTkuNzg2IDkyLjI4MzcgMjYxLjA0OSA5My41Mjk1IDI2My41NzYgOTMuNTI5NSAyNjYuMTE2IDkzLjUyOTUgMjY3LjM4NyA5Mi4yODM3IDI2Ny4zODcgODkuNzkyMSAyNjcuMzg3IDg3LjMwMDUgMjY2LjExNiA4Ni4wNTQ3IDI2My41NzYgODYuMDU0N1oiIGZpbGw9IiNGRkU1MDAiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPjwvZz48L3N2Zz4=)
+      no-repeat 1rem/1.8rem,
+    #b32121;
+  padding: 1rem 1rem 1rem 3.7rem;
+  color: white;
+}
+
+.blazor-error-boundary::after {
+  content: "An error has occurred.";
+}
+
+/*.view {
+    width: 600px;
+    height: 500px;
+}
+
+.wrapper {*/
+    /*position: relative;*/
+    /*overflow-y: auto;
+    border: 1px solid black;
+    white-space: nowrap;
+}*/
+
+.sticky-col {
+    position: -webkit-sticky;
+    position: sticky;
+}
+
+.first-col {
+    width: 170px;
+  /*  min-width: 170px;
+    max-width: 170px;*/
+    left: 0px;
+}
+
+.second-col {
+    width: 140px;
+    left: 225px;
+}
+
+/*div.container {
+    width: 600px;
+} */
+
+table {
+  /*width: 100%;*/
+  border-collapse: collapse;
+}
+
+table tr th,
+table tr td {
+  border: 1px solid;
+}
+
+/*.table-change-product > .table-bordered > :not(caption) > * > * {
+    border-width: 0 0 ;
+}
+
+.table-change-product table thead {
+    top: 0;
+}*/
+
+table.width-screen thead {
+    top: 60px;
+}
+
+table thead,
+table thead {
+    position: -webkit-sticky;
+    position: sticky;
+    z-index: 10;
+}
+
+table.width-screen tbody:nth-of-type(1) tr:nth-of-type(1) td {
+    border-top: none !important;
+}
+
+table.width-screen thead th {
+    border-top: none !important;
+    border-bottom: none !important;
+    box-shadow: inset 0 0 0 #000000, inset 0 -0.5px 0 #000000 !important;
+    padding: 2px 0;
+    background-color: #a9e7ed !important;
+}
+
+.width-screen {
+    width: 531.25rem !important;
+}
+
+.command-wrapper {
+  display: flex;
+  position: sticky;
+  top: 0px;
+  z-index: 20;
+  background: white;
+  border-bottom: 1px solid;
+  padding: 10px;
+}
+
+table > tbody > tr > td {
+    vertical-align: middle;
+}
+
+table thead th {
+  background-clip: padding-box;
+}
+
+tfoot tr {
+  height: 30px;
+}
+
+
+
+tfoot,
+tfoot th,
+tfoot td {
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    /*background: #d9d9d9 !important;*/
+}
+
+tfoot td.sum-before-mtd {
+    background: #75c596 !important;
+}
+
+tfoot td.sum-current-mtd {
+    background: #75c596 !important;
+}
+
+tfoot td.error, 
+tfoot td.success {
+    color:white;
+}
+
+tfoot td {
+    border-top: none !important;
+    border-bottom: none !important;
+    border-right: none !important;
+    border-left: none !important;
+    box-shadow: inset 0.5px 0 0 #000000, inset 0 -0.5px 0 #000000 !important;
+}
+
+tfoot td.error {
+    background: red ;
+}
+
+tfoot td.success {
+    background: green !important;
+}
+
+/*table change product*/
+.table-scroll {
+    position: relative;
+    width: 100%;
+    z-index: 1;
+    margin: auto;
+    overflow: auto;
+    height: 370px;
+}
+
+.table-scroll table {
+  /*  width: 100%;
+    min-width: 1280px;*/
+    margin: auto;
+    /*border-collapse: separate;*/
+    border-spacing: 0;
+}
+
+.table-scroll table thead th {
+   border-top: none !important;
+    border-bottom: none !important;
+    box-shadow: inset 0 0.5px 0 #000000, inset 0 -0.5px 0 #000000 !important;
+    /*padding: 14px;*/
+    /*background-color: #a9e7ed !important;*/
+}
+
+.table-wrap {
+    position: relative;
+}
+
+.table-scroll th,
+.table-scroll td {
+    /*padding: 5px 10px;*/
+    /*border: 1px solid #000;*/
+    /*vertical-align: top;*/
+    border-top-width: 0px;
+}
+
+.table-scroll thead th {
+   /* background: #333;
+    color: #fff;*/
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0px;
+}
+/* safari and ios need the tfoot itself to be position:sticky also */
+.table-scroll tfoot,
+.table-scroll tfoot th,
+.table-scroll tfoot td {
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 0;
+    background: #666;
+    color: #fff;
+    z-index: 4;
+}
+
+
+.no-arrow {
+    -moz-appearance: textfield;
+}
+
+.no-arrow::-webkit-outer-spin-button,
+.no-arrow::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.chage {
+  color: red;
+}
+
+.salweek, 
+.salweek > td {
+    background-color: #c7cdff !important;
+}
+
+.success {
+    background: #61eba1 !important;
+}
+
+.danger,
+.danger > td {
+    background-color: #ffccc7 !important;
+}
+
+.today {
+    background: #f7e73f !important;
+}
+
+/*check box*/
+.rz-chkbox-box.rz-state-active:hover:not(.rz-state-disabled):after {
+    background-color: var(--rz-success) !important;
+}
+
+
+/*text number*/
+.text-size {
+    height: unset !important;
+}
+.text-size .rz-inputtext , .text-size.rz-textbox {
+    font-size: 12px;
+    padding: 3px 3px 3px 0 !important;
+}
+
+
+
+/*dropdown*/
+.dropdown-sm {
+    width: 100%;
+    padding: 3px 0 3px 5px !important;
+    height: unset !important;
+    font-size: 12px !important;
+}
+
+/*group color header*/
+.monday.color {
+    background-color: #fffac7 !important;
+}
+.tuesday.color {
+    background-color: #ffc7e4 !important;
+}
+.wednesday.color {
+    background-color: #ceffc7 !important;
+}
+.thursday.color {
+    background-color: #ffebc7 !important;
+}
+.friday.color {
+    background-color: #c7ebff !important;
+}
+.saturday.color {
+    background-color: #dec7ff !important;
+}
+.sunday.color {
+    background-color: #ffc7c8 !important;
+}
+
+/*text*/
+.text-amount {
+    color: #c0bfbe;
+}
+.text-close > td {
+    color:gray !important;
+}
+
+.nomal-chk, .change-pro-chk {
+    cursor: pointer;
+}
+
+.nomal-chk {
+    color: green;
+}
+
+.change-pro-chk {
+    color:red;
+}
+
+.rank-error {
+    background-color: red !important;
+}
+
+.rank-warning {
+    background-color: #ff9600 !important;
+}
+
+
+
+/*machine*/
+.new-machine {
+    background-color: lightgreen !important;
+}
+.return-machine {
+    background-color: #ff9191 !important;
+}
+.change-machine {
+    background-color: lightyellow !important;
+}
+
+/*button*/
+
+/*status*/
+.plan-success {
+    background: #75c596 !important;
+}
+.plan-error {
+    background-color: #ff9191 !important;
+}
+.plan-out {
+    background-color: #ffffbb !important;
+}
+.plan-notdue {
+    background-color: blanchedalmond !important;
+}
+
+.rank-error.color {
+    background-color: red !important;
+}

@@ -1,0 +1,369 @@
+﻿@page "/"
+
+
+<div class="width-screen command-wrapper">
+        <RadzenDropDown TValue="string" Style="width: 100%; max-width: 200px; position: sticky;left: 0px;" TextProperty="ORGANIZATION_NAME"
+            ValueProperty="ORGANIZATION_CODE" @bind-Value=@selectOrg Data=@optionsOrg Change="@(args => ChangeOrg(args))" />
+        <RadzenDropDown TValue="string" TextProperty="ROUTE_NAME" ValueProperty="ROUTE_CODE"
+            Style="width: 100%; max-width: 270px;position: sticky;left: 200px;" @bind-Value=@selectRoute Data=@optionsRoute />
+        <RadzenDropDown TValue="MonthObject" TextProperty="Name" 
+            Style="width: 100%; max-width: 150px;position: sticky;left: 470px;" @bind-Value=@selectMonth Data=@optionsMonth />
+        <RadzenButton Text="Search" Style="width: 100px; position: sticky;left: 620px;text-transform: none;"
+            Click="@(args => OnClickSearch())" />
+        <RadzenButton Text="Hide Master" ButtonStyle="ButtonStyle.Info"
+            Style="width: 100%; max-width: 150px;position: sticky;left: 720px;text-transform: none;" Click="@(args => OnClickChangeHideMaster())" />
+        <RadzenButton Text="Config" ButtonStyle="ButtonStyle.Info"
+            Style="position: sticky;left: 870px;text-transform: none;" Click=@ShowInlineDialog />
+</div>
+
+@if (!loading)
+{
+    @if (data.Count() != 0)
+    {
+       @*  <div class="view">
+   <div class="wrapper"> *@
+        <table class="width-screen table table-hover table-sm" style="margin: 0px !important;">
+            <thead>
+                <TableHeaderView 
+                    HideMaster="hideMaster" 
+                    Columns="columns" 
+                    SelectMonth="selectMonth" 
+                    DayRank="dayRank"
+                    ActionButton="actionButton"
+                    SortRankCallback="@SortRank"
+                    OnClickSavePlanCallback="@ShowDialogSave" 
+                    OnCalPlanningCallback="@((args) => OnCalPlanning(args.Item1 , args.Item2 ))"/>
+            </thead>
+            <tbody>
+                <TableBodyServiceView 
+                    data="data" 
+                    HideMaster="hideMaster"
+                    SelectRoute="selectRoute"
+                    SelectOrg="selectOrg"
+                    OnChangCallback="@((args) => OnChangDetail(args.Item1 , args.Item2 ,args.Item3))" 
+                    OnChangeMasterCallback="@OnChangeMater"
+                    OnChageRankCallback="@((args) => OnChageRank(args.Item1 , args.Item2))"
+                    ShowdialogChangeProductCallback="@ShowdialogChangeProduct"/>
+            </tbody>
+            <tfoot>
+                <TableFooterView 
+                    Data="data" 
+                    Columns="columns" 
+                    DropMonth="dropMonth" 
+                    Target="target.DROP_PER_DAY"
+                    HideMaster="hideMaster"/>
+            </tfoot>
+        </table>
+   @*  </div>
+    </div> *@
+    }
+     else 
+    {
+        <p>Data is empty!</P>
+    }
+}
+else 
+{
+    <Loading />
+}
+
+@inject IPlanningService PlanningService
+@inject DialogService DialogService
+@inject TooltipService TooltipService
+@code {
+    Variant variant = Variant.Outlined;
+    public bool loading = false;
+    public bool hideMaster = false;
+    public string selectOrg = "SRC";
+    public string selectRoute = "C001";
+    public Target2 target = new();
+    public MonthObject selectMonth = new();
+    public List<int> dropMonth = new();
+    public List<PlanningMasterData2> data = new();
+    public IDictionary<string, ColumnProperty> columns { get; set; } = new Dictionary<string, ColumnProperty>();
+    public IEnumerable<OrganizationData> optionsOrg = new List<OrganizationData>();
+    public IEnumerable<MonthObject> optionsMonth = new List<MonthObject>();
+    public IEnumerable<PlanningRouteWeb.Models.RouteData> optionsRoute = new List<PlanningRouteWeb.Models.RouteData>();
+    public List<string> dayRank = new List<string>();
+    public ChangeActionButton actionButton = new();
+    ModalChangeProduct modal { get; set; } = new();
+
+    protected override async Task OnInitializedAsync() 
+    {
+        loading = true;
+        var dd = GetDatetimeClass.currentDate.Month.ToString("D2");
+        selectMonth = GetDatetimeClass.monthObjects.Single(x => x.Number == dd);
+        optionsMonth = GetDatetimeClass.monthObjects;
+
+        await LoadOrg();
+        await LoadRoute();
+        await LoadMaster();
+
+        loading = false;
+    }
+
+    public async Task LoadOrg()
+    {
+        var req = new OrganizationRequest { ORG = "" };
+        var res = await PlanningService.PlanningGetORG(req);
+        optionsOrg = res!.Data;
+    }
+
+    public async Task LoadRoute()
+    {
+        var req = new OrganizationRequest { ORG = $"{selectOrg}" };
+        var res = await PlanningService.PlanningGetRoute(req);
+        optionsRoute = res!.Data;
+    }
+
+    public async Task LoadMaster()
+    {
+        var req = new PanningMasterRequest 
+        { 
+            YEARMONTH = $"{GetDatetimeClass.currentDate.ToStringDate("yyyy")}{selectMonth.Number}",
+            ORG = $"{selectOrg}", 
+            Route = $"{selectRoute}" 
+        };
+        var (column, record , targets ) = await PlanningService.PlanningGetMaster(req);
+        columns = column;
+        data = record;
+        target = new Target2
+        {
+            DROP_PER_DAY = !string.IsNullOrWhiteSpace(targets.DROP_PER_DAY) ? int.Parse(targets.DROP_PER_DAY) : 0,
+            VALUE_PER_DAY = !string.IsNullOrWhiteSpace(targets.VALUE_PER_DAY) ? int.Parse(targets.VALUE_PER_DAY) : 0,
+            VALUE_PER_MONTH = !string.IsNullOrWhiteSpace(targets.VALUE_PER_MONTH) ? int.Parse(targets.VALUE_PER_MONTH) : 0,
+        }; 
+        CalDropMonth();
+        StateHasChanged();
+    }
+
+    private async void ChangeOrg(object args)
+    {
+        var req = new OrganizationRequest { ORG = $"{args}" };
+        var route = await PlanningService.PlanningGetRoute(req);
+        optionsRoute = route!.Data;
+        selectRoute = route!.Data[0].ROUTE_CODE;
+        StateHasChanged();
+    }
+
+    public async void OnClickSearch() 
+    {
+        dayRank = new List<string>();
+        await LoadMaster();
+        StateHasChanged();
+    }
+
+    private void OnChangeMater(PlanningMasterData2 item)
+    {
+        var index = data.ToList().FindIndex(d => d.LOCATION_CODE == item.LOCATION_CODE && d.MSORT == item.MSORT);
+        data[index].DROPWEEK = GetActualChecked(data[index]);
+    } 
+
+    private int GetActualChecked(PlanningMasterData2 data)
+    {
+        int value = 0;
+        if (data.MONDAY) value++;
+        if (data.TUESDAY) value++;
+        if (data.WEDNESDAY) value++;
+        if (data.THURSDAY) value++;
+        if (data.FRIDAY) value++;
+        if (data.SATURDAY) value++;
+        if (data.SUNDAY) value++;
+        return value;
+    }
+
+    private async Task OnClickSavePlan(DialogService ds)
+    {
+        loading = true;
+        var dataSave = new List<PlanningMasterData2>();
+        foreach( var (item,index) in data.WithIndex())
+        {
+            dataSave.Add(item);
+            if(item.GroupData.Count() > 1)
+            {
+                var save = ConvertModel.PlanningMasterData2ViewModel(item);
+
+                foreach(var (row,idx) in item.GroupData.Skip(1).WithIndex()){
+                    var record = ConvertModel.Group2ModelToPlanningMasterData2(row);
+                    record.YEARMONTH = save.YEARMONTH;
+                    record.ORGANIZATION_CODE = save.ORGANIZATION_CODE;
+                    record.ROUTE_CODE = save.ROUTE_CODE;
+                    record.ROUTE_NAME = save.ROUTE_NAME;
+                    record.CUSTOMER_CODE = save.CUSTOMER_CODE;
+                    record.CUSTOMER_NAME = save.CUSTOMER_NAME;
+                    record.LOCATION_CODE = save.LOCATION_CODE;
+                    record.LOCATION_NAME = save.LOCATION_NAME;
+                    record.MACHINE_CODE = save.MACHINE_CODE;
+                    record.MACHINE_MODEL = save.MACHINE_MODEL;
+                    record.CHANGE_ACTION = save.CHANGE_ACTION;
+                    record.TOTAL_FEE = save.TOTAL_FEE;
+                    record.BEFORE_SALE = save.BEFORE_SALE;
+                    record.BEFORE_MTD = save.BEFORE_MTD;
+                    record.CURRENT_MTD = save.CURRENT_MTD;
+                    record.DROPWEEK = save.DROPWEEK;
+                    record.DROPDAY = save.DROPDAY;
+                    record.MONDAY = save.MONDAY;
+                    record.TUESDAY = save.TUESDAY;
+                    record.WEDNESDAY = save.WEDNESDAY;
+                    record.THURSDAY = save.THURSDAY;
+                    record.FRIDAY = save.FRIDAY;
+                    record.SATURDAY = save.SATURDAY;
+                    record.SUNDAY = save.SUNDAY;
+                    record.IS_DUPLICATE = save.IS_DUPLICATE;
+                    record.SALE_LAST_WEEK = save.SALE_LAST_WEEK;
+                    dataSave.Add(record);
+                }
+            }
+        }
+        var recordData = dataSave.Select(x => ConvertModel.PlanningMasterData2ModeltoSave(x)).ToList();
+        var response = await PlanningService.PlanningSavePlan(recordData);
+        if(response.ErrorMessage == "success")
+        {
+            await LoadMaster();
+            actionButton = new();
+        }
+        loading = false;
+        ds.Close(false);
+        StateHasChanged();
+    }
+
+    public void OnChangDetail(int index ,PlanningDetail2 current , List<PlanningDetail2> records)
+    {
+        var d = actionButton.Date.Find(x => x.Date == current.CALENDAR_DATE);
+        if(d == null)
+        {
+            actionButton.Action = "edit";
+            actionButton.Date.Add(new DateError { Date = current.CALENDAR_DATE, Error = false });
+        }
+        
+        data[index].GETPLAN_DETAIL = CalDataPlanning.CalEstimate(current , records);
+        CalDropMonth();
+        StateHasChanged();
+    }
+
+    private void CalDropMonth()
+    {
+        dropMonth = new List<int>();
+        foreach (var item in data)
+        {
+            var countDropMonth = item.GETPLAN_DETAIL.Count(x => x.STATUS_MANUAL);
+            dropMonth.Add(countDropMonth);
+        }
+    }
+
+    private async Task ShowInlineDialog()
+    {
+        var result = await DialogService.OpenAsync("Change Config", ds =>
+        @<RadzenStack Gap="1.5rem">
+            <RadzenFormField Text="DROP PER DAY" Variant="@variant">
+                <RadzenNumeric ShowUpDown="false" TValue="int"@bind-Value=@target.DROP_PER_DAY/>
+            </RadzenFormField>
+            <RadzenFormField Text="VALUE PER DAY" Variant="@variant">
+                <RadzenNumeric ShowUpDown="false" TValue="int"@bind-Value=@target.VALUE_PER_DAY/>
+            </RadzenFormField>
+            <RadzenFormField Text="VALUE PER MONTH" Variant="@variant">
+                <RadzenNumeric ShowUpDown="false" TValue="int"@bind-Value=@target.VALUE_PER_MONTH/>
+            </RadzenFormField>
+            <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+                <RadzenStack Orientation="Orientation.Horizontal">
+                    <RadzenButton Text="Ok" Click="() => SaveTarget(ds)"  Style="width: 80px;" />
+                    <RadzenButton Text="Cancel" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" />
+                </RadzenStack>
+            </RadzenStack>
+        </RadzenStack>
+    );
+    }
+
+    private async Task ShowDialogSave()
+    {
+        var result = await DialogService.OpenAsync("Confirm Save", ds =>
+        @<RadzenStack Gap="1.5rem">
+            Are you sure?
+            <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End">
+                <RadzenStack Orientation="Orientation.Horizontal">
+                    <RadzenButton Text="Save" Click="() => OnClickSavePlan(ds)"  Style="width: 80px;" />
+                    <RadzenButton Text="Cancel" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" />
+                </RadzenStack>
+            </RadzenStack>
+        </RadzenStack>);
+    }
+
+    private async Task ShowdialogChangeProduct(ChangeProductRequest item) {
+        var result = await DialogService.OpenAsync("Change Product", ds =>
+        @<ModalChangeProduct Item="item" Dialog="ds"/>,new DialogOptions() { Width = "1300px", Height = "600px" });
+    }
+
+    private async Task SaveTarget(DialogService ds)
+    {
+        var response = await PlanningService.PlanningSaveTarget(new TargetSave
+            {
+                ORG = selectOrg,
+                Route = selectRoute,
+                DROP_PER_DAY = target.DROP_PER_DAY.ToString(),
+                VALUE_PER_DAY = target.VALUE_PER_DAY.ToString(),
+                VALUE_PER_MONTH = target.VALUE_PER_MONTH.ToString(),
+            });
+
+        if(response.ErrorMessage == "success")
+        {
+            ds.Close(true);
+        }
+    }
+
+    private async Task OnCalPlanning(string start , string end)
+    {
+        loading = true;
+        var body = new CalPlanning
+        {
+            YEARMONTH = $"{GetDatetimeClass.currentDate.ToStringDate("yyyy")}{selectMonth.Number}",
+            ORG = $"{selectOrg}", 
+            Route = $"{selectRoute}",
+            StartDate = start ,
+            EndDate = end
+        };
+
+        var response = await PlanningService.PlanningCalPlan(body);
+
+        if(response.ErrorMessage == "success")
+        {
+            await LoadMaster();
+        }
+        loading = false;
+    }
+
+    private void OnChageRank(List<string> items , string date)
+    {
+        var d = actionButton.Date.Find(x => x.Date == date);
+
+        if(items.Count() == 0)
+        {
+            if(d != null)
+            {
+               var index = actionButton.Date.FindIndex(x => x.Date == d.Date);
+                actionButton.Date[index].Error = false;
+            }
+            else
+            {
+                actionButton.Action = "edit";
+                actionButton.Date.Add(new DateError { Date = date, Error = false });
+            }
+           
+        } else
+        {
+            if(d != null)
+            {
+                var index = actionButton.Date.FindIndex(x => x.Date == d.Date);
+                actionButton.Date[index].Error = true;
+
+            }
+        }
+        dayRank = items;
+    }
+
+    private void SortRank()
+    {
+        // var aa = data.OrderByDescending(x => x.GETPLAN_DETAIL).ToList;
+    }
+
+    private void OnClickChangeHideMaster() => hideMaster = !hideMaster;
+}

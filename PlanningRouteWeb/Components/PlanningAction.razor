@@ -1,0 +1,76 @@
+﻿<div class="width-screen command-wrapper">
+    <RadzenDropDown 
+        TValue="string" 
+        Style="width: 100%; max-width: 200px; position: sticky;left: 0px;" 
+        TextProperty="ORGANIZATION_NAME"
+        ValueProperty="ORGANIZATION_CODE" 
+        @bind-Value=@SelectOrg 
+        Data=@OptionsOrg 
+        Change="@(args => OnChangeOrg(args))" />
+
+    <RadzenDropDown 
+        TValue="string" 
+        TextProperty="ROUTE_NAME" 
+        ValueProperty="ROUTE_CODE"
+        Style="width: 100%; max-width: 270px;position: sticky;left: 200px;"
+        @bind-Value=SelectRoute
+        Data=@OptionsRoute />
+
+    <RadzenDropDown 
+        TValue="MonthObject" 
+        TextProperty="Name"
+        Style="width: 100%; max-width: 150px;position: sticky;left: 470px;" 
+        @bind-Value=@SelectMonth 
+        Data=@OptionsMonth />
+
+    <RadzenButton 
+        Text="Search" 
+        Style="width: 100px; position: sticky;left: 620px;text-transform: none;"
+        Click="OnClickSearchCallback" />
+
+    <RadzenButton 
+        Text="View Value" 
+        ButtonStyle="ButtonStyle.Success"
+        Style="width: 120px; position: sticky;left: 720px;text-transform: none;" 
+        Click="OnClickChangeViewCallback" />
+
+    <RadzenButton 
+        Text="Hide Master" 
+        ButtonStyle="ButtonStyle.Info"
+        Style="position: sticky;left: 840px;text-transform: none;" 
+        Click="OnClickChangeHideMasterCallback" />
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback<object> OnChangeOrgCallback { get; set; }
+
+    [Parameter]
+    public EventCallback OnClickChangeViewCallback { get; set; }
+
+    [Parameter]
+    public EventCallback OnClickChangeHideMasterCallback { get; set; }
+
+    [Parameter]
+    public EventCallback OnClickSearchCallback { get; set; }
+
+    [Parameter]
+    public string SelectOrg { get; set; } = string.Empty;
+
+    [Parameter]
+    public string SelectRoute { get; set; } = string.Empty;
+
+    [Parameter]
+    public MonthObject SelectMonth { get; set; } = new();
+
+    [Parameter]
+    public IEnumerable<OrganizationData> OptionsOrg { get; set; } = new List<OrganizationData>();
+
+    [Parameter]
+    public IEnumerable<MonthObject> OptionsMonth { get; set; } = new List<MonthObject>();
+
+    [Parameter]
+    public IEnumerable<PlanningRouteWeb.Models.RouteData> OptionsRoute { get; set; } = new List<PlanningRouteWeb.Models.RouteData>();
+
+    protected async Task OnChangeOrg(object args) => await OnChangeOrgCallback.InvokeAsync(args);
+}
