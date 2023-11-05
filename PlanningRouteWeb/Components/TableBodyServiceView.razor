@@ -3,198 +3,271 @@
     var countDropMonth = item.GETPLAN_DETAIL.Count(x => x.STATUS_MANUAL);
     var styleMachine = item.CHANGE_ACTION == "C" ? "change-machine" : item.CHANGE_ACTION == "R" ? "return-machine" : item.CHANGE_ACTION == "N" ? "new-machine" : null;
     <tr>
-        @* class="sticky-col first-col"
-           class="sticky-col second-col"*@
-        <td  style=" font-size: 12px;">
-            <div class="d-inline-block" style="width:100%">@item.CUSTOMER_NAME</div>
+        <td class="sticky-col first-col" style=" font-size: 12px;">
+            <div class="d-inline-block text-truncate" style="width:17rem">@item.CUSTOMER_NAME</div>
         </td>
-        <td  style=" font-size: 12px;">
-            <div class="d-inline-block" style="width:100%">@item.LOCATION_NAME</div>
+        <td class="sticky-col second-col" style="font-size: 12px;">
+            <div class="d-inline-block" style="width: 10rem;">@item.LOCATION_NAME</div>
         </td>
-        <td class=@($"{styleMachine}") style="font-size: 12px;"> @item.MACHINE_CODE</td>
-        <td style="font-size: 12px;"> @item.MACHINE_MODEL</td>
-        <td class="text-end" style="font-size: 12px;"> @item.TOTAL_FEE</td>
-        <td class="text-end" style="font-size: 12px;"> @item.BEFORE_SALE</td>
-        <td class="text-end" style="font-size: 12px;"> @item.BEFORE_MTD</td>
-        <td class="text-end" style="font-size: 12px;"> @item.CURRENT_MTD</td>
+        <td class=@($"sticky-col thired-col {styleMachine}") style="font-size: 12px;">
+            <div class="d-inline-block text-truncate" style="width: 3rem;"> @item.MACHINE_CODE</div>
+        </td>
+        <td class="sticky-col last-col" style="font-size: 12px;">
+            <div class="d-inline-block text-truncate" style="width: 7rem;"> @item.MACHINE_MODEL</div>
+        </td>
+        <td class="text-end" style="font-size: 12px;">
+            <div class="d-inline-block" style="width:99%"> @item.TOTAL_FEE</div>
+        </td>
+        <td class="text-end" style="font-size: 12px;">
+            <div class="d-inline-block" style="width:99%"> @item.BEFORE_SALE</div>
+        </td>
+        <td class="text-end" style="font-size: 12px;">
+            <div class="d-inline-block" style="width:99%"> @item.BEFORE_MTD</div>
+        </td>
+        <td class="text-end" style="font-size: 12px;">
+            <div class="d-inline-block" style="width:99%"> @item.CURRENT_MTD</div>
+        </td>
+
+        @* ค่ามาตรฐาน *@
         @if (!HideMaster)
         {
-            <td class="text-center" style="font-size: 12px;">
+            <td class="text-center">
                 <div>
                     <RadzenCheckBox @bind-Value=@item.MONDAY @onclick="()=>OnChangeMasterCallback.InvokeAsync(item)" />
                 </div>
             </td>
-            <td class="text-center" style="font-size: 12px;">
+            <td class="text-center">
                 <div>
                     <RadzenCheckBox @bind-Value=@item.TUESDAY @onclick="()=>OnChangeMasterCallback.InvokeAsync(item)" />
                 </div>
             </td>
-            <td class="text-center" style="font-size: 12px;">
+            <td class="text-center">
                 <div>
                     <RadzenCheckBox @bind-Value=@item.WEDNESDAY @onclick="()=>OnChangeMasterCallback.InvokeAsync(item)" />
                 </div>
             </td>
-            <td class="text-center" style="font-size: 12px;">
+            <td class="text-center">
                 <div>
                     <RadzenCheckBox @bind-Value=@item.THURSDAY @onclick="()=>OnChangeMasterCallback.InvokeAsync(item)" />
                 </div>
             </td>
-            <td class="text-center" style="font-size: 12px;">
+            <td class="text-center">
                 <div>
                     <RadzenCheckBox @bind-Value=@item.FRIDAY @onclick="()=>OnChangeMasterCallback.InvokeAsync(item)" />
                 </div>
             </td>
-            <td class="text-center" style="font-size: 12px;">
+            <td class="text-center">
                 <div>
                     <RadzenCheckBox @bind-Value=@item.SATURDAY @onclick="()=>OnChangeMasterCallback.InvokeAsync(item)" />
                 </div>
             </td>
-            <td class="text-center" style="font-size: 12px;">
+            <td class="text-center">
                 <div>
                     <RadzenCheckBox @bind-Value=@item.SUNDAY @onclick="()=>OnChangeMasterCallback.InvokeAsync(item)" />
                 </div>
             </td>
-            <td style="font-size: 12px;">
-                @item.DROPWEEK
+            <td class="text-center" >
+                <div style="font-size: 12px;">
+                    @item.DROPWEEK
+                </div>
             </td>
 
-            @if (item.GroupData.Count() == 1)
-            {
-                <td colspan="2" class="p-0" style="font-size: 12px;">
-                    <div class="d-flex flex-column">
-                        <div class="d-flex">
-                            <div class="d-flex align-items-center justify-content-center border-end border-dark" style="width: 4rem;">
-                                @item.MSORT
-                                <RadzenButton Click=@(args => OnChangeRow(item , item.GroupData[0], !item.GroupData[0].IS_DUPLICATE ? "add" : "del"))
-                                              Text="@(item.IS_DUPLICATE ? "-" : "+")"
-                                              ButtonStyle="@(!item.IS_DUPLICATE ? ButtonStyle.Primary : ButtonStyle.Danger)"
-                                              Size="Radzen.ButtonSize.ExtraSmall"
-                                              Style="width: 25px;text-transform: none;" />
-
-                            </div>
-                            <div class="p-1 w-100">
-                                <RadzenTextBox class="w-100 text-size" @bind-Value=@item.GroupData[0].REMARK />
-                            </div>
-                        </div>
-                    </div>
-                </td>
-            } 
-            else
-            {
-                <td colspan="2" class="p-0" style="font-size: 12px;">
-                    <div class="d-flex flex-column">
-                        @foreach (var (g, idx) in item.GroupData.WithIndex())
-                        {
-                            var borderGrp = idx == item.GroupData.Count() - 1 ? "" : "border-bottom border-dark";
-                            <div class=@($"d-flex {borderGrp}")>
-                                <div class="d-flex align-items-center justify-content-center border-end border-dark" style="width: 4rem;">
-                                    @g.MSORT
-                                    <RadzenButton Click=@(args => OnChangeRow(item , g , !g.IS_DUPLICATE ? "add" : "del"))
-                                                    Text="@(g.IS_DUPLICATE ? "-" : "+")"
-                                                    ButtonStyle="@(!g.IS_DUPLICATE ? ButtonStyle.Primary : ButtonStyle.Danger)"
-                                                    Size="Radzen.ButtonSize.ExtraSmall"
-                                                    Style="width: 25px;text-transform: none;" />
-                                
-                                </div>
-                                <div class="p-1 w-100">
-                                    <RadzenTextBox class="w-100 text-size" @bind-Value=@g.REMARK />
-                                </div>
-                            </div>
-                        }
-                    </div>
-                </td>
-            }
-        }
-
-        <td class="text-end" style="font-size: 12px;"> @item.SALE_LAST_WEEK</td>
-        <td class="text-end" style="font-size: 12px;"> @countDropMonth</td>
-
-        @foreach (var (i, idx) in item.GETPLAN_DETAIL.WithIndex())
-        {
-            var boolToday = GetDatetimeClass.currentDate.ToContainsDate(i.CALENDAR_DATE);
-            var color = i.SALETOTAL == 0 ? "text-amount" : null;
-            var today = boolToday ? "today" : null;
-            var stylePlan = i.DOC_TYPE == "1" && i.STATUS_MANUAL ? "plan-success" :
-                                i.STATUS_MANUAL && string.IsNullOrWhiteSpace(i.DOC_TYPE) && !i.IsCurrent ? "plan-error" :
-                                !i.STATUS_MANUAL && i.SALETOTAL != 0 ? "plan-out" :
-                                boolToday && i.SALETOTAL == 0 || DateTime.ParseExact(i.CALENDAR_DATE, "dd/MM/yyyy", null) > DateTime.Parse(GetDatetimeClass.currentDate.ToString("MMM d, yyyy", CultureInfo.GetCultureInfo("en-US"))) ? "plan-notdue" : "";
-            @if (i.IsCurrent)
-            {
-                <td class=@($"{today} {stylePlan} text-center") style="width: 20px;"> 
-                    <div>
-                        <RadzenCheckBox Disabled="@(!i.IsCurrent)"
-                                        @key="item"
-                                        @bind-Value=@i.STATUS_MANUAL
-                                        @onclick="()=> OnChangCallback.InvokeAsync((index, i ,item.GETPLAN_DETAIL))" />
-                    </div>
-                </td>
-                <td class=@($"{today} {stylePlan} text-end fw-bold") style="width: 20px; font-size: 12px;">
-                    <p class=@($"mb-0 {color}")>
-                        
-                        @if (i.STATUS_MANUAL)
-                        {
-                            <div class="d-flex justify-content-between">
-                               
-                                <RadzenIcon @onclick="() => ShowdialogChangeProductCallback.InvokeAsync(new ChangeProductRequest{ ChangeDate = i.CALENDAR_DATE , Location = item.LOCATION_CODE , Machine = item.MACHINE_CODE , ORG = item.ORGANIZATION_CODE })" Icon="cached" class="change-pro-chk" style="font-weight: 700;font-size: 16px;" />
-                                <p class="m-0"> @(i.SALETOTAL == 0 ? i.AMOUNT : i.SALETOTAL)</p>
-                            </div>
-
-                        }else
-                        {
-                            <p class="m-0"> @(i.SALETOTAL == 0 ? i.AMOUNT : i.SALETOTAL)</p>
-                        }
-                    </p>
-                </td>
-                <td class=@($"{today} text-center p-0")>
-                    @{
-                        var styleRank = i.RANK == null ? "rank-warning" : FindRank(i.RANK, i.CALENDAR_DATE, item.LOCATION_CODE) != null ? "rank-error" : null;
-                    }
-                    @if (i.STATUS_MANUAL)
-                    {
+            <td colspan="2" class="p-0" style="font-size: 12px;">
+                <div class="d-flex flex-column">
                         @if (item.GroupData.Count() == 1)
                         {
-                            <div class="d-flex flex-column">
-                                <div class="d-flex">
-                                    <div class="p-1 w-100">
-                                        <RadzenNumeric class=@($"text-size {styleRank} w-100")
-                                                       ShowUpDown="false"
-                                                       Disabled="@(!i.IsCurrent)"
-                                                       TextAlign="TextAlign.Center"
-                                                       TValue="int?"
-                                                       Change=@(args => ChageRank(args , i.CALENDAR_DATE , item.LOCATION_CODE))
-                                        @bind-Value=@i.RANK />
-                                    </div>
+                            @* เข้ารอบเดียว *@
+                            <div class="d-flex">
+                                <div class="d-flex align-items-center justify-content-center border-end border-dark" style="width: 4rem;">
+                                    @item.MSORT
+                                    <RadzenButton Click=@(args => OnChangeRowCallback.InvokeAsync((item , item.GroupData[0], !item.GroupData[0].IS_DUPLICATE ? "add" : "del")))
+                                                  Text="@(item.IS_DUPLICATE ? "-" : "+")"
+                                                  ButtonStyle="@(!item.IS_DUPLICATE ? ButtonStyle.Primary : ButtonStyle.Danger)"
+                                                  Size="Radzen.ButtonSize.ExtraSmall"
+                                                  Style="width: 25px;text-transform: none;" />
+                                </div>
+                                <div class="p-1 w-100">
+                                    <RadzenTextBox class="w-100 text-size" @bind-Value=@item.GroupData[0].REMARK />
                                 </div>
                             </div>
                         }
                         else
                         {
-                            <div class="d-flex flex-column">
-                                @foreach (var (g, seq) in item.GroupData.WithIndex())
-                                {
-                                    var val = g.GETPLAN_DETAIL.Single(x => x.CALENDAR_DATE == i.CALENDAR_DATE);
-                                    var borderGrp = seq == item.GroupData.Count() - 1 ? null : "border-bottom border-dark";
-                                    <div class=@($"d-flex {borderGrp}")>
+                            @* เข้าหลายรอบ *@
+                            @foreach (var (g, idx) in item.GroupData.WithIndex())
+                            {
+                                var borderGrp = idx == item.GroupData.Count() - 1 ? "" : "border-bottom border-dark";
+                                <div class=@($"d-flex {borderGrp}")>
+                                    <div class="d-flex align-items-center justify-content-center border-end border-dark" style="width: 4rem;">
+                                        @g.MSORT
+                                        <RadzenButton Click=@(args => OnChangeRowCallback.InvokeAsync((item , g , !g.IS_DUPLICATE ? "add" : "del")))
+                                                      Text="@(g.IS_DUPLICATE ? "-" : "+")"
+                                                      ButtonStyle="@(!g.IS_DUPLICATE ? ButtonStyle.Primary : ButtonStyle.Danger)"
+                                                      Size="Radzen.ButtonSize.ExtraSmall"
+                                                      Style="width: 25px;text-transform: none;" />
+
+                                    </div>
+                                    <div class="p-1 w-100">
+                                        <RadzenTextBox class="w-100 text-size" @bind-Value=@g.REMARK />
+                                    </div>
+                                </div>
+                            }
+                        }
+                </div>
+            </td>
+
+            <td class="text-end" >
+                <div style="font-size: 12px;width: 100%">
+                    @item.SALE_LAST_WEEK
+                </div>
+            </td>
+            <td class="text-end" style="font-size: 12px;">
+                <div style="font-size: 12px;width: 100%">
+                    @countDropMonth
+                </div>
+            </td>
+
+            @foreach (var (i, idx) in item.GETPLAN_DETAIL.WithIndex())
+            {
+                var boolToday = GetDatetimeClass.currentDate.ToContainsDate(i.CALENDAR_DATE);
+                var color = i.SALETOTAL == 0 ? "text-amount" : null;
+                var today = boolToday ? "today" : null;
+
+                var stylePlan = i.DOC_TYPE == "1" && i.STATUS_MANUAL ? "plan-success" :
+                i.STATUS_MANUAL && string.IsNullOrWhiteSpace(i.DOC_TYPE) && !i.IsCurrent && !boolToday ? "plan-error" :
+                !i.STATUS_MANUAL && i.SALETOTAL != 0 ? "plan-out" :
+                boolToday && string.IsNullOrWhiteSpace(i.DOC_TYPE) ? "plan-notdue" : "";
+                @* || DateTime.ParseExact(i.CALENDAR_DATE, "dd/MM/yyyy", null) > DateTime.Parse(GetDatetimeClass.currentDate.ToString("MMM d, yyyy", CultureInfo.GetCultureInfo("en-US")))  *@
+                @if (i.IsCurrent)
+                {
+                    <td class=@($"{today} {stylePlan} text-center") style="width: 20px;">
+                        <div>
+                            <RadzenCheckBox Disabled="@(!i.IsCurrent)"
+                            @key="item"
+                            @bind-Value=@i.STATUS_MANUAL
+                            @onclick="()=> OnChangCallback.InvokeAsync((index, i ,item.GETPLAN_DETAIL))" />
+                        </div>
+                    </td>
+                    <td class=@($"{today} {stylePlan} text-end fw-bold") style="width: 20px; font-size: 12px;">
+                        <p class=@($"mb-0 {color}")>
+                            @if (i.STATUS_MANUAL)
+                            {
+                                <div class="d-flex justify-content-between">
+                                    <RadzenIcon @onclick="() => ShowdialogChangeProductCallback.InvokeAsync(new ChangeProductRequest{ ChangeDate = i.CALENDAR_DATE , Location = item.LOCATION_CODE , Machine = item.MACHINE_CODE , ORG = item.ORGANIZATION_CODE })" Icon="cached" class="change-pro-chk" style="font-weight: 700;font-size: 16px;" />
+                                    <p class="m-0">
+                                        @(i.SALETOTAL == 0 ? i.AMOUNT : i.SALETOTAL)
+                                    </p>
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="m-0"> 
+                                    @(i.SALETOTAL == 0 ? i.AMOUNT : i.SALETOTAL)
+                                </p>
+                            }
+                        </p>
+                    </td>
+                    <td class=@($"{today} text-center p-0")>
+                        @if (i.STATUS_MANUAL)
+                        {
+                            @if (item.GroupData.Count() == 1)
+                            {
+                                var styleRank = i.RANK == null ? "rank-warning" : FindRankGroup(i.RANK, i.CALENDAR_DATE, item.LOCATION_CODE) ? "rank-error" : "rank-success";
+                                <div class="d-flex flex-column">
+                                    <div class="d-flex">
                                         <div class="p-1 w-100">
                                             <RadzenNumeric class=@($"text-size {styleRank} w-100")
                                                            ShowUpDown="false"
                                                            Disabled="@(!i.IsCurrent)"
                                                            TextAlign="TextAlign.Center"
                                                            TValue="int?"
-                                                           Change=@(args => ChageRank(args , i.CALENDAR_DATE , item.LOCATION_CODE))
-                                            @bind-Value=@val.RANK />
+                                                           Change=@(args => ChageRank(args , i.CALENDAR_DATE , item.LOCATION_CODE ))
+                                            @bind-Value=@i.RANK />
                                         </div>
                                     </div>
-                                }
-                            </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="d-flex flex-column">
+                                    @foreach (var (g, seq) in item.GroupData.WithIndex())
+                                    {
+                                        var borderGrp = seq == item.GroupData.Count() - 1 ? null : "border-bottom border-dark";
+                                        var iGrp = data[index].GroupData[seq].GETPLAN_DETAIL.FindIndex(x => x.CALENDAR_DATE == i.CALENDAR_DATE);
+                                        
+                                        var styleRank = data[index].GroupData[seq].GETPLAN_DETAIL[iGrp].RANK == null ? "rank-warning" : FindRankGroup(data[index].GroupData[seq].GETPLAN_DETAIL[iGrp].RANK, i.CALENDAR_DATE, item.LOCATION_CODE) ? "rank-error" : "rank-success";
+                                        <div class=@($"d-flex {borderGrp}")>
+                                            <div class="p-1 w-100">
+                                                <RadzenNumeric class=@($"text-size {styleRank} w-100")
+                                                               ShowUpDown="false"
+                                                               Disabled="@(!i.IsCurrent)"
+                                                               TextAlign="TextAlign.Center"
+                                                               TValue="int?"
+                                                               @bind-Value=@data[index].GroupData[seq].GETPLAN_DETAIL[iGrp].RANK
+                                                               Change=@(args => ChageRank(args , i.CALENDAR_DATE , item.LOCATION_CODE , index , seq , true)) />
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
                         }
-                    }
-                    else
-                    {
+                        else
+                        {
+                            @if (item.GroupData.Count() == 1)
+                            {
+                                <div>
+                                    <div class="d-flex align-items-center justify-content-center" style="width: 1rem;">
+                                        @i.RANK
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="d-flex flex-column">
+                                    @foreach (var (g, seq) in item.GroupData.WithIndex())
+                                    {
+                                        var val = g.GETPLAN_DETAIL.Single(x => x.CALENDAR_DATE == i.CALENDAR_DATE);
+                                        var borderGrp = seq == item.GroupData.Count() - 1 ? null : "border-bottom border-dark";
+                                        <div class=@($"{borderGrp}")>
+                                            <div class="d-flex align-items-center justify-content-center w-100" style="height: 2rem;">
+                                                @val.RANK
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        }
+                    </td>
+                }
+                else
+                {
+                    <td class=@($"{today} {stylePlan} text-center") style="width: 20px;">
+                        @if (i.STATUS_MANUAL) {
+                            <RadzenIcon Icon="done" class="nomal-chk" style="font-weight: 700;font-size: 16px;" />
+                        }
+                    </td>
+
+                    <td class=@($"{today} {stylePlan} text-end fw-bold") style="width: 20px; ">
+                        @* <RadzenText MouseEnter="@(args => ShowTooltip(args , item.MACHINE_CODE) )" class=@($"mb-0 {color} fw-bold") Style="font-size: 12px; cursor : pointer;"> *@
+                            @* @(i.SALETOTAL == 0 ? "" : string.IsNullOrWhiteSpace(i.DOC_TYPE) ? "" : i.SALETOTAL) *@
+                            <div class=@(i.CHANGEPRODUCT == "1" ? "d-flex justify-content-between" : "d-flex justify-content-end")>
+                            @if (i.CHANGEPRODUCT == "1")
+                                {
+                                    <RadzenIcon @onclick="() => ShowdialogChangeProductCallback.InvokeAsync(new ChangeProductRequest{ ChangeDate = i.CALENDAR_DATE , Location = item.LOCATION_CODE , Machine = item.MACHINE_CODE , ORG = item.ORGANIZATION_CODE })"
+                                                Icon="cached"
+                                                style="font-weight: 700;font-size: 16px;" />
+                                }
+                                <p class=@($"m-0 {color}") style="font-size: 12px;">
+                                    @(!string.IsNullOrWhiteSpace(i.DOC_TYPE) ? i.SALETOTAL : i.AMOUNT)
+                                </p>
+                            </div>
+                        @* </RadzenText> *@
+                    </td>
+                    <td class=@($"{today} text-center fw-bold p-0") style="width: 20px; font-size: 12px;">
                         @if (item.GroupData.Count() == 1)
                         {
                             <div>
-                                <div class="d-flex align-items-center justify-content-center" style="width: 1rem;">
+                                <div class="d-flex align-items-center justify-content-center" style="height: 2rem;">
                                     @i.RANK
                                 </div>
                             </div>
@@ -214,75 +287,19 @@
                                 }
                             </div>
                         }
-                    }
-                </td>
-            }
-            else
-            {
-                if (i.STATUS_MANUAL)
-                {
-                    <td class=@($"{today} {stylePlan} text-center") style="width: 20px;">
-                        <RadzenIcon Icon="done" class="nomal-chk" style="font-weight: 700;font-size: 16px;" />
                     </td>
-                }else
-                {
-                     <td class=@($"{today} {stylePlan} text-center") style="width: 20px;">
-                     </td>
                 }
-                <td  class=@($"{today} {stylePlan} text-end fw-bold") style="width: 20px; ">
-                    <RadzenText MouseEnter="@(args => ShowTooltip(args , item.MACHINE_CODE) )" class=@($"mb-0 {color} fw-bold") Style="font-size: 12px; cursor : pointer;">
-                        @* @(i.SALETOTAL == 0 ? "" : string.IsNullOrWhiteSpace(i.DOC_TYPE) ? "" : i.SALETOTAL) *@
-                        @{
-                            var changeProduct = i.CHANGEPRODUCT == "1"; 
-                        }
-                        <div class=@(changeProduct ? "d-flex justify-content-between" : "d-flex justify-content-end")>
-                            @if(changeProduct)
-                            {
-                                <RadzenIcon
-                                    @onclick="() => ShowdialogChangeProductCallback.InvokeAsync(new ChangeProductRequest{ ChangeDate = i.CALENDAR_DATE , Location = item.LOCATION_CODE , Machine = item.MACHINE_CODE , ORG = item.ORGANIZATION_CODE })" 
-                                    Icon="cached" 
-                                    style="font-weight: 700;font-size: 16px;" />
-                            }
-                            <p class="m-0">@(!string.IsNullOrWhiteSpace(i.DOC_TYPE) ? i.SALETOTAL : i.AMOUNT)</p>
-                        </div>
-                    </RadzenText>
-                </td>
-                <td class=@($"{today} text-center fw-bold p-0") style="width: 20px; font-size: 12px;">
-                    @if (item.GroupData.Count() == 1)
-                    {
-                        <div>
-                            <div class="d-flex align-items-center justify-content-center" style="height: 2rem;">
-                                @i.RANK
-                            </div>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="d-flex flex-column">
-                            @foreach (var (g, seq) in item.GroupData.WithIndex())
-                            {
-                                var val = g.GETPLAN_DETAIL.Single(x => x.CALENDAR_DATE == i.CALENDAR_DATE);
-                                var borderGrp = seq == item.GroupData.Count() - 1 ? null : "border-bottom border-dark";
-                                <div class=@($"{borderGrp}")>
-                                    <div class="d-flex align-items-center justify-content-center w-100" style="height: 2rem;">
-                                        @val.RANK
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    }
-                </td>
-            }
-            
-            if ((idx + 1) % 7 == 0)
-            {
-                var clsStyle = CalSaleWeek(item.GETPLAN_DETAIL, idx + 1, item) > 1 ? "success" : "danger";
-                <td class="text-end salweek fw-bold" style="width: 20px; font-size: 12px;">
-                    @CalSaleWeek(item.GETPLAN_DETAIL , idx + 1)
-                </td>
-                <td class=@($"text-end fw-bold {clsStyle}") style="width: 20px; font-size: 12px;">
-                    @CalSaleWeek(item.GETPLAN_DETAIL , idx + 1 , item)
-                </td>
+
+                if ((idx + 1) % 7 == 0)
+                {
+                    var clsStyle = CalSaleWeek(item.GETPLAN_DETAIL, idx + 1, item) > 1 ? "success" : "danger";
+                    <td class="text-end salweek fw-bold" style="width: 20px; font-size: 12px;">
+                        @CalSaleWeek(item.GETPLAN_DETAIL , idx + 1)
+                    </td>
+                    <td class=@($"text-end fw-bold {clsStyle}") style="width: 20px; font-size: 12px;">
+                        @CalSaleWeek(item.GETPLAN_DETAIL , idx + 1 , item)
+                    </td>
+                }
             }
         }
     </tr>
@@ -305,53 +322,58 @@
     [Parameter]
     public EventCallback<ChangeProductRequest> ShowdialogChangeProductCallback { get; set; }
     [Parameter]
-    public EventCallback<(List<string> , string)> OnChageRankCallback { get; set; }
-
+    public EventCallback<(int?, string, string)> OnChageRankCallback { get; set; }
+    [Parameter]
+    public EventCallback<(PlanningMasterData2 item, Group2 grp, string action)> OnChangeRowCallback { get; set; }
     public List<string> dayRank = new List<string>();
-
-    private void OnChangeRow(PlanningMasterData2 item, Group2 grp , string action)
-    {
-        if (action == "add")
-        {   
-            var newItem = ConvertModel.Group2ModelToModel(grp);
-            newItem.IS_DUPLICATE = true;
-            newItem.MSORT = (item.GroupData.Count() + 1).ToString();
-            item.GroupData.Add(newItem);
-        }
-        else if (action == "del")
-        {
-            item.GroupData.Remove(grp);
-        }
-    }
 
     private void ShowTooltip(ElementReference elementReference, string text, TooltipOptions? options = null) => TooltipService.Open(elementReference, $"ตู้ปัจจุบัน : {text}", options);
 
-    private async Task ChageRank(int? rank, string date ,string location)
+    private async Task ChageRank(int? rank, string date, string location, int index = 0, int seq = 0 ,bool fbool = false)
     {
-
-        var f = FindRank(rank, date, location);
-
-        if (rank == null)
-        {
-            dayRank.Remove(date);
-        }
-        else if (f != null)
-        {
-            dayRank.Add(date);
-        }
-        else
-        {
-            dayRank.Remove(date);
-        }
-
-        await OnChageRankCallback.InvokeAsync((dayRank, date));
+        // if (fbool)
+        // {
+        //     var aaa = data[index].GroupData[seq].GETPLAN_DETAIL.FindIndex(x => x.CALENDAR_DATE == date);
+        //     data[index].GroupData[seq].GETPLAN_DETAIL[aaa].RANK = rank;
+        // }
+        await OnChageRankCallback.InvokeAsync((rank, date, location));
     }
 
-    private PlanningMasterData2? FindRank(int? rank, string date, string location)
-    {
-        var f = data.Find(x => x.GETPLAN_DETAIL.Find(d => d.CALENDAR_DATE == date && d.RANK == rank) != null && x.LOCATION_CODE != location);
+    // private PlanningMasterData2? FindRank(int? rank, string date, string location)
+    // {
+    //     var f = data.Find(x => x.GETPLAN_DETAIL.Find(d => d.CALENDAR_DATE == date && d.RANK == rank) != null && x.LOCATION_CODE != location);
+    //     return f;
+    // }
 
-        return f;
+    private bool FindRankGroup(int? rank, string date, string location)
+    {
+        var detail = new List<PlanningDetail2>();
+        foreach (var i in data)
+        {
+            if (i.GroupData.Count() > 1)
+            {
+                var d = i.GroupData.First().GETPLAN_DETAIL.Where(x => x.STATUS_MANUAL && x.CALENDAR_DATE == date);
+                detail.AddRange(d);
+                foreach (var g in i.GroupData.Skip(1))
+                {
+                    var gg = g.GETPLAN_DETAIL.Where(x => x.STATUS_MANUAL && x.CALENDAR_DATE == date).ToList();
+                    detail.AddRange(gg);
+                }
+            }
+            else
+            {
+                var d = i.GETPLAN_DETAIL.Where(x => x.STATUS_MANUAL && x.CALENDAR_DATE == date).ToList();
+                detail.AddRange(d);
+            }
+        }
+
+        var chk = detail.Where(x => x.RANK == rank).ToList();
+        if (chk.Count() > 1)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     private double CalSaleWeek(List<PlanningDetail2> row, int index, PlanningMasterData2? plan = null)

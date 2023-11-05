@@ -1,6 +1,4 @@
 using PlanningRouteWeb.Models;
-using PlanningRouteWeb.Services;
-using System.Globalization;
 
 namespace PlanningRouteWeb.Helpers
 {
@@ -104,7 +102,8 @@ namespace PlanningRouteWeb.Helpers
             {
                 CALENDAR_DATE = model.CALENDAR_DATE,
                 STATUS_ORIGINAL = model.STATUS_ORIGINAL,
-                STATUS_MANUAL = !string.IsNullOrWhiteSpace(model.STATUS_MANUAL) ? true : model.DOC_TYPE == "1" ? true : false,
+                STATUS_MANUAL = !string.IsNullOrWhiteSpace(model.STATUS_MANUAL) ? model.STATUS_MANUAL == "Y" ? true : false : false,
+                //STATUS_MANUAL = model.CALENDAR_DATE == "06/11/2023" ? true : false,
                 DOC_TYPE = model.DOC_TYPE,
                 SALETOTAL = !string.IsNullOrWhiteSpace(model.SALETOTAL) ? double.Parse(model.SALETOTAL) : 0,
                 RANK = !string.IsNullOrWhiteSpace(model.RANK) ? int.Parse(model.RANK) : null,
@@ -117,7 +116,7 @@ namespace PlanningRouteWeb.Helpers
             };
         }
 
-        public static Group2 Group2ModelToModel(Group2 model)
+        public static Group2 Group2ModelToModel(Group2 model, bool genRank)
         {
             return new Group2
             {
@@ -149,10 +148,9 @@ namespace PlanningRouteWeb.Helpers
                 SUNDAY = model.SUNDAY,
                 IS_DUPLICATE = model.IS_DUPLICATE,
                 SALE_LAST_WEEK = model.SALE_LAST_WEEK,
-                GETPLAN_DETAIL = model.GETPLAN_DETAIL.Select(x => NewPlanningDetail2(x)).ToList()
+                GETPLAN_DETAIL = model.GETPLAN_DETAIL.Select(x => NewPlanningDetail2(x, genRank)).ToList()
             };
         }
-
         public static PlanningMasterData2 Group2ModelToPlanningMasterData2(Group2 model)
         {
             return new PlanningMasterData2
@@ -188,8 +186,7 @@ namespace PlanningRouteWeb.Helpers
                 GETPLAN_DETAIL = model.GETPLAN_DETAIL.Select(x => NewPlanningDetail2(x)).ToList()
             };
         }
-
-        public static PlanningMasterData2 PlanningMasterDataModeltoModel(PlanningMasterData model, int addDay , IEnumerable<PlanningMasterData> Grp)
+        public static PlanningMasterData2 PlanningMasterDataModeltoModel(PlanningMasterData model, int addDay, IEnumerable<PlanningMasterData> Grp)
         {
             var data = new PlanningMasterData2
             {
@@ -230,7 +227,6 @@ namespace PlanningRouteWeb.Helpers
                             .OrderBy(x => int.Parse(x.MSORT))
                             .ToList(),
             };
-
             return data;
         }
 
@@ -273,7 +269,7 @@ namespace PlanningRouteWeb.Helpers
                                 .ToList()
             };
         }
-        public static PlanningDetail2 NewPlanningDetail2(PlanningDetail2 model)
+        public static PlanningDetail2 NewPlanningDetail2(PlanningDetail2 model, bool genRank = false)
         {
             return new PlanningDetail2
             {
@@ -282,7 +278,7 @@ namespace PlanningRouteWeb.Helpers
                 STATUS_MANUAL = model.STATUS_MANUAL,
                 DOC_TYPE = model.DOC_TYPE,
                 SALETOTAL = model.SALETOTAL,
-                RANK = null,
+                RANK = !genRank ? model.RANK : null,
                 HOLIDAY = model.HOLIDAY,
                 IsCurrent = model.IsCurrent,
                 MACHINE_CODE = model.MACHINE_CODE,
@@ -347,7 +343,6 @@ namespace PlanningRouteWeb.Helpers
                 IsSubRow = !string.IsNullOrWhiteSpace(model.STATUSCHANGE) ? model.STATUSCHANGE == "1" ? true : false : false,
             };
         }
-
 
         public static SaveChangeProductData SaveChangeProductDataModel(ChangeProductDetail2 model)
         {

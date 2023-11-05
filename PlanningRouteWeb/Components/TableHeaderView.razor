@@ -1,31 +1,24 @@
 ﻿@{
     var date = GetDatetimeClass.currentDate;
+    var total = GetDatetimeClass.monthObjects.Single(x => x.Number == (int.Parse(SelectMonth.Number) - 1).ToString("D2")).ShortName;
+    var mdtBefore = GetDatetimeClass.monthObjects.Single(x => x.Number == (int.Parse(SelectMonth.Number) - 1).ToString("D2")).ShortName;
+    var colSpan = (Columns.Count() * 3) + ((Columns.Count() / 7) * 2);
 }
 <tr>
-    @* class="sticky-col first-col" *@
-    @* class="sticky-col second-col" *@
-    <th rowspan="4" style="width: 170px;font-size: 12px;">ลูกค้า</th>
-    <th rowspan="4" style="width: 140px;font-size: 12px;">จุดตั้ง</th>
-    <th rowspan="4" style="width: 40px;font-size: 12px;">ตู้ปัจจุบัน</th>
-    <th rowspan="4" style="width: 30px;font-size: 12px;">MODEL</th>
-    <th rowspan="4" style="width: 50px;font-size: 12px;">ค่าธรรมเนียม</th>
-    <th rowspan="4" style="width: 50px;font-size: 12px;">
-        <p class="m-0"> TOTAL</p>
-        <p class="m-0">
-            @(
-                GetDatetimeClass.monthObjects
-                .Single(x => x.Number == (int.Parse(SelectMonth.Number) - 1).ToString("D2"))
-                .ShortName)
-        </p>
+    <th class="sticky-col first-col" rowspan="4" style="font-size: 12px;">ลูกค้า</th>
+    <th class="sticky-col second-col" rowspan="4" style="font-size: 12px;">จุดตั้ง</th>
+    <th class="sticky-col thired-col" rowspan="4" style="font-size: 12px;">ตู้ปัจจุบัน</th>
+    <th class="sticky-col last-col" rowspan="4" style="font-size: 12px;">MODEL</th>
+    <th rowspan="4" style="width: 4rem;font-size: 12px;">ค่าธรรมเนียม</th>
+    <th rowspan="4" style="width: 3rem;font-size: 12px;">
+        <p class="m-0">TOTAL</p>
+        <p class="m-0">@total</p>
     </th>
-    <th rowspan="4" style="width: 30px;font-size: 12px;">
+    <th rowspan="4" style="width: 3.5rem;font-size: 12px;">
         <p class="m-0">MTD</p>
-        <p class="m-0">@(
-                GetDatetimeClass.monthObjects
-            .Single(x => x.Number == (int.Parse(SelectMonth.Number) - 1).ToString("D2"))
-            .ShortName)</p>
+        <p class="m-0">@mdtBefore</p>
     </th>
-    <th rowspan="4" style="width: 40px;font-size: 12px;">
+    <th rowspan="4" style="width: 3.5rem;font-size: 12px;">
         <p class="m-0">MTD</p>
         <p class="m-0">@SelectMonth.ShortName</p>
     </th>
@@ -35,40 +28,40 @@
             ค่ามาตรฐาน
         </th>
     }
-    <th rowspan="4" style="width: 30px;font-size: 12px; padding-left:4px; padding-right:0px;">
+    <th rowspan="4" style="width: 3.5rem;font-size: 12px; padding-left:4px; padding-right:0px;">
         <p class="m-0">Sale</p>
         <p class="m-0">Last</p>
         <p class="m-0">Week</p>
     </th>
-    <th rowspan="4" style="width: 30px;font-size: 12px; padding-left:4px; padding-right:0px;">
+    <th rowspan="4" style="width: 3.5rem;font-size: 12px; padding-left:4px; padding-right:0px;">
         <p class="m-0">Drop</p>
         <p class="m-0">Month</p>
     </th>
-    <th colspan="@((Columns.Count() * 3) + ((Columns.Count() / 7) * 2))"
-        class="text-center" style="font-size: 12px;">แพลนเดือน @SelectMonth.Name</th>
+    <th colspan="@colSpan" class="text-center" style="font-size: 12px;">
+         แพลนเดือน @SelectMonth.Name
+    </th>
 </tr>
 
 <tr>
-    @if (!HideMaster)
-    {
-        <th rowspan="2" class="text-center" style="width: 20px;font-size: 12px;">จ</th>
-        <th rowspan="2" class="text-center" style="width: 20px;font-size: 12px;">อ</th>
-        <th rowspan="2" class="text-center" style="width: 20px;font-size: 12px;">พ</th>
-        <th rowspan="2" class="text-center" style="width: 20px;font-size: 12px;">พฤ</th>
-        <th rowspan="2" class="text-center" style="width: 20px;font-size: 12px;">ศ</th>
-        <th rowspan="2" class="text-center" style="width: 20px;font-size: 12px;">ส</th>
-        <th rowspan="2" class="text-center" style="width: 20px;font-size: 12px;">อ</th>
-        <th rowspan="2" style="width: 20px;font-size: 12px;">
-            <p class="m-0">Drop</p>
-            <p class="m-0">Week</p>
-        </th>
-        <th rowspan="2" style="width: 1rem;font-size: 12px;">
-            <p class="m-0">Drop</p>
-            <p class="m-0">Day</p>
-        </th>
-        <th rowspan="2" style="width: 200px;font-size: 12px;">Remark</th>
-    }
+    @* ค่ามาตรฐาน *@
+    <th rowspan="2" class="text-center" style="width: 1.25rem;font-size: 12px;">อ</th>
+    <th rowspan="2" class="text-center" style="width: 1.25rem;font-size: 12px;">จ</th>
+    <th rowspan="2" class="text-center" style="width: 1.25rem;font-size: 12px;">พ</th>
+    <th rowspan="2" class="text-center" style="width: 1.25rem;font-size: 12px;">พฤ</th>
+    <th rowspan="2" class="text-center" style="width: 1.25rem;font-size: 12px;">ศ</th>
+    <th rowspan="2" class="text-center" style="width: 1.25rem;font-size: 12px;">ส</th>
+    <th rowspan="2" class="text-center" style="width: 1.25rem;font-size: 12px;">อ</th>
+    <th rowspan="2" style="width: 2rem;font-size: 12px;">
+        <p class="m-0">Drop</p>
+        <p class="m-0">Week</p>
+    </th>
+    <th rowspan="2" style="width: 3.15rem;font-size: 12px;">
+        <p class="m-0">Drop</p>
+        <p class="m-0">Day</p>
+    </th>
+    <th rowspan="2" style="width: 12.5rem;font-size: 12px;">Remark</th>
 
+    @* plan detail *@
     @foreach (var (obj, index) in Columns.WithIndex())
     {
         if ((index + 1) % 7 == 0)
@@ -81,43 +74,45 @@
             {
                 <th colspan="21" class="p-0" >
                     <div class="p-2 text-end" >
-                        
                         @if(action == null)
                         {
-                            <RadzenButton Text="Create"
+                            <RadzenButton Text=@(ActionButton.Action == "create" ? "สร้าง" : ActionButton.Action == "recreate" ? "ล้างค่า สร้างใหม่" : "บันทึก")
                                           ButtonStyle="ButtonStyle.Secondary"
                                           Style="@($"{StyleHeaderButton(chk2)}text-transform: none;")"
                                           Size="Radzen.ButtonSize.Small"
-                            Click="@(args => CalPlaaning(chk2 ,  obj.Key ))" />
+                                          Click="@(args => CalPlaaning(chk2 ,  obj.Key , ActionButton.Action))" />
                         }
                         else
                         {
-                            <RadzenButton Text="Edit"
+                            <RadzenButton Text=@(ActionButton.Action == "create" ? "สร้าง" : ActionButton.Action == "recreate" ? "ล้างค่า สร้างใหม่" : "บันทึก")
                                           ButtonStyle="ButtonStyle.Secondary"
                                           Style="@($"{StyleHeaderButton(chk2)}text-transform: none;")"
                                           Size="Radzen.ButtonSize.Small"
                                           Click="OnClickSavePlanCallback"
                                           Disabled="@(disable > 0 ? true : false)" />
                         }
-                       
                     </div>
                 </th>
-                <th rowspan="3" colspan="1" class="text-center" style="font-size:12px;">
+                <th rowspan="3" colspan="1" class="text-end" style="width:4rem;font-size:12px;">
                     <p class="m-0">Sale</p>
                     <p class="m-0">Week</p>
                 </th>
-                <th rowspan="3" colspan="1" class="text-center" style="font-size:12px;">Diff</th>
+                <th rowspan="3" colspan="1" class="text-end" style="width:4rem;font-size:12px;">Diff</th>
             }
             else
             {
-                <th colspan="21" class="p-0">
-                    @* @DateTime.ParseExact(obj.Key, "dd/MM/yyyy", null) *@
+                <th colspan="21" class="p-0"></th>
+                <th rowspan="3" colspan="1" class="text-center" style="width:4rem; font-size:12px;">
+                    <div class="w-100 text-end">
+                        <p class="m-0">Sale</p>
+                        <p class="m-0">Week</p>
+                    </div>
                 </th>
-                <th rowspan="3" colspan="1" class="text-center" style="font-size:12px;">
-                    <p class="m-0">Sale</p>
-                    <p class="m-0">Week</p>
+                <th rowspan="3" colspan="1" class="text-center" style="width:4rem; font-size:12px;">
+                    <div class="w-100 text-end">
+                        Diff
+                    </div>
                 </th>
-                <th rowspan="3" colspan="1" class="text-center" style="font-size:12px;">Diff</th>
             }
         }
     }
@@ -139,8 +134,7 @@
     {
         <th colspan="10" class="text-center" style="padding: 5px;">
             <div>
-                <RadzenButton 
-                    Text="Apply"
+                <RadzenButton Text="บันทึกค่ามาตรฐาน"
                     ButtonStyle="ButtonStyle.Secondary"
                     Style="width: 100%;text-transform: none;"
                     Size="Radzen.ButtonSize.Small"
@@ -148,23 +142,25 @@
             </div>
         </th>
     }
-
     @foreach (var (obj, index) in Columns.WithIndex())
     {
-        <th class="@($"{obj.Value.ClassColor} color")"
-            style="font-size: 12px;text-align: center;">@obj.Value.FieldDate</th>
-        <th class="@($"{obj.Value.ClassColor} color")"
-            style="width: 2rem; font-size: 12px; text-align: center;">@obj.Value.FieldValueName</th>
-        <th class="@($"{obj.Value.ClassColor} color")"
-            style="width: 1.5rem; font-size: 12px;">
-            <div class="d-flex " style="width: 1rem;">
+        <th class="@($"{obj.Value.ClassColor} color")" style="width: 3rem; font-size: 12px;text-align: center;">
+            <div style="width:100%">
+                @obj.Value.FieldDate
+            </div>
+        </th>
+        <th class="@($"{obj.Value.ClassColor} color")" style="width: 6rem; font-size: 12px; text-align: center;">
+            <div style="width:100%">
+                @obj.Value.FieldValueName
+            </div>
+         </th>
+        <th class="@($"{obj.Value.ClassColor} color")" style="width: 3rem; font-size: 12px;">
+            <div class="d-flex" style="width:100%">
                 <div class="mx-1">
                     @obj.Value.FieldRankName
                 </div>
-                
                 <RadzenIcon Icon="find_replace" style="font-weight: 700;font-size: 16px;" @onclick="()=>SortRankCallback.InvokeAsync()" />
             </div>
-              
         </th>
     }
 </tr>
@@ -188,9 +184,6 @@
 
     [Parameter]
     public EventCallback<(string , string)> OnCalPlanningCallback { get; set; }
-
-    [Parameter]
-    public List<string> DayRank { get; set; } = new();
 
     [Parameter]
     public ChangeActionButton ActionButton { get; set; } = new();
@@ -232,6 +225,9 @@
                 case 5:
                     style = $"width: {14.3 * con + 1}%;";
                     break;
+                case 6:
+                    style = $"width: {14.3 * con }%;";
+                    break;
                 default :
                     style = $"width: 0%;display:none;";
                     break;
@@ -241,44 +237,39 @@
         return style;
     }
 
-    private async Task CalPlaaning(bool chk , string date)
+    private async Task CalPlaaning(bool chk , string date, string action = "create")
     {
-        DateTime start;
-        DateTime end;
-        if (!chk)
+        if (action == "save")
         {
-            start = GetDatetimeClass.currentDate.AddDays(1 + StateContainer.BeforeConfig);
-            end = start.LastDayOfWeek();
+            await OnClickSavePlanCallback.InvokeAsync();
         }
-        else
+        else 
         {
-            start = GetDatetimeClass.currentDate.LastDayOfWeek().AddDays(1);
-            end = start.AddDays(6);
+            DateTime start;
+            DateTime end;
+            if (!chk)
+            {
+                start = GetDatetimeClass.currentDate.AddDays(1 + StateContainer.BeforeConfig);
+                end = start.LastDayOfWeek();
+            }
+            else
+            {
+                start = GetDatetimeClass.currentDate.LastDayOfWeek().AddDays(1);
+                end = start.AddDays(6);
+            }
+            await OnCalPlanningCallback.InvokeAsync((start.ToStringDate(), end.ToStringDate()));
         }
+    }
 
-        await OnCalPlanningCallback.InvokeAsync((start.ToStringDate(), end.ToStringDate()));
+    public string ClassHeader(int f, DateTime date, KeyValuePair<string, ColumnProperty> obj)
+    {
+        var classHeader = $"{obj.Value.ClassColor} color";
+        return classHeader;
     }
 
     public void Dispose()
     {
         StateContainer.OnChange -= StateHasChanged;
-    }
-
-    public string ClassHeader(int f, DateTime date, KeyValuePair<string, ColumnProperty> obj)
-    {
-        // if(f == 1)
-        // {
-        //     var classHeader = date.ToContainsDate(obj.Key) ? "today" : $"{obj.Value.ClassColor} color";
-        //     return classHeader;
-        // }
-        // else
-        // {
-        //     var chkRank = DayRank.Count(x => x == obj.Key);
-        //     var classHeader = date.ToContainsDate(obj.Key) ? "today" : chkRank > 0 ? "rank-error color" : $"{obj.Value.ClassColor} color";
-        //     return classHeader;
-        // }
-        var classHeader = $"{obj.Value.ClassColor} color";
-        return classHeader;
     }
 }
  

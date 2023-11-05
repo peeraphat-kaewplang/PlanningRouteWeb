@@ -53,6 +53,7 @@ namespace PlanningRouteWeb.Models
     {
         public string Date { get; set; } = string.Empty;
         public bool Error { get; set; }
+        public int? Rank { get; set; }
     }
 
 }

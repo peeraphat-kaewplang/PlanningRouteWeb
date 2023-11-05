@@ -47,24 +47,46 @@
 }
 
 .first-col {
-    width: 170px;
-  /*  min-width: 170px;
-    max-width: 170px;*/
-    left: 0px;
+    left: 0rem;
 }
 
 .second-col {
-    width: 140px;
-    left: 225px;
+    left: 17.5rem;
 }
 
+.thired-col {
+    left: 28rem;
+}
+
+.last-col {
+    left: 31.55rem;
+}
+
+/*fix column header*/
+table thead tr th.sticky-col.first-col,
+table thead tr th.sticky-col.second-col,
+table thead tr th.sticky-col.thired-col,
+table thead tr th.sticky-col.last-col {
+    z-index: 20;
+}
+
+/*fix column body*/
+table tbody tr td.sticky-col.first-col,
+table tbody tr td.sticky-col.second-col,
+table tbody tr td.sticky-col.thired-col,
+table tbody tr td.sticky-col.last-col {
+    z-index: 1;
+}
+
+/*tfoot th.sticky-col.first-col {
+    z-index: 20;
+}*/
 /*div.container {
     width: 600px;
 } */
-
 table {
-  /*width: 100%;*/
-  border-collapse: collapse;
+    /*width: 100%;*/
+    border-collapse: collapse;
 }
 
 table tr th,
@@ -147,6 +169,10 @@ tfoot td.sum-before-mtd {
 
 tfoot td.sum-current-mtd {
     background: #75c596 !important;
+}
+
+tfoot td.sum-error-mtd {
+    background-color: #ffccc7 !important;
 }
 
 tfoot td.error, 
@@ -336,6 +362,10 @@ tfoot td.success {
     background-color: #ff9600 !important;
 }
 
+.rank-success {
+    background: #75c596 !important;
+}
+
 
 
 /*machine*/
@@ -359,7 +389,7 @@ tfoot td.success {
     background-color: #ff9191 !important;
 }
 .plan-out {
-    background-color: #ffffbb !important;
+    background-color: #fabd85 !important;
 }
 .plan-notdue {
     background-color: blanchedalmond !important;

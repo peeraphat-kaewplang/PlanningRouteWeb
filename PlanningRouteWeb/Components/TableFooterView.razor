@@ -3,10 +3,10 @@
     var grpData = LoadFooter();
 }
 <tr>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td rowspan="2" colspan="4" class="sticky-col first-col" style="z-index:20;"></td>
+    @* <td class="sticky-col second-col" style="z-index:20;"></td> 
+    <td class="sticky-col thired-col" style="z-index:20;"></td>
+    <td class="sticky-col last-col" style="z-index:20;"></td>*@
     <td></td>
     <td class="text-end fw-bold" style="font-size: 12px;">
         @beforeSale
@@ -17,16 +17,20 @@
     <td class="text-end fw-bold" style="font-size: 12px;">
         @currentMTD
     </td>
-    <td class="text-center fw-bold" style="font-size: 12px;">@Data.Count(c => c.MONDAY == true)</td>
-    <td class="text-center fw-bold" style="font-size: 12px;">@Data.Count(c => c.TUESDAY == true)</td>
-    <td class="text-center fw-bold" style="font-size: 12px;">@Data.Count(c => c.WEDNESDAY == true)</td>
-    <td class="text-center fw-bold" style="font-size: 12px;">@Data.Count(c => c.THURSDAY == true)</td>
-    <td class="text-center fw-bold" style="font-size: 12px;">@Data.Count(c => c.FRIDAY == true)</td>
-    <td class="text-center fw-bold" style="font-size: 12px;">@Data.Count(c => c.SATURDAY == true)</td>
-    <td class="text-center fw-bold" style="font-size: 12px;">@Data.Count(c => c.SUNDAY == true)</td>
-    <td ></td>
-    <td ></td>
-    <td ></td>
+    @if (!HideMaster)
+    {
+        <td class="text-center fw-bold" style="font-size: 12px;">@Data.Count(c => c.MONDAY == true)</td>
+        <td class="text-center fw-bold" style="font-size: 12px;">@Data.Count(c => c.TUESDAY == true)</td>
+        <td class="text-center fw-bold" style="font-size: 12px;">@Data.Count(c => c.WEDNESDAY == true)</td>
+        <td class="text-center fw-bold" style="font-size: 12px;">@Data.Count(c => c.THURSDAY == true)</td>
+        <td class="text-center fw-bold" style="font-size: 12px;">@Data.Count(c => c.FRIDAY == true)</td>
+        <td class="text-center fw-bold" style="font-size: 12px;">@Data.Count(c => c.SATURDAY == true)</td>
+        <td class="text-center fw-bold" style="font-size: 12px;">@Data.Count(c => c.SUNDAY == true)</td>
+        <td colspan="3" rowspan="2"></td>
+        @* <td colspan="2" rowspan="2"></td> *@
+        @* <td></td> *@
+    }
+    
     <td rowspan="2" class="text-end fw-bold" style="font-size: 12px;">
         @Data.Sum(x => x.SALE_LAST_WEEK)
     </td>
@@ -49,30 +53,35 @@
     }
 </tr>
 <tr>
-    @* class="sticky-col first-col" *@
+    
+    @* <td rowspan="2" colspan="3"  style="z-index:20;"></td>
+    <td class="sticky-col second-col" style="z-index:20;"></td>
+    <td class="sticky-col thired-col" style="z-index:20;"></td>
+    <td class="sticky-col last-col" style="z-index:20;"></td> *@
     <td></td>
     <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td class="text-end fw-bold sum-before-mtd" style="font-size: 12px;">
+    @{
+        var style1 = (beforeSale - beforeMTD) > 1 ? "sum-current-mtd" : "sum-error-mtd";
+        var style2 = (beforeMTD - currentMTD) > 1 ? "sum-current-mtd" : "sum-error-mtd";
+    }
+    <td class=@($"text-end fw-bold {style1}") style="font-size: 12px;">
         @(beforeSale - beforeMTD)
     </td>
-    <td class="text-end fw-bold sum-current-mtd" style="font-size: 12px;">
+    <td class=@($"text-end fw-bold {style2}") style="font-size: 12px;">
         @(beforeMTD - currentMTD)
     </td>
-    <td class="text-center fw-bold" style="font-size: 12px;">@(Target - Data.Count(c => c.MONDAY == true))</td>
-    <td class="text-center fw-bold" style="font-size: 12px;">@(Target - Data.Count(c => c.TUESDAY == true))</td>
-    <td class="text-center fw-bold" style="font-size: 12px;">@(Target - Data.Count(c => c.WEDNESDAY == true))</td>
-    <td class="text-center fw-bold" style="font-size: 12px;">@(Target - Data.Count(c => c.THURSDAY == true))</td>
-    <td class="text-center fw-bold" style="font-size: 12px;">@(Target - Data.Count(c => c.FRIDAY == true))</td>
-    <td class="text-center fw-bold" style="font-size: 12px;">@(Target - Data.Count(c => c.SATURDAY == true))</td>
-    <td class="text-center fw-bold" style="font-size: 12px;">@(Target - Data.Count(c => c.SUNDAY == true))</td>
-    <td></td>
-    <td></td>
-    <td></td>
-  
+    @if (!HideMaster)
+    {
+        <td class="text-center fw-bold" style="font-size: 12px;">@(Target - Data.Count(c => c.MONDAY == true))</td>
+        <td class="text-center fw-bold" style="font-size: 12px;">@(Target - Data.Count(c => c.TUESDAY == true))</td>
+        <td class="text-center fw-bold" style="font-size: 12px;">@(Target - Data.Count(c => c.WEDNESDAY == true))</td>
+        <td class="text-center fw-bold" style="font-size: 12px;">@(Target - Data.Count(c => c.THURSDAY == true))</td>
+        <td class="text-center fw-bold" style="font-size: 12px;">@(Target - Data.Count(c => c.FRIDAY == true))</td>
+        <td class="text-center fw-bold" style="font-size: 12px;">@(Target - Data.Count(c => c.SATURDAY == true))</td>
+        <td class="text-center fw-bold" style="font-size: 12px;">@(Target - Data.Count(c => c.SUNDAY == true))</td>
+        @* <td></td> *@
+        @* <td colspan="2"></td> *@
+    }
     @foreach (var (obj, index) in grpData.WithIndex())
     {
         var error = obj.COUNT_STATUS_MANUAL == obj.MAX_DROP ? "success" : "error";
@@ -105,7 +114,6 @@
         beforeSale = Data.Sum(x => !string.IsNullOrWhiteSpace(x.BEFORE_SALE) ? int.Parse(x.BEFORE_SALE) : 0);
         beforeMTD = Data.Sum(x => !string.IsNullOrWhiteSpace(x.BEFORE_MTD) ? int.Parse(x.BEFORE_MTD) : 0);
         currentMTD = Data.Sum(x => !string.IsNullOrWhiteSpace(x.CURRENT_MTD) ? int.Parse(x.CURRENT_MTD) : 0);
-        base.OnInitialized();
     }
 
     private List<ColumnFooter> LoadFooter()
@@ -113,18 +121,28 @@
         var planDetail = new List<PlanningDetail2>();
         foreach (var x in Data)
         {
-            planDetail.AddRange(x.GETPLAN_DETAIL);
+            if(x.GroupData.Count() > 1)
+            {
+                foreach (var i in x.GroupData.Skip(0))
+                {
+                    planDetail.AddRange(i.GETPLAN_DETAIL);
+                }
+            }
+            else
+            {
+                planDetail.AddRange(x.GETPLAN_DETAIL);
+            }
         }
 
         return planDetail.GroupBy(a => a.CALENDAR_DATE, (key, grp) => new ColumnFooter
-            {
-                FieldDate = key,
-                COUNT_STATUS_MANUAL = grp.Where(x => x.STATUS_MANUAL).Count(),
-                MAX_DROP = !string.IsNullOrWhiteSpace(grp.FirstOrDefault()!.MAX_DROP) ? int.Parse(grp.FirstOrDefault()!.MAX_DROP) : 0,
-                IsCurrent = GetDatetimeClass.currentDate.ToContainsDate(key) ,
-                SUM_SALETOTAL = grp.Sum(x => x.STATUS_MANUAL && !string.IsNullOrWhiteSpace(x.DOC_TYPE) || x.IsCurrent ? x.SALETOTAL : 0),
-                SUM_SALETOTAL_TOTAL = grp.Sum(x => x.SALETOTAL != 0 ? x.SALETOTAL : x.AMOUNT),
-            })
+        {
+            FieldDate = key,
+            COUNT_STATUS_MANUAL = grp.Where(x => x.STATUS_MANUAL).Count(),
+            MAX_DROP = !string.IsNullOrWhiteSpace(grp.FirstOrDefault()!.MAX_DROP) ? int.Parse(grp.FirstOrDefault()!.MAX_DROP) : 0,
+            IsCurrent = GetDatetimeClass.currentDate.ToContainsDate(key) ,
+            SUM_SALETOTAL = grp.Sum(x => x.STATUS_MANUAL && !string.IsNullOrWhiteSpace(x.DOC_TYPE) || x.IsCurrent ? x.SALETOTAL : 0),
+            SUM_SALETOTAL_TOTAL = grp.Sum(x => x.SALETOTAL != 0 ? x.SALETOTAL : x.AMOUNT),
+        })
         .ToList();
     }
 

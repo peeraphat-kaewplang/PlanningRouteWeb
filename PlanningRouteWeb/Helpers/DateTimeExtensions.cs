@@ -1,6 +1,7 @@
 ﻿using PlanningRouteWeb.Models;
 using PlanningRouteWeb.Services;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace PlanningRouteWeb.Helpers
 {
@@ -35,7 +36,8 @@ namespace PlanningRouteWeb.Helpers
             => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
         public static bool CheckDateInCurrentWeek(this DateTime date , int addDay)
         {
-            var currentDate = DateTime.Parse(GetDatetimeClass.currentDate.ToString("MMM d, yyyy", CultureInfo.GetCultureInfo("en-US"))).AddDays(addDay);
+
+            var currentDate = GetDatetimeClass.currentDate.AddDays(addDay);
             //var currentDate = GetDatetimeClass.currentDate.AddDays(addDay);
             var week = date.GetWeekNumberOfMonth();
             var currentWeek = currentDate.GetWeekNumberOfMonth();

@@ -31,6 +31,6 @@ namespace PlanningRouteWeb.Helpers
             new MonthObject {Number = "12" , Name = "ธันวาคม",ShortName = "ธ.ค."},
         };
 
-        public static DateTime currentDate = DateTime.Today;
+        public static DateTime currentDate = DateTime.Now;
     }
 }

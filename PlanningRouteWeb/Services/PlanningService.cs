@@ -92,8 +92,6 @@ namespace PlanningRouteWeb.Services
                 var plannings = JsonSerializer.Deserialize<PanningMasterResponse>(content, _options);
                 var dataPlan = plannings!.Data.Plan.Where(p => p.GETPLAN_DETAIL.Count() > 30).ToList();
 
-                var aaa = dataPlan.Where(x => x.MACHINE_CODE == "28936").ToList();
-
                 if (dataPlan.Count() != 0)
                 {
                     columns = new Dictionary<string, ColumnProperty>();
@@ -114,11 +112,12 @@ namespace PlanningRouteWeb.Services
 
                     var mapModel = plannings?.Data.Plan
                         //.Where(x => x.LOCATION_CODE == "0163915")
-                        .GroupBy(x =>  x.LOCATION_CODE , 
-                                (key, grp) => 
-                                ConvertModel.PlanningMasterDataModeltoModel(grp.OrderBy(x => int.Parse(x.MSORT)).FirstOrDefault()! , _stateContainer.BeforeConfig , grp))
+                        .GroupBy(x => x.LOCATION_CODE,
+                                (key, grp) =>
+                                ConvertModel.PlanningMasterDataModeltoModel(grp.OrderBy(x => int.Parse(x.MSORT)).FirstOrDefault()!, _stateContainer.BeforeConfig, grp))
                         .OrderBy(x => x.LOCATION_CODE)
                         .ThenBy(x => int.Parse(x.MSORT))
+                        //.Skip(0).Take(4)
                         .ToList();
 
                     var data = mapModel!.Select(x =>
