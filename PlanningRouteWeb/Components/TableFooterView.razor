@@ -4,9 +4,6 @@
 }
 <tr>
     <td rowspan="2" colspan="4" class="sticky-col first-col" style="z-index:20;"></td>
-    @* <td class="sticky-col second-col" style="z-index:20;"></td> 
-    <td class="sticky-col thired-col" style="z-index:20;"></td>
-    <td class="sticky-col last-col" style="z-index:20;"></td>*@
     <td></td>
     <td class="text-end fw-bold" style="font-size: 12px;">
         @beforeSale
@@ -27,8 +24,6 @@
         <td class="text-center fw-bold" style="font-size: 12px;">@Data.Count(c => c.SATURDAY == true)</td>
         <td class="text-center fw-bold" style="font-size: 12px;">@Data.Count(c => c.SUNDAY == true)</td>
         <td colspan="3" rowspan="2"></td>
-        @* <td colspan="2" rowspan="2"></td> *@
-        @* <td></td> *@
     }
     
     <td rowspan="2" class="text-end fw-bold" style="font-size: 12px;">
@@ -53,11 +48,6 @@
     }
 </tr>
 <tr>
-    
-    @* <td rowspan="2" colspan="3"  style="z-index:20;"></td>
-    <td class="sticky-col second-col" style="z-index:20;"></td>
-    <td class="sticky-col thired-col" style="z-index:20;"></td>
-    <td class="sticky-col last-col" style="z-index:20;"></td> *@
     <td></td>
     <td></td>
     @{
@@ -79,9 +69,8 @@
         <td class="text-center fw-bold" style="font-size: 12px;">@(Target - Data.Count(c => c.FRIDAY == true))</td>
         <td class="text-center fw-bold" style="font-size: 12px;">@(Target - Data.Count(c => c.SATURDAY == true))</td>
         <td class="text-center fw-bold" style="font-size: 12px;">@(Target - Data.Count(c => c.SUNDAY == true))</td>
-        @* <td></td> *@
-        @* <td colspan="2"></td> *@
     }
+
     @foreach (var (obj, index) in grpData.WithIndex())
     {
         var error = obj.COUNT_STATUS_MANUAL == obj.MAX_DROP ? "success" : "error";

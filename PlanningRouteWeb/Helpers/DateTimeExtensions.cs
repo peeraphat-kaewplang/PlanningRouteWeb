@@ -38,7 +38,6 @@ namespace PlanningRouteWeb.Helpers
         {
 
             var currentDate = GetDatetimeClass.currentDate.AddDays(addDay);
-            //var currentDate = GetDatetimeClass.currentDate.AddDays(addDay);
             var week = date.GetWeekNumberOfMonth();
             var currentWeek = currentDate.GetWeekNumberOfMonth();
 

@@ -10,7 +10,7 @@
             Style="width: 100%; max-width: 150px;position: sticky;left: 470px;" @bind-Value=@selectMonth Data=@optionsMonth />
         <RadzenButton Text="ค้นหา" Style="width: 100px; position: sticky;left: 620px;text-transform: none;"
             Click="@(args => OnClickSearch())" />
-        <RadzenButton Text="ซ่อนค่าคงที่" ButtonStyle="ButtonStyle.Info"
+        <RadzenButton Text=@(!hideMaster ? "ซ่อนค่าคงที่" : "แสดงค่าคงที่") ButtonStyle="ButtonStyle.Info"
             Style="width: 100%; max-width: 150px;position: sticky;left: 720px;text-transform: none;" Click="@(args => OnClickChangeHideMaster())" />
         <RadzenButton Text="ตั้งค่าเริ่มต้น" ButtonStyle="ButtonStyle.Info"
             Style="position: sticky;left: 870px;text-transform: none;" Click=@ShowInlineDialog />
@@ -20,9 +20,10 @@
 {
     @if (data.Count() != 0)
     {
-       @*  <div class="view">
+        var styleWidth = !hideMaster ? "widht-show-master" : "widht-hide-master";
+        @*  <div class="view">
    <div class="wrapper"> *@
-        <table class="width-screen table table-hover table-bordered table-sm" style="margin: 0px !important;">
+        <table class=@($"width-screen {styleWidth} table table-hover table-bordered table-sm") style="margin: 0px !important;">
             <thead>
                 <TableHeaderView 
                     HideMaster="hideMaster" 
@@ -278,13 +279,13 @@ else
                 }
             }
         }
-        // var recordData = dataSave.Select(x => ConvertModel.PlanningMasterData2ModeltoSave(x)).ToList();
-        // var response = await PlanningService.PlanningSavePlan(recordData);
-        // if(response.ErrorMessage == "success")
-        // {
-        //     await LoadMaster();
-        //     actionButton = new();
-        // }
+        var recordData = dataSave.Select(x => ConvertModel.PlanningMasterData2ModeltoSave(x)).ToList();
+        var response = await PlanningService.PlanningSavePlan(recordData);
+        if(response.ErrorMessage == "success")
+        {
+            await LoadMaster();
+            actionButton = new();
+        }
         loading = false;
         ds.Close(false);
         StateHasChanged();

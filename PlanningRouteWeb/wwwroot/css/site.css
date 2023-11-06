@@ -126,7 +126,15 @@ table.width-screen thead th {
 }
 
 .width-screen {
+   
+}
+
+.widht-show-master {
     width: 531.25rem !important;
+}
+
+.widht-hide-master {
+    width: 494rem !important;
 }
 
 .command-wrapper {
