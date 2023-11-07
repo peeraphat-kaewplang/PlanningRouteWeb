@@ -117,7 +117,7 @@ namespace PlanningRouteWeb.Services
                                 ConvertModel.PlanningMasterDataModeltoModel(grp.OrderBy(x => int.Parse(x.MSORT)).FirstOrDefault()!, _stateContainer.BeforeConfig, grp))
                         .OrderBy(x => x.LOCATION_CODE)
                         .ThenBy(x => int.Parse(x.MSORT))
-                        //.Skip(0).Take(4)
+                        //.Skip(0).Take(2)
                         .ToList();
 
                     var data = mapModel!.Select(x =>
@@ -155,6 +155,9 @@ namespace PlanningRouteWeb.Services
                 Route = body[0].ROUTE_CODE,
                 Data = body
             };
+
+            //var jsonstr = Newtonsoft.Json.JsonConvert.SerializeObject(contentBody);
+
             var requestMessage = new HttpRequestMessage()
             {
                 Method = new HttpMethod("POST"),

@@ -1,7 +1,11 @@
 ﻿@page "/"
 @using Microsoft.AspNetCore.WebUtilities;
 
-<div class="width-screen command-wrapper">
+@{
+    var styleWidth = !hideMaster ? "widht-show-master" : "widht-hide-master";
+}
+
+<div class=@($"width-screen {styleWidth} command-wrapper")>
         <RadzenDropDown TValue="string" Style="width: 100%; max-width: 200px; position: sticky;left: 0px;" TextProperty="ORGANIZATION_NAME"
             ValueProperty="ORGANIZATION_CODE" @bind-Value=@selectOrg Data=@optionsOrg Change="@(args => ChangeOrg(args))" />
         <RadzenDropDown TValue="string" TextProperty="ROUTE_NAME" ValueProperty="ROUTE_CODE"
@@ -14,15 +18,13 @@
             Style="width: 100%; max-width: 150px;position: sticky;left: 720px;text-transform: none;" Click="@(args => OnClickChangeHideMaster())" />
         <RadzenButton Text="ตั้งค่าเริ่มต้น" ButtonStyle="ButtonStyle.Info"
             Style="position: sticky;left: 870px;text-transform: none;" Click=@ShowInlineDialog />
+            
 </div>
 
-@if (!loading)
-{
     @if (data.Count() != 0)
     {
-        var styleWidth = !hideMaster ? "widht-show-master" : "widht-hide-master";
         @*  <div class="view">
-   <div class="wrapper"> *@
+        <div class="wrapper"> *@
         <table class=@($"width-screen {styleWidth} table table-hover table-bordered table-sm") style="margin: 0px !important;">
             <thead>
                 <TableHeaderView 
@@ -40,10 +42,11 @@
                     HideMaster="hideMaster"
                     SelectRoute="selectRoute"
                     SelectOrg="selectOrg"
+                    ActionButton="actionButton"
                     OnChangCallback="@((args) => OnChangDetail(args.Item1 , args.Item2 ,args.Item3))" 
                     OnChangeRowCallback="@((args) => OnChangeRow(args.Item1 , args.Item2 ,args.Item3))"
                     OnChangeMasterCallback="@OnChangeMater"
-                    OnChageRankCallback="@((args) => OnChageRank(args.Item1 , args.Item2 , args.Item3 ))"
+                    OnChageRankCallback="@((args) => OnChageRank( args.Item2))"
                     ShowdialogChangeProductCallback="@ShowdialogChangeProduct"/>
             </tbody>
             <tfoot>
@@ -62,14 +65,10 @@
     {
         <p>Data is empty!</P>
     }
-}
-else 
-{
-    <Loading />
-}
 
 @inject IPlanningService PlanningService
 @inject DialogService DialogService
+@inject IDialogService DialogServiceCustom
 @inject TooltipService TooltipService
 @inject NavigationManager NavManager
 
@@ -88,11 +87,16 @@ else
     public IEnumerable<MonthObject> optionsMonth = new List<MonthObject>();
     public IEnumerable<PlanningRouteWeb.Models.RouteData> optionsRoute = new List<PlanningRouteWeb.Models.RouteData>();
     public ChangeActionButton actionButton = new();
-    ModalChangeProduct modal { get; set; } = new();
+    public List<ActionButton> actionButtons = new List<ActionButton>
+    {
+        new ActionButton { Week = GetDatetimeClass.currentDate.GetWeekNumberOfMonth()} ,
+        new ActionButton { Week = GetDatetimeClass.currentDate.GetWeekNumberOfMonth() + 1} ,
+    };
 
     protected override async Task OnInitializedAsync() 
     {
         loading = true;
+
         var uri = NavManager.ToAbsoluteUri(NavManager.Uri);
         var queryStrings = QueryHelpers.ParseQuery(uri.Query);
         if(queryStrings.TryGetValue("ORG", out var name))
@@ -126,6 +130,7 @@ else
 
     public async Task LoadMaster()
     {
+
         var req = new PanningMasterRequest 
         { 
             YEARMONTH = $"{GetDatetimeClass.currentDate.ToStringDate("yyyy")}{selectMonth.Number}",
@@ -143,6 +148,7 @@ else
         }; 
         CalDropMonth();
         FindRankEmpty(record);
+
         StateHasChanged();
     }
 
@@ -171,6 +177,20 @@ else
 
                 if(detail.Count() != 0)
                 {
+                    // var weeks = detail.GroupBy(x => new { x.RANK, x.CALENDAR_DATE }, (key, grp) => new
+                    // {
+                    //     Week = DateTime.ParseExact(key.CALENDAR_DATE, "dd/MM/yyyy", null).GetWeekNumberOfMonth(),
+                    // });
+
+                    // if(weeks.Count() != 0)
+                    // {
+                    //     foreach(var w in weeks)
+                    //     {
+                    //         var action = actionButtons.Find(x => x.Week == w.Week);
+                    //         action!.Action = "recreate";
+                    //     }
+                    // }
+
                     actionButton.Action = "recreate";
                 }
                 else
@@ -213,8 +233,10 @@ else
     public async void OnClickSearch() 
     {
         actionButton = new();
-        await LoadMaster();
+        actionButtons = new();
+        await ShowBusyDialog();
         StateHasChanged();
+
     }
 
     private void OnChangeMater(PlanningMasterData2 item)
@@ -242,44 +264,45 @@ else
         var dataSave = new List<PlanningMasterData2>();
         foreach( var (item,index) in data.WithIndex())
         {
-            dataSave.Add(item);
-            if(item.GroupData.Count() > 1)
-            {
-                var save = ConvertModel.PlanningMasterData2ViewModel(item);
-                item.GETPLAN_DETAIL = item.GroupData[0].GETPLAN_DETAIL;
-                foreach(var (row,idx) in item.GroupData.Skip(1).WithIndex()){
-                    var record = ConvertModel.Group2ModelToPlanningMasterData2(row);
-                    record.YEARMONTH = save.YEARMONTH;
-                    record.ORGANIZATION_CODE = save.ORGANIZATION_CODE;
-                    record.ROUTE_CODE = save.ROUTE_CODE;
-                    record.ROUTE_NAME = save.ROUTE_NAME;
-                    record.CUSTOMER_CODE = save.CUSTOMER_CODE;
-                    record.CUSTOMER_NAME = save.CUSTOMER_NAME;
-                    record.LOCATION_CODE = save.LOCATION_CODE;
-                    record.LOCATION_NAME = save.LOCATION_NAME;
-                    record.MACHINE_CODE = save.MACHINE_CODE;
-                    record.MACHINE_MODEL = save.MACHINE_MODEL;
-                    record.CHANGE_ACTION = save.CHANGE_ACTION;
-                    record.TOTAL_FEE = save.TOTAL_FEE;
-                    record.BEFORE_SALE = save.BEFORE_SALE;
-                    record.BEFORE_MTD = save.BEFORE_MTD;
-                    record.CURRENT_MTD = save.CURRENT_MTD;
-                    record.DROPWEEK = save.DROPWEEK;
-                    record.DROPDAY = save.DROPDAY;
-                    record.MONDAY = save.MONDAY;
-                    record.TUESDAY = save.TUESDAY;
-                    record.WEDNESDAY = save.WEDNESDAY;
-                    record.THURSDAY = save.THURSDAY;
-                    record.FRIDAY = save.FRIDAY;
-                    record.SATURDAY = save.SATURDAY;
-                    record.SUNDAY = save.SUNDAY;
-                    record.IS_DUPLICATE = save.IS_DUPLICATE;
-                    record.SALE_LAST_WEEK = save.SALE_LAST_WEEK;
-                    dataSave.Add(record);
-                }
+            foreach(var (row,idx) in item.GroupData.WithIndex()){
+
+                var save = ConvertModel.PlanningMasterData2ViewModel(item.GroupData[idx]);
+                var record = ConvertModel.Group2ModelToPlanningMasterData2(row);
+
+                record.REMARK = item.GroupData[idx].REMARK;
+                record.GETPLAN_DETAIL = item.GroupData[idx].GETPLAN_DETAIL;
+                record.YEARMONTH = save.YEARMONTH;
+                record.ORGANIZATION_CODE = save.ORGANIZATION_CODE;
+                record.ROUTE_CODE = save.ROUTE_CODE;
+                record.ROUTE_NAME = save.ROUTE_NAME;
+                record.CUSTOMER_CODE = save.CUSTOMER_CODE;
+                record.CUSTOMER_NAME = save.CUSTOMER_NAME;
+                record.LOCATION_CODE = save.LOCATION_CODE;
+                record.LOCATION_NAME = save.LOCATION_NAME;
+                record.MACHINE_CODE = save.MACHINE_CODE;
+                record.MACHINE_MODEL = save.MACHINE_MODEL;
+                record.CHANGE_ACTION = save.CHANGE_ACTION;
+                record.TOTAL_FEE = save.TOTAL_FEE;
+                record.BEFORE_SALE = save.BEFORE_SALE;
+                record.BEFORE_MTD = save.BEFORE_MTD;
+                record.CURRENT_MTD = save.CURRENT_MTD;
+                record.DROPWEEK = save.DROPWEEK;
+                record.DROPDAY = save.DROPDAY;
+                record.MONDAY = item.MONDAY;
+                record.TUESDAY = item.TUESDAY;
+                record.WEDNESDAY = item.WEDNESDAY;
+                record.THURSDAY = item.THURSDAY;
+                record.FRIDAY = item.FRIDAY;
+                record.SATURDAY = item.SATURDAY;
+                record.SUNDAY = item.SUNDAY;
+                record.IS_DUPLICATE = save.IS_DUPLICATE;
+                record.SALE_LAST_WEEK = save.SALE_LAST_WEEK;
+                dataSave.Add(record);
             }
+
         }
         var recordData = dataSave.Select(x => ConvertModel.PlanningMasterData2ModeltoSave(x)).ToList();
+        
         var response = await PlanningService.PlanningSavePlan(recordData);
         if(response.ErrorMessage == "success")
         {
@@ -290,7 +313,64 @@ else
         ds.Close(false);
         StateHasChanged();
     }
-
+    //   private async Task OnClickSavePlan(DialogService ds)
+    // {
+    //     loading = true;
+    //     var dataSave = new List<PlanningMasterData2>();
+    //     foreach( var (item,index) in data.WithIndex())
+    //     {
+    //         item.REMARK = item.GroupData[0].REMARK;
+    //         item.GETPLAN_DETAIL = item.GroupData[0].GETPLAN_DETAIL;
+    //         dataSave.Add(item);
+    //         if(item.GroupData.Count() > 1)
+    //         {
+                
+               
+    //             foreach(var (row,idx) in item.GroupData.Skip(1).WithIndex()){
+    //                 var save = ConvertModel.PlanningMasterData2ViewModel(item.GroupData[idx + 1]);
+    //                 var record = ConvertModel.Group2ModelToPlanningMasterData2(row);
+    //                 record.YEARMONTH = save.YEARMONTH;
+    //                 record.ORGANIZATION_CODE = save.ORGANIZATION_CODE;
+    //                 record.ROUTE_CODE = save.ROUTE_CODE;
+    //                 record.ROUTE_NAME = save.ROUTE_NAME;
+    //                 record.CUSTOMER_CODE = save.CUSTOMER_CODE;
+    //                 record.CUSTOMER_NAME = save.CUSTOMER_NAME;
+    //                 record.LOCATION_CODE = save.LOCATION_CODE;
+    //                 record.LOCATION_NAME = save.LOCATION_NAME;
+    //                 record.MACHINE_CODE = save.MACHINE_CODE;
+    //                 record.MACHINE_MODEL = save.MACHINE_MODEL;
+    //                 record.CHANGE_ACTION = save.CHANGE_ACTION;
+    //                 record.TOTAL_FEE = save.TOTAL_FEE;
+    //                 record.BEFORE_SALE = save.BEFORE_SALE;
+    //                 record.BEFORE_MTD = save.BEFORE_MTD;
+    //                 record.CURRENT_MTD = save.CURRENT_MTD;
+    //                 record.DROPWEEK = save.DROPWEEK;
+    //                 record.REMARK = save.REMARK;
+    //                 record.DROPDAY = save.DROPDAY;
+    //                 record.MONDAY = save.MONDAY;
+    //                 record.TUESDAY = save.TUESDAY;
+    //                 record.WEDNESDAY = save.WEDNESDAY;
+    //                 record.THURSDAY = save.THURSDAY;
+    //                 record.FRIDAY = save.FRIDAY;
+    //                 record.SATURDAY = save.SATURDAY;
+    //                 record.SUNDAY = save.SUNDAY;
+    //                 record.IS_DUPLICATE = save.IS_DUPLICATE;
+    //                 record.SALE_LAST_WEEK = save.SALE_LAST_WEEK;
+    //                 dataSave.Add(record);
+    //             }
+    //         }
+    //     }
+    //     var recordData = dataSave.Select(x => ConvertModel.PlanningMasterData2ModeltoSave(x)).ToList();
+    //     var response = await PlanningService.PlanningSavePlan(recordData);
+    //     if(response.ErrorMessage == "success")
+    //     {
+    //         await LoadMaster();
+    //         actionButton = new();
+    //     }
+    //     loading = false;
+    //     ds.Close(false);
+    //     StateHasChanged();
+    // }
     public void OnChangDetail(int index ,PlanningDetail2 current , List<PlanningDetail2> records)
     {
         var action = actionButton.Date.Find(x => x.Date == current.CALENDAR_DATE);
@@ -452,6 +532,7 @@ else
             EndDate = end
         };
 
+        var jsonstr = Newtonsoft.Json.JsonConvert.SerializeObject (body);
         var response = await PlanningService.PlanningCalPlan(body);
 
         if(response.ErrorMessage == "success")
@@ -485,85 +566,182 @@ else
         {
             data[index].GroupData.Remove(grp);
         }
+
+        var date = data[0].GroupData[0].GETPLAN_DETAIL
+        .Where(x => x.IsCurrent)
+        .Select(x => x.CALENDAR_DATE)
+        .ToList();
+
+        foreach(var x in date)
+        {
+            OnChageRank(x);
+        }
     }
 
-    private void OnChageRank(int? rank , string date , string location )
+    class DeatilRank 
     {
-        var detail = new List<PlanningDetail2>();
+        public string MACHINE_CODE { get; set; } = string.Empty;
+        public int? RANK { get; set; } 
+        public string CALENDAR_DATE { get; set; } = string.Empty;
+    } 
+
+    private void OnChageRank(string date)
+    {
+        var detail = new List<DeatilRank>();
         if(data.Count() != 0 )
         {
-            if(rank != null)
+            foreach(var i in data)
             {
-                foreach(var i in data)
+                foreach(var j in i.GroupData )
                 {
-                    if(i.GroupData.Count() > 1)
+                    var d  = j.GETPLAN_DETAIL.Where(x => x.STATUS_MANUAL && x.CALENDAR_DATE == date)
+                    .Select(x => new DeatilRank
                     {
-                        var d  = i.GroupData.First().GETPLAN_DETAIL.Where(x => x.STATUS_MANUAL && x.CALENDAR_DATE == date);
-                        detail.AddRange(d);
-                        foreach(var g in i.GroupData.Skip(1))
-                        {
-                            var gg = g.GETPLAN_DETAIL.Where(x => x.STATUS_MANUAL && x.CALENDAR_DATE == date).ToList();
-                            detail.AddRange(gg);
-                        }
-                    }
-                    else
-                    {
-                        var d  = i.GETPLAN_DETAIL.Where(x => x.STATUS_MANUAL && x.CALENDAR_DATE == date).ToList();
-                        detail.AddRange(d);
-                    }
-                }
-
-                if(detail.Count() != 0)
-                {
-                    var rankEmpty = detail.Where(d => d.RANK == null);
-                    if(rankEmpty.Count() == 0)
-                    {
-                        var action = actionButton.Date.Find(x => x.Date == date  );
-                        if(action != null)
-                        {
-                            actionButton.Date.Remove(action!);
-                        } 
-
-                        var dupRank = detail.GroupBy(x => new { x.RANK, x.CALENDAR_DATE }, (key, grp) => new
-                        {
-                            Date = key.CALENDAR_DATE,
-                            Rank = key.RANK,
-                            Sum = grp.Count()
-                        })
-                        .Where(x => x.Date == date)
-                        .ToList();
-
-                        var currentDupRank = dupRank.Where(x => x.Date == date);
-                        if(dupRank!.Count() > 1)
-                        {
-                            var sumRank = currentDupRank.Where(x => x.Sum > 1);
-                            if(sumRank.Count() == 0)
-                            {
-                                actionButton.Date.Remove(action!);
-                            }else
-                            {
-                                actionButton.Date.Add(new DateError { Date = date, Error = true , Rank = rank });
-                            }
-                        }
-                    }
-                    else
-                    {
-                        var action = actionButton.Date.Where(x => x.Date == date  );
-                        if(action.Count() == 0)
-                        {
-                             actionButton.Date.Add(new DateError { Date = date, Error = true , Rank = rank });
-                        } 
-                    }
+                        MACHINE_CODE = i.MACHINE_CODE , RANK = x.RANK , CALENDAR_DATE = x.CALENDAR_DATE
+                    })
+                    .ToList();
+                    detail.AddRange(d);
                 }
             }
-            else
+
+            if (detail.Count() != 0)
             {
-                actionButton.Date.Add(new DateError { Date = date, Error = true , Rank = rank });
+                var action = actionButton.Date.Find(x => x.Date == date)!;
+                var rankEmpty = detail.Where(d => d.RANK == null).ToList();
+
+                var rankDup = detail.GroupBy(x => new { x.RANK, x.CALENDAR_DATE }, (key, grp) => new
+                {
+                    Date = key.CALENDAR_DATE,
+                    Rank = key.RANK,
+                    Sum = grp.Count()
+                }).Where(x => x.Sum > 1).ToList();
+
+                if  (rankEmpty.Count() > 0 || rankDup.Count() > 0)
+                {
+                    if (action == null)
+                    {
+                        actionButton.Date.Add(new DateError { Date = date, Error = true});
+                    }
+                    else
+                    {
+                        action.Date = date;
+                        action.Error = (rankEmpty.Count() > 0 || rankDup.Count() > 0);
+                    }
+                } 
+                else
+                {
+                    if (action != null)
+                    {
+                        actionButton.Date.Remove(action);
+                    }
+                } 
+
+                if (action == null)
+                {
+                    if(rankEmpty.Count() > 0 || rankDup.Count() > 0)
+                    {
+                        var chkAction = actionButton.Date.Find(x => x.Date == date);
+                        if(chkAction == null)
+                        {
+                             actionButton.Date.Add(new DateError { Date = date, Error = true });
+                        }
+                    }
+                }
+                else
+                {
+                    action.Date = date;
+                    action.Error = (rankEmpty.Count() > 0 || rankDup.Count() > 0);
+                }
+
             }
             actionButton.Action = "save";
         }
     }
      
+    // private void OnChageRank(int? rank , string date , string location )
+    // {
+    //     var detail = new List<PlanningDetail2>();
+    //     if(data.Count() != 0 )
+    //     {
+    //         if(rank != null)
+    //         {
+    //             foreach(var i in data)
+    //             {
+    //                 if(i.GroupData.Count() > 1)
+    //                 {
+    //                     var d  = i.GroupData.First().GETPLAN_DETAIL.Where(x => x.STATUS_MANUAL && x.CALENDAR_DATE == date);
+    //                     detail.AddRange(d);
+    //                     foreach(var g in i.GroupData.Skip(1))
+    //                     {
+    //                         var gg = g.GETPLAN_DETAIL.Where(x => x.STATUS_MANUAL && x.CALENDAR_DATE == date).ToList();
+    //                         detail.AddRange(gg);
+    //                     }
+    //                 }
+    //                 else
+    //                 {
+    //                     var d  = i.GETPLAN_DETAIL.Where(x => x.STATUS_MANUAL && x.CALENDAR_DATE == date).ToList();
+    //                     detail.AddRange(d);
+    //                 }
+    //             }
+
+    //             if(detail.Count() != 0)
+    //             {
+    //                 var rankEmpty = detail.Where(d => d.RANK == null);
+    //                 if(rankEmpty.Count() == 0)
+    //                 {
+    //                     var action = actionButton.Date.Find(x => x.Date == date  );
+    //                     if(action != null)
+    //                     {
+    //                         actionButton.Date.Remove(action!);
+    //                     } 
+
+    //                     var dupRank = detail.GroupBy(x => new { x.RANK, x.CALENDAR_DATE }, (key, grp) => new
+    //                     {
+    //                         Date = key.CALENDAR_DATE,
+    //                         Rank = key.RANK,
+    //                         Sum = grp.Count()
+    //                     })
+    //                     .Where(x => x.Date == date)
+    //                     .ToList();
+
+    //                     var currentDupRank = dupRank.Where(x => x.Date == date);
+    //                     if(dupRank!.Count() > 1)
+    //                     {
+    //                         var sumRank = currentDupRank.Where(x => x.Sum > 1);
+    //                         if(sumRank.Count() == 0)
+    //                         {
+    //                             actionButton.Date.Remove(action!);
+    //                         }else
+    //                         {
+    //                             actionButton.Date.Add(new DateError { Date = date, Error = true , Rank = rank });
+    //                         }
+    //                     }
+    //                 }
+    //                 else
+    //                 {
+    //                     var action = actionButton.Date.Find(x => x.Date == date);
+    //                     if(action == null)
+    //                     {
+    //                          actionButton.Date.Add(new DateError { Date = date, Error = true , Rank = rank });
+    //                     } 
+    //                     else
+    //                     {
+    //                         var rankEmptyByDay = detail.Where(d => d.CALENDAR_DATE == date && d.RANK == null).ToList();
+    //                         if(rankEmptyByDay.Count() == 1)
+    //                         {
+    //                             actionButton.Date.Remove(action!);
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //         else
+    //         {
+    //             actionButton.Date.Add(new DateError { Date = date, Error = true , Rank = rank });
+    //         }
+    //         actionButton.Action = "save";
+    //     }
+    // }
     private void SortRank()
     {
         // var aa = data.OrderByDescending(x => x.GETPLAN_DETAIL).ToList;
@@ -571,4 +749,12 @@ else
 
     private void OnClickChangeHideMaster() => hideMaster = !hideMaster;
 
+    public async Task ShowBusyDialog()
+    {
+        var Task = InvokeAsync(async () => {
+            await LoadMaster();
+            DialogServiceCustom.DialogClose();
+        });
+        await DialogServiceCustom.BusyDialog("กำลังโหลดข้อมูล...");
+    }
 }

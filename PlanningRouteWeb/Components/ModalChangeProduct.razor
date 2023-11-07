@@ -30,7 +30,7 @@
 
     @if (header.TYPE_METER == "2")
     {
-        <table class="table table-hover table-sm">
+        <table class="table table-hover table-sm table-bordered">
             <thead>
                 <tr>
                     <th style="font-size: 12px;width:100px;">ช่องสินค้า</th>
@@ -54,6 +54,9 @@
                         <tr class=@(i.IsAddSlot && !i.STATUSCHANGE ? "table-success" : i.IsSubRow ? "table-secondary text-close" : "")>
                             <td class="text-end" style="font-size: 12px;">
                                 @(i.SLOT_NO == 0 ? "" : i.SLOT_NO)
+
+                                @i.IsSubRow
+                                @i.IsAddSlot
                             </td>
 
                             @if (SelectRowEdit == idx)
@@ -78,7 +81,6 @@
                                     </div>
                                 </td>
                                 <td class="text-end" style="font-size: 12px;width:100px;">
-
                                     <RadzenNumeric class="text-size"
                                                    ShowUpDown="false"
                                                    TextAlign="TextAlign.End"
@@ -255,10 +257,10 @@
 
 <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
     <RadzenStack Orientation="Orientation.Horizontal">
-        <RadzenButton Click="()=> SaveChangeProduct(0)" Text="Save" Style="width: 80px;text-transform: none;" />
-        <RadzenButton Shade="Shade.Lighter" ButtonStyle="ButtonStyle.Light" Click="()=> SaveChangeProduct(1)" Text="Cancel" Style="width: 80px;text-transform: none;" />
+        <RadzenButton Click="()=> SaveChangeProduct(0)" Text="บันทึก" Style="width: 80px;text-transform: none;" />
+        <RadzenButton Shade="Shade.Lighter" ButtonStyle="ButtonStyle.Light" Click="()=> SaveChangeProduct(1)" Text="ยกเลิกการเปลี่ยนสินค้า" Style="width: 200px;text-transform: none;" />
     </RadzenStack>
-    <RadzenButton Text="Close" Click="(() => Dialog!.Close(false))" ButtonStyle="ButtonStyle.Light" Style="text-transform: none;" />
+    <RadzenButton Text="ปิด" Click="(() => Dialog!.Close(false))" ButtonStyle="ButtonStyle.Light" Style="text-transform: none;" />
 </RadzenStack>
 
 @inject IChangeProductService ChangeProductService
@@ -324,7 +326,6 @@
 
     private void AddSlot(int index, ChangeProductDetail2 item)
     {
-
         var row = new ChangeProductDetail2
         {
             MACHINE_CODE = item.MACHINE_CODE,
@@ -417,6 +418,5 @@
                             Products = g.ToList()
                         }).ToList();
         return data;
-
     }
 }

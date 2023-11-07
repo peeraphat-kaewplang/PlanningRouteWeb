@@ -13,6 +13,7 @@ builder.Services.AddScoped(
 
 builder.Services.AddScoped<IPlanningService , PlanningService>();
 builder.Services.AddScoped<IChangeProductService, ChangeProductService>();
+builder.Services.AddScoped<IDialogService, DialogServices>();
 builder.Services.AddScoped<StateContainer>();
 
 var app = builder.Build();

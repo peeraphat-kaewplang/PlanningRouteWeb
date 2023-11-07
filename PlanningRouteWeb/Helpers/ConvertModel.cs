@@ -287,7 +287,7 @@ namespace PlanningRouteWeb.Helpers
                 AMOUNT = model.AMOUNT,
             };
         }
-        public static PlanningMasterData2 PlanningMasterData2ViewModel(PlanningMasterData2 model)
+        public static PlanningMasterData2 PlanningMasterData2ViewModel(Group2 model)
         {
             return new PlanningMasterData2
             {
