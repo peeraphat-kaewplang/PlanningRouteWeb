@@ -29,7 +29,7 @@
 
     public List<RawproductDetail2> options = new();
 
-    RadzenDropDown<string> radzenDropDown;
+    RadzenDropDown<string>? radzenDropDown;
 
    
 
@@ -42,7 +42,10 @@
     private async Task<List<RawproductDetail2>> LoadProductDetail()
     {
         var body = new RawproductDetail2Request { 
-            RawProductCode = RawProductCode, ORG = ItemModal.ORG , Location = ItemModal.Location ,Machine = ItemModal.Machine };
+            RawProductCode = RawProductCode, 
+            ORG = ItemModal.ORG ,
+            Location = ItemModal.Location ,
+            Machine = ItemModal.Machine };
         var res = await ChangeProductService.GetRawproductDetail2(body);
 
         return res.Data;
