@@ -343,6 +343,9 @@ tfoot td.success {
 }
 
 /*text*/
+.validat {
+    border-color: red !important;
+}
 .text-amount {
     color: #c0bfbe;
 }
@@ -350,7 +353,7 @@ tfoot td.success {
     color:gray !important;
 }
 
-.nomal-chk, .change-pro-chk {
+.nomal-chk, .change-pro-chk, .change-pro {
     cursor: pointer;
 }
 
@@ -359,7 +362,11 @@ tfoot td.success {
 }
 
 .change-pro-chk {
-    color:red;
+    color:lightblue;
+}
+
+.change-pro {
+    color: limegreen;
 }
 
 .rank-error {

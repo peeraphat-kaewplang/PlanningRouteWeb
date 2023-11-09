@@ -1,4 +1,5 @@
-﻿<div class="row">
+﻿@using System.Reflection;
+<div class="row">
     <div class="col-3">
         <p>ตู้ : @header.MACHINE_CODE</p>
     </div>
@@ -17,7 +18,7 @@
         <p>โมเดลตู้ : @header.MACHINE_MODEL</p>
     </div>
     <div class="col-3">
-        <p>ตู้ @(loading ? "" : header.TYPE_METER == "2" ? "1:1" : "กลุ่ม")</p>
+        <p>ตู้ @(header.TYPE_METER == "2" ? "1:1" : "กลุ่ม")</p>
     </div>
     <div class="col-3">
         <p>@(header.ISONLINE == "1" ? "ออนไลน์" : "ออฟไลน์")</p>
@@ -33,91 +34,96 @@
         <table class="table table-hover table-sm table-bordered">
             <thead>
                 <tr>
-                    <th style="font-size: 12px;width:100px;">ช่องสินค้า</th>
+                    <th style="font-size: 12px;">ช่องสินค้า</th>
                     <th style="font-size: 12px;">ประเภทกลุ่มสินค้า</th>
                     <th style="font-size: 12px;">ชื่อสินค้า</th>
-                    <th style="font-size: 12px;width:100px;">ยอดโหลด</th>
-                    <th style="font-size: 12px;width:100px;">ยอดขายเฉลี่ย</th>
-                    <th style="font-size: 12px;width:100px;">ราคากลาง</th>
-                    <th style="font-size: 12px;width:100px;">ราคาขาย</th>
-                    <th style="font-size: 12px;width:100px;">ราคาเรียกเก็บ</th>
-                    <th style="font-size: 12px;width:100px;">ราคาตามสัญญา</th>
-                    <th style="font-size: 12px;width:200px;" colspan="3">command</th>
+                    <th style="font-size: 12px;">ยอดโหลด</th>
+                    <th style="font-size: 12px;">ยอดขายเฉลี่ย</th>
+                    <th style="font-size: 12px;">ราคากลาง</th>
+                    <th style="font-size: 12px;">ราคาขาย</th>
+                    <th style="font-size: 12px;">ราคาเรียกเก็บ</th>
+                    <th style="font-size: 12px;">ราคาตามสัญญา</th>
+                    @if(IsCurrent)
+                    {
+                        <th style="font-size: 12px;" colspan="3">command</th>
+                    }
                 </tr>
             </thead>
             <tbody>
-                @if (!loading)
-                {
                     @foreach (var (i, idx) in detail.WithIndex())
                     {
-                        var text = SelectRowEdit == idx ? "Save" : "Edit";
-                        <tr class=@(i.IsAddSlot && !i.STATUSCHANGE ? "table-success" : i.IsSubRow ? "table-secondary text-close" : "")>
-                            <td class="text-end" style="font-size: 12px;">
+                        var tableColorRow = i.IsStatusChange && !i.STATUSCHANGE && !i.IsAddSlot ? "table-secondary text-close" :
+                                            !i.IsStatusChange && i.STATUSCHANGE && i.IsAddSlot ? "table-success" :
+                                            i.IsStatusChange && i.STATUSCHANGE && !i.IsAddSlot ? "table-primary" :
+                                            null;
+                        <tr class=@($"{tableColorRow}") >
+                            <td class="text-end" style="font-size: 12px;width: 3rem;">
                                 @(i.SLOT_NO == 0 ? "" : i.SLOT_NO)
-
-                                @i.IsSubRow
-                                @i.IsAddSlot
                             </td>
 
                             @if (SelectRowEdit == idx)
                             {
-                                <td>
-                                    <div style="width:150px;">
-                                        <RadzenDropDown class="dropdown-sm fw-bold"
+                                <td style="width:10rem;">
+                                        <RadzenDropDown class="dropdown-sm fw-bold w-100"
                                                         TValue="string"
                                                         Data=@product
                                                         TextProperty="RAWPRODUCTNAME"
                                                         ValueProperty="RAWPRODUCTCODE"
-                                        @bind-Value=@i.RAWPRODUCTCODE />
-                                    </div>
+                                                        @bind-Value=@i.RAWPRODUCTCODE
+                                                        
+                                                        Change="@(args => actionButton = false)" />
                                 </td>
-                                <td>
-                                    <div style="width:350px;">
+                                <td style="width:30rem;">
                                         <DropDownProductDt index="@idx"
                                                            ItemModal="@Item"
                                                            RawProductCode="@i.RAWPRODUCTCODE"
                                                            ProductCode="@i.PRODUCT_CODE"
-                                                           SelectDetailCallback="@((args) => SelectDetail(args.Item1 , args.Item2 ))" />
-                                    </div>
+                                                           SelectDetailCallback="@((args) => SelectDetail(i,args.Item1))" />
                                 </td>
-                                <td class="text-end" style="font-size: 12px;width:100px;">
-                                    <RadzenNumeric class="text-size"
+                                <td class="text-end" style="width:3rem;font-size: 12px;">
+                                @{
+                                    var validat = i.LOADIN == 0 ? "validat" : null;
+                                }
+                                <RadzenNumeric class=@($"text-size {validat}")
                                                    ShowUpDown="false"
                                                    TextAlign="TextAlign.End"
                                                    TValue="int"
-                                    @bind-Value=@i.LOADIN />
+                                                   @bind-Value=@i.LOADIN
+                                                   @oninput=@(args => OnChangeNumber(args , i , "LOADIN")) />
                                 </td>
                             }
                             else
                             {
                                 var rawProductName = product.FirstOrDefault(x => x.RAWPRODUCTCODE == i.RAWPRODUCTCODE);
-                                <td>
-                                    <div style="width:150px;font-size: 12px;">
+                                <td style="width:10rem;">
+                                    <div style="font-size: 12px;">
                                         @rawProductName!.RAWPRODUCTNAME
                                     </div>
                                 </td>
-                                <td>
-                                    <div style="width:350px;font-size: 12px;">
+                                <td style="width:30rem;">
+                                    <div style="font-size: 12px;">
                                         @i.PRODUCT_NAME
                                     </div>
                                 </td>
-                                <td>
+                                <td style="width:3rem;">
                                     <div class="text-end" style="font-size: 12px;">
                                         @i.LOADIN
                                     </div>
                                 </td>
                             }
-                            <td class="text-end" style="font-size: 12px;width:100px;">@i.SALETOTAL</td>
+                            <td class="text-end" style="font-size: 12px;width:100px;">@(string.IsNullOrWhiteSpace(i.SALETOTAL) ? "0" : i.SALETOTAL)</td>
                             <td class="text-end" style="font-size: 12px;width:100px;">@i.SALEPRICE</td>
 
                             <td class="text-end" style="font-size: 12px;width:100px;">
                                 @if (SelectRowEdit == idx)
                                 {
-                                    <RadzenNumeric class="text-size"
+                                    var validat = i.SLOT_REALPRICE == 0 ? "validat" : null;
+                                    <RadzenNumeric class=@($"text-size {validat}")
                                                    ShowUpDown="false"
                                                    TextAlign="TextAlign.End"
                                                    TValue="int"
-                                    @bind-Value=@i.SLOT_REALPRICE />
+                                                   @bind-Value=@i.SLOT_REALPRICE
+                                                   @oninput=@(args => OnChangeNumber(args , i ,"SLOT_REALPRICE")) />
                                 }
                                 else
                                 {
@@ -125,17 +131,59 @@
                                 }
                             </td>
 
-                            <td style="font-size: 12px;width:100px;"></td>
-                            <td style="font-size: 12px;width:100px;"></td>
-
-
-                            @if (!i.IsAddSlot && i.STATUSCHANGE)
+                            <td>
+                                <div class="text-end" style="font-size: 12px;width:5rem;">
+                                    @if (SelectRowEdit == idx)
+                                    {
+                                        var validat = i.SLOT_INSTALLPRICE == 0 ? "validat" : null;
+                                        <RadzenNumeric class=@($"text-size {validat}")
+                                                       ShowUpDown="false"
+                                                       TextAlign="TextAlign.End"
+                                                       TValue="int"
+                                                       @bind-Value=@i.SLOT_INSTALLPRICE
+                                                       @oninput=@(args => OnChangeNumber(args , i , "SLOT_INSTALLPRICE")) />
+                                    }
+                                    else
+                                    {
+                                        @i.SLOT_INSTALLPRICE
+                                    }
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-end" style="font-size: 12px;width:5rem;">
+                                    @if (SelectRowEdit == idx)
+                                    {
+                                        var validat = i.SLOT_CONTRACT_PRICE == 0 ? "validat" : null;
+                                        <RadzenNumeric class=@($"text-size {validat}")
+                                                       ShowUpDown="false"
+                                                       TextAlign="TextAlign.End"
+                                                       TValue="int"
+                                                       @bind-Value=@i.SLOT_CONTRACT_PRICE
+                                                       @oninput=@(args => OnChangeNumber(args, i , "SLOT_CONTRACT_PRICE")) />
+                                    }
+                                    else
+                                    {
+                                        @i.SLOT_CONTRACT_PRICE
+                                    }
+                                </div>
+                            </td>
+                            @if(IsCurrent){
+                            @if (i.IsStatusChange && !i.STATUSCHANGE && !i.IsAddSlot)
                             {
                                 <td>
                                     <div style="width:100px;"></div>
                                 </td>
                                 <td>
-                                    <div style="width:30px;"></div>
+                                    <div style="width:30px;">
+                                        @if ((idx < detail.Count() - 1 && detail[idx + 1].SLOT_NO - i.SLOT_NO > 1 && SelectRowEdit != idx) || (FindRowLastIndex(idx, i)))
+                                        {
+                                            <RadzenButton Click="()=> AddSlot(idx, i)"
+                                                          Icon="add"
+                                                          ButtonStyle="ButtonStyle.Primary"
+                                                          Size="ButtonSize.ExtraSmall" 
+                                                          />
+                                        }
+                                    </div>
                                 </td>
                                 <td>
                                     <div style="width:30px;"></div>
@@ -145,66 +193,73 @@
                             {
                                 <td class="text-center" style="font-size: 12px;">
                                     <div class="d-flex justify-content-around" style="width:100px;">
-                                        <RadzenButton Click="()=>ChangeProduct(idx , i)"
-                                                      Text="change"
-                                                      ButtonStyle="ButtonStyle.Secondary"
-                                                      Size="ButtonSize.ExtraSmall"
-                                                      Style="text-transform: none;"
-                                                      Disabled=@(!i.SLOTSTATUS || i.IsSubRow) />
-                                        @if (SelectRowEdit == null || SelectRowEdit == idx)
+
+                                        @if (SelectRowEdit != idx)
                                         {
-                                            <RadzenButton Click="()=> SelectRow(idx)"
-                                                          Text=@text
+                                            @if (i.IsAddSlot || i.STATUSCHANGE)
+                                            {
+                                                <RadzenButton Click=@(() => SelectRowEdit = idx)
+                                                              Text="แก้ไข"
+                                                              ButtonStyle="ButtonStyle.Warning"
+                                                              Size="ButtonSize.ExtraSmall"
+                                                              Style="text-transform: none;"
+                                                              Disabled=@(!i.SLOTSTATUS) />
+                                            }
+                                            else
+                                            {
+                                                <RadzenButton Click="()=>ChangeProduct(idx , i)"
+                                                              Text="เปลี่ยนสินค้า"
+                                                              ButtonStyle="ButtonStyle.Secondary"
+                                                              Size="ButtonSize.ExtraSmall"
+                                                              Style="text-transform: none;"
+                                                              Disabled=@(!i.SLOTSTATUS) />
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <RadzenButton Click="()=>SaveRowChange(i)"
+                                                          Text="บันทึก"
                                                           ButtonStyle="ButtonStyle.Primary"
                                                           Size="ButtonSize.ExtraSmall"
                                                           Style="text-transform: none;"
-                                                          Disabled=@(!i.SLOTSTATUS || i.IsSubRow) />
+                                                          Disabled=@(i.LOADIN == 0 && 
+                                                          i.SLOT_REALPRICE != 0 && 
+                                                          i.SLOT_INSTALLPRICE != 0 && 
+                                                          i.SLOT_CONTRACT_PRICE != 0) />
                                         }
 
                                     </div>
                                 </td>
                                 <td class="text-center" style="font-size: 12px;">
                                     <div style="width:30px;">
-                                        @if (idx < detail.Count() - 1 && detail[idx + 1].SLOT_NO - i.SLOT_NO > 1 && !i.IsSubRow || i.STATUSCHANGE)
+                                        @if ((idx < detail.Count() - 1 && detail[idx + 1].SLOT_NO - i.SLOT_NO > 1 && SelectRowEdit != idx) || FindRowLastIndex(idx, i))
                                         {
                                             <RadzenButton Click="()=> AddSlot(idx, i)"
                                                           Icon="add"
                                                           ButtonStyle="ButtonStyle.Primary"
                                                           Size="ButtonSize.ExtraSmall"
-                                                          Disabled=@(!i.SLOTSTATUS || i.IsSubRow) />
+                                                           />
                                         }
                                     </div>
                                 </td>
                                 <td style="font-size: 12px;">
-                                    @if (i.IsAddSlot)
-                                    {
-                                        <RadzenButton Click="()=> DeleteRow(idx)"
-                                                      Text="del"
-                                                      Shade="Shade.Lighter"
-                                                      ButtonStyle="ButtonStyle.Danger "
-                                                      Size="ButtonSize.ExtraSmall"
-                                                      Style="text-transform: none;" />
+                                    @{
+                                        var delete =  i.IsSave ? false : true;
+                                        var text = !i.IsSave ? "del" :
+                                                   i.SLOTSTATUS ? "off" : "on";
                                     }
-                                    else
-                                    {
-                                        <RadzenButton Click="()=> OffRow(idx , i.IsAddSlot)"
-                                                      Text=@(i.SLOTSTATUS ? "off" : "on")
-                                                      ButtonStyle=@(i.SLOTSTATUS ? ButtonStyle.Danger : ButtonStyle.Success)
-                                                      Size="ButtonSize.ExtraSmall"
-                                                      Style="text-transform: none;"
-                                                      Disabled=@i.IsSubRow />
-                                    }
-
+                                    <RadzenButton Click="()=> OptionRow(i , delete)"
+                                                  Text=@(text)
+                                                  Shade=@(i.IsAddSlot ? Shade.Default : Shade.Light)
+                                                  ButtonStyle=@(i.SLOTSTATUS ? ButtonStyle.Danger : ButtonStyle.Success)
+                                                  Size="ButtonSize.ExtraSmall"
+                                                  Style="text-transform: none;"
+                                                  />
                                 </td>
+                            }
                             }
                         </tr>
                     }
-                }
-                else
-                {
-                    <Loading />
-                }
-
             </tbody>
         </table>
     }
@@ -226,8 +281,6 @@
                 </tr>
             </thead>
             <tbody>
-                @if (!loading)
-                {
                     @foreach (var i in GroupDetail())
                     {
                          <tr>
@@ -243,43 +296,70 @@
                             <td>21-09-2016</td>
                          </tr>
                     }
-                }else
-                {
-                    <Loading />
-                }
-               
             </tbody>
          </table>
-
     }
-
 </div>
 
 <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
-    <RadzenStack Orientation="Orientation.Horizontal">
-        <RadzenButton Click="()=> SaveChangeProduct(0)" Text="บันทึก" Style="width: 80px;text-transform: none;" />
-        <RadzenButton Shade="Shade.Lighter" ButtonStyle="ButtonStyle.Light" Click="()=> SaveChangeProduct(1)" Text="ยกเลิกการเปลี่ยนสินค้า" Style="width: 200px;text-transform: none;" />
-    </RadzenStack>
-    <RadzenButton Text="ปิด" Click="(() => Dialog!.Close(false))" ButtonStyle="ButtonStyle.Light" Style="text-transform: none;" />
+    @if(IsCurrent)
+    {
+        <RadzenStack Orientation="Orientation.Horizontal">
+            <RadzenButton 
+                Click="()=> SaveChangeProduct(0)" 
+                Text="บันทึก" 
+                Style="width: 80px;text-transform: none;" 
+                Disabled=@(SelectRowEdit != null)/>
+            <RadzenButton Shade="Shade.Lighter" ButtonStyle="ButtonStyle.Light" Click="()=> SaveChangeProduct(1)" Text="ยกเลิกการเปลี่ยนสินค้า" Style="width: 200px;text-transform: none;" />
+        </RadzenStack>
+        <RadzenButton Text="ปิด" Click="(() => Dialog!.Close(false))" ButtonStyle="ButtonStyle.Light" Style="text-transform: none;" />
+    }
 </RadzenStack>
 
 @inject IChangeProductService ChangeProductService
+@inject IDialogService DialogServiceCustom
 @code {
     [Parameter]
     public ChangeProductRequest Item { get; set; } = new();
     [Parameter]
     public DialogService? Dialog { get; set; }
+    [Parameter]
+    public bool IsCurrent { get; set; }
 
-    public bool loading = false;
     public int? SelectRowEdit = null;
+    public bool actionButton=true;
 
     ChangeProductHeader header = new();
     List<ChangeProductDetail2> detail = new();
     List<Rawproduct> product = new();
 
+    // Default row
+    // IsStatusChange = false,
+    // STATUSCHANGE = false,
+    // IsAddSlot = false,
+
+    // Change Product
+    // เเถวใหม่
+    // IsStatusChange = true,
+    // STATUSCHANGE = true,
+    // IsAddSlot = false,
+    // แถวเก่า
+    // IsStatusChange = true,
+    // STATUSCHANGE = false,
+    // IsAddSlot = false,
+
+    // Add row
+    // IsStatusChange = false,  
+    // STATUSCHANGE = true,
+    // IsAddSlot = true,
+
     protected override async Task OnInitializedAsync()
     {
-        loading = true;
+        await LoadDataChangeProduct();
+    }
+
+    private async Task LoadDataChangeProduct()
+    {
         var body = new RawproductRequest { RawProductCode = "" };
         var res = await ChangeProductService.GetChangeProduct(Item);
         var resProduct = await ChangeProductService.GetRawproduct(body);
@@ -287,110 +367,143 @@
         header = res.Header;
         detail = res.Detail;
         product = resProduct.Data;
-        loading = false;
         StateHasChanged();
     }
 
-    private void SelectDetail(RawproductDetail2 item, int index)
+    private void SelectDetail(ChangeProductDetail2 item ,RawproductDetail2 selectProduct)
     {
-        detail[index].PRODUCT_CODE = item.PRODUCTCODE;
-        detail[index].PRODUCT_NAME = item.PRODUCTNAME;
-        detail[index].SALETOTAL = item.SALETOTAL;
-        detail[index].SALEPRICE = item.SALEPRICE;
+        item.PRODUCT_CODE = selectProduct.PRODUCTCODE;
+        item.PRODUCT_NAME = selectProduct.PRODUCTNAME;
+        item.SALETOTAL = selectProduct.SALETOTAL;
+        item.SALEPRICE = selectProduct.SALEPRICE;
+        item.LOADIN = 0;
+        // actionButton = false;
         StateHasChanged();
     }
 
-    private void SelectRow(int index)
+    private void OptionRow(ChangeProductDetail2 item , bool delete = false)
     {
-        if (index == SelectRowEdit)
+        if(delete)
         {
-            var productChang = detail[index];
-            var items = detail.Where(x => x.PRODUCT_CODE == productChang.PRODUCT_CODE && !x.IsSubRow).ToList();
-            if (items.Count() != 0)
+            if (item.STATUSCHANGE)
             {
-                @foreach (var i in items)
+                var record = detail.Find(x => x.SLOT_NO == item.SLOT_NO && !x.STATUSCHANGE);
+                if(record != null)
                 {
-                    var idx = detail.FindIndex(x => x.SLOT_NO == i.SLOT_NO);
-                    detail[idx].SLOT_REALPRICE = productChang.SLOT_REALPRICE;
+                    record.STATUSCHANGE = false;
+                    record.IsStatusChange = false;
+                    record.IsAddSlot = false;
                 }
             }
-
+            detail.Remove(item);
             SelectRowEdit = null;
-            StateHasChanged();
-        } 
+        }
         else
         {
-            SelectRowEdit = index;
+            // off row
+            item.SLOTSTATUS = !item.SLOTSTATUS;
         }
+        StateHasChanged();
+    }
+
+    private void SaveRowChange(ChangeProductDetail2 productChang)
+    {
+        // ราคาสินค้าตัวเดียวกันต้องเท่ากับราคาสินค้าตัวที่เปลี่ยน
+
+        // หาสินค้าที่เหมือนกับสินค้าที่เปลี่ยนทั้งหมดในตู้
+        var products = detail.Where(x => x.PRODUCT_CODE == productChang.PRODUCT_CODE && productChang.SLOT_NO != x.SLOT_NO);
+        if (products.Count() != 0)
+        {
+            foreach (var i in products.ToList())
+            {
+                // check change product
+                var change = detail.FindLast(x => x.SLOT_NO == i.SLOT_NO);
+                var changeIdx = detail.FindLastIndex(x => x.SLOT_NO == i.SLOT_NO);
+                if (!change!.STATUSCHANGE)
+                {
+                    // add row change product
+                    change.SLOT_REALPRICE = productChang.SLOT_REALPRICE;
+                    ChangeProduct(changeIdx , change ,false);
+                }
+                else
+                {
+                    change.SLOT_REALPRICE = productChang.SLOT_REALPRICE;
+                }
+
+                // var idx = detail.FindIndex(x => x.SLOT_NO == i.SLOT_NO);
+                // detail[idx].SLOT_REALPRICE = productChang.SLOT_REALPRICE;
+            }
+        }
+
+        SelectRowEdit = null;
+        actionButton = true;
+        StateHasChanged();
     }
 
     private void AddSlot(int index, ChangeProductDetail2 item)
     {
-        var row = new ChangeProductDetail2
-        {
-            MACHINE_CODE = item.MACHINE_CODE,
-            SLOT_NO = item.SLOT_NO + 1,
-            RAWPRODUCTCODE = item.RAWPRODUCTCODE,
-            PRODUCT_CODE = item.PRODUCT_CODE,
-            PRODUCT_NAME = item.PRODUCT_NAME,
-            SLOT_INSTALLPRICE = item.SLOT_INSTALLPRICE,
-            SLOT_REALPRICE = item.SLOT_REALPRICE,
-            SLOT_CONTRACT_PRICE = item.SLOT_CONTRACT_PRICE,
-            SLOTSTATUS = item.SLOTSTATUS,
-            SALEPRICE = item.SALEPRICE,
-            SALETOTAL = item.SALETOTAL,
-            STATUSCHANGE = item.STATUSCHANGE,
-            IsAddSlot = true,
-            IsSubRow = item.IsSubRow
-        };
-        detail.Insert(index + 1, row);
-        StateHasChanged();
-    }
+        var changeLast = detail.Count(x => x.SLOT_NO == item.SLOT_NO); 
+        var idx = changeLast > 1 ? index + 2 : index + 1;
 
-    private void OffRow(int index , bool isAddSlot)
-    {
-        if (!isAddSlot)
-        {
-            detail[index].SLOTSTATUS = !detail[index].SLOTSTATUS;
-        }else
-        {
-            detail.Remove(detail[index]);
-        }
+        detail.Insert(idx, new ChangeProductDetail2
+            {
+                MACHINE_CODE = item.MACHINE_CODE,
+                SLOT_NO = item.SLOT_NO + 1,
+                RAWPRODUCTCODE = item.RAWPRODUCTCODE,
+                PRODUCT_CODE = item.PRODUCT_CODE,
+                PRODUCT_NAME = item.PRODUCT_NAME,
+                SLOT_INSTALLPRICE = item.SLOT_INSTALLPRICE,
+                SLOT_REALPRICE = item.SLOT_REALPRICE,
+                SLOT_CONTRACT_PRICE = item.SLOT_CONTRACT_PRICE,
+                SLOTSTATUS = item.SLOTSTATUS,
+                SALEPRICE = item.SALEPRICE,
+                SALETOTAL = item.SALETOTAL,
+                IsStatusChange = false,
+                STATUSCHANGE = true,
+                IsAddSlot = true,
+            });
 
         StateHasChanged();
     }
 
-    private void ChangeProduct(int index, ChangeProductDetail2 item)
+    private void ChangeProduct(int index, ChangeProductDetail2 item , bool selectRow =true)
     {
-        var row = new ChangeProductDetail2
-        {
-            MACHINE_CODE = item.MACHINE_CODE,
-            SLOT_NO = item.SLOT_NO,
-            RAWPRODUCTCODE = item.RAWPRODUCTCODE,
-            PRODUCT_CODE = item.PRODUCT_CODE,
-            PRODUCT_NAME = item.PRODUCT_NAME,
-            SALETOTAL = item.SALETOTAL,
-            SLOT_INSTALLPRICE = item.SLOT_INSTALLPRICE,
-            SLOT_REALPRICE = item.SLOT_REALPRICE,
-            SLOT_CONTRACT_PRICE = item.SLOT_CONTRACT_PRICE,
-            SLOTSTATUS = item.SLOTSTATUS,
-            SALEPRICE = item.SALEPRICE,
-            STATUSCHANGE = true,
-            IsAddSlot = true,
-            IsSubRow = false
-        };
+        item.IsStatusChange = true;
+        item.STATUSCHANGE = false;
 
-        item.IsSubRow = true;
-        item.STATUSCHANGE = true;
-        detail.Insert(index + 1, row);
-        SelectRowEdit = index + 1;
+        detail.Insert(index + 1, 
+            new ChangeProductDetail2
+            {
+                MACHINE_CODE = item.MACHINE_CODE,
+                SLOT_NO = item.SLOT_NO,
+                RAWPRODUCTCODE = item.RAWPRODUCTCODE,
+                PRODUCT_CODE = item.PRODUCT_CODE,
+                PRODUCT_NAME = item.PRODUCT_NAME,
+                SALETOTAL = item.SALETOTAL,
+                SLOT_INSTALLPRICE = item.SLOT_INSTALLPRICE,
+                SLOT_REALPRICE = item.SLOT_REALPRICE,
+                SLOT_CONTRACT_PRICE = item.SLOT_CONTRACT_PRICE,
+                SLOTSTATUS = item.SLOTSTATUS,
+                SALEPRICE = item.SALEPRICE,
+                IsStatusChange = true,
+                STATUSCHANGE = true,
+                IsAddSlot = false,
+            });
+
+        if (selectRow) SelectRowEdit = index + 1;
+
         StateHasChanged();
     }
 
-    private void DeleteRow(int index)
+    private async Task DialogLoading()
     {
-        detail.Remove(detail[index]);
-        StateHasChanged();
+        var task = InvokeAsync(async () =>
+        {
+            await LoadDataChangeProduct();
+            await Task.Delay(1500);
+            DialogServiceCustom.DialogClose();
+        });
+        await DialogServiceCustom.BusyDialog("กำลังบันทึกข้อมูลดข้อมูล...");
     }
 
     private async Task SaveChangeProduct(int cancel)
@@ -405,7 +518,11 @@
             Data = detail.Select(x => ConvertModel.SaveChangeProductDataModel(x)).ToList() 
         };
 
-        var res = await ChangeProductService.SaveChangeProduct(data);
+        var response = await ChangeProductService.SaveChangeProduct(data);
+        if (response.ErrorMessage == "success")
+        {
+            await DialogLoading();
+        }
     }
 
     private List<ChangeProductGroup> GroupDetail()
@@ -418,5 +535,24 @@
                             Products = g.ToList()
                         }).ToList();
         return data;
+    }
+
+    private bool FindRowLastIndex(int index,ChangeProductDetail2 item)
+    {
+        // เช็คว่า slot สุดท้ายมีการเปลี่ยนสินค้าหรือไม่
+        var last = detail.FindLast(x => x.SLOT_NO == detail.Last().SLOT_NO);
+        var lastIdx = detail.FindLastIndex(x => x.SLOT_NO == detail.Last().SLOT_NO);
+
+        return index == (last!.STATUSCHANGE && !last.IsAddSlot? lastIdx - 1 : lastIdx);
+    }
+
+    private void OnChangeNumber(ChangeEventArgs arg, ChangeProductDetail2 item , string field)
+    {
+        var str = $"{arg.Value}";
+        var value = !string.IsNullOrEmpty(str) ? int.Parse(str) : 0;
+        Type type = typeof(ChangeProductDetail2);
+        ChangeProductDetail2 obj = item;
+        PropertyInfo objField = type.GetProperty(field)!;
+        objField.SetValue(obj, value);
     }
 }

@@ -1,5 +1,9 @@
 ﻿ 
 <RadzenDropDown 
+    @ref=@radzenDropDown
+    FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" 
+    FilterOperator="StringFilterOperator.StartsWith" 
+    AllowFiltering="true"
     class="dropdown-sm fw-bold"
     Style="width: 100%;"
     TValue="string"
@@ -24,6 +28,8 @@
     public EventCallback<(RawproductDetail2, int)> SelectDetailCallback { get; set; }
 
     public List<RawproductDetail2> options = new();
+
+    RadzenDropDown<string> radzenDropDown;
 
    
 

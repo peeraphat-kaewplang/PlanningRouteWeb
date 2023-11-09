@@ -144,6 +144,7 @@
             @* || DateTime.ParseExact(i.CALENDAR_DATE, "dd/MM/yyyy", null) > DateTime.Parse(GetDatetimeClass.currentDate.ToString("MMM d, yyyy", CultureInfo.GetCultureInfo("en-US")))  *@
             @if (i.IsCurrent)
             {
+
                 <td class=@($"{today} {stylePlan} text-center") style="width: 20px;">
                     <div>
                         <RadzenCheckBox Disabled="@(!i.IsCurrent)"
@@ -156,8 +157,16 @@
                     <p class=@($"mb-0 {color}")>
                         @if (i.STATUS_MANUAL)
                         {
+                            var changePrd = i.CHANGEPRODUCT == "1" ? "change-pro" : "change-pro-chk";
                             <div class="d-flex justify-content-between">
-                                <RadzenIcon @onclick="() => ShowdialogChangeProductCallback.InvokeAsync(new ChangeProductRequest{ ChangeDate = i.CALENDAR_DATE , Location = item.LOCATION_CODE , Machine = item.MACHINE_CODE , ORG = item.ORGANIZATION_CODE })" Icon="cached" class="change-pro-chk" style="font-weight: 700;font-size: 16px;" />
+                                <RadzenIcon @onclick="() => ShowdialogChangeProductCallback.InvokeAsync((new ChangeProductRequest{ 
+                                    ChangeDate = i.CALENDAR_DATE ,
+                                    Location = item.LOCATION_CODE , 
+                                    Machine = item.MACHINE_CODE , 
+                                    ORG = item.ORGANIZATION_CODE } , i.IsCurrent))" 
+                                            Icon="cached"
+                                            class=@(changePrd)
+                                            style="font-weight: 700;font-size: 16px;" />
                                 <p class="m-0">
                                     @(i.SALETOTAL == 0 ? i.AMOUNT : i.SALETOTAL)
                                 </p>
@@ -262,9 +271,13 @@
                         <div class=@(i.CHANGEPRODUCT == "1" ? "d-flex justify-content-between" : "d-flex justify-content-end")>
                         @if (i.CHANGEPRODUCT == "1")
                             {
-                                <RadzenIcon @onclick="() => ShowdialogChangeProductCallback.InvokeAsync(new ChangeProductRequest{ ChangeDate = i.CALENDAR_DATE , Location = item.LOCATION_CODE , Machine = item.MACHINE_CODE , ORG = item.ORGANIZATION_CODE })"
+                                <RadzenIcon @onclick="() => ShowdialogChangeProductCallback.InvokeAsync((new ChangeProductRequest{ 
+                                    ChangeDate = i.CALENDAR_DATE , 
+                                    Location = item.LOCATION_CODE , 
+                                    Machine = item.MACHINE_CODE , 
+                                    ORG = item.ORGANIZATION_CODE }, i.IsCurrent))"
                                             Icon="cached"
-                                            style="font-weight: 700;font-size: 16px;" />
+                                            style="font-weight: 700;font-size: 16px;cursor: pointer;" />
                             }
                             <p class=@($"m-0 {color}") style="font-size: 12px;">
                                 @(!string.IsNullOrWhiteSpace(i.DOC_TYPE) ? i.SALETOTAL : i.AMOUNT)
@@ -329,7 +342,7 @@
     [Parameter]
     public EventCallback<PlanningMasterData2> OnChangeMasterCallback { get; set; }
     [Parameter]
-    public EventCallback<ChangeProductRequest> ShowdialogChangeProductCallback { get; set; }
+    public EventCallback<(ChangeProductRequest ,bool)> ShowdialogChangeProductCallback { get; set; }
     [Parameter]
     public EventCallback<(int?, string, string)> OnChageRankCallback { get; set; }
     [Parameter]
@@ -355,13 +368,23 @@
 
     private bool FindRankGroup(int? rank, string date, string location)
     {
-        var detail = new List<PlanningDetail2>();
+        var detail = new List<DeatilRank>();
         foreach (var i in data)
         {
             foreach (var g in i.GroupData)
             {
-                var gg = g.GETPLAN_DETAIL.Where(x => x.STATUS_MANUAL && x.CALENDAR_DATE == date).ToList();
-                detail.AddRange(gg);
+                var d = g.GETPLAN_DETAIL.Where(x => x.STATUS_MANUAL && x.CALENDAR_DATE == date)
+                    .Select(x => new DeatilRank
+                        {
+                            MACHINE_CODE = i.MACHINE_CODE,
+                            RANK = x.RANK,
+                            CALENDAR_DATE = x.CALENDAR_DATE
+                        })
+                    .ToList();
+                detail.AddRange(d);
+
+                // var gg = g.GETPLAN_DETAIL.Where(x => x.STATUS_MANUAL && x.CALENDAR_DATE == date).ToList();
+                // detail.AddRange(gg);
             }
 
             // if (i.GroupData.Count() > 1)

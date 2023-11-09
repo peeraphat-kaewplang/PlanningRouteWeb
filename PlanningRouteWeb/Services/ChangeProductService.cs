@@ -36,15 +36,31 @@ namespace PlanningRouteWeb.Services
             }
 
             var changeProduct = JsonSerializer.Deserialize<ChangeProductResponse>(content, _options);
+
+            //var aa = changeProduct!.Data.Detail.OrderBy(x => x.SLOT_NO).ToList();
+
+            //var json = JsonSerializer.Serialize(aa);
+
             
             var data = new ChangeProductData2
             {
                 Header = changeProduct!.Data.Header,
                 Detail = changeProduct!.Data.Detail
-                .Select(x => ConvertModel.ChangeProductDetailModal(x))
+                .Select(x =>
+                {
+                    var chagePrd = changeProduct!.Data.Detail.Find(d => d.SLOT_NO == x.SLOT_NO && d.STATUSCHANGE != x.STATUSCHANGE);
+                    if(chagePrd != null)
+                    {
+                        return ConvertModel.ChangeProductDetailModal(x , true);
+                    }
+                    return ConvertModel.ChangeProductDetailModal(x);
+                })
                 .OrderBy(x => x.SLOT_NO)
+                .ThenBy(x => x.STATUSCHANGE)
                 .ToList()
             };
+
+           
             return data;
         }
 

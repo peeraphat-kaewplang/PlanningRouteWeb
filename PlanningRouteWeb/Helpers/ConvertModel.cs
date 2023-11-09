@@ -323,7 +323,7 @@ namespace PlanningRouteWeb.Helpers
             };
         }
 
-        public static ChangeProductDetail2 ChangeProductDetailModal(ChangeProductDetail model)
+        public static ChangeProductDetail2 ChangeProductDetailModal(ChangeProductDetail model , bool isStatusChange = false)
         {
             return new ChangeProductDetail2
             {
@@ -332,20 +332,23 @@ namespace PlanningRouteWeb.Helpers
                 PRODUCT_CODE = model.PRODUCT_CODE,
                 PRODUCT_NAME = model.PRODUCT_NAME,
                 SLOT_NO = int.Parse(model.SLOT_NO),
-                SLOT_INSTALLPRICE = model.SLOT_INSTALLPRICE,
+                SLOT_INSTALLPRICE = !string.IsNullOrWhiteSpace(model.SLOT_INSTALLPRICE) ? int.Parse(model.SLOT_INSTALLPRICE) : 0,
                 SLOT_REALPRICE = !string.IsNullOrWhiteSpace(model.SLOT_REALPRICE) ? int.Parse(model.SLOT_REALPRICE) : 0,
-                SLOT_CONTRACT_PRICE = model.SLOT_CONTRACT_PRICE,
+                SLOT_CONTRACT_PRICE = !string.IsNullOrWhiteSpace(model.SLOT_CONTRACT_PRICE) ? int.Parse(model.SLOT_CONTRACT_PRICE) : 0,
                 SLOTSTATUS = !string.IsNullOrWhiteSpace(model.SLOTSTATUS) ? model.SLOTSTATUS == "1" ? true : false : false,
                 SALEPRICE = model.SALEPRICE,
                 SALETOTAL = model.SALETOTAL,
                 LOADIN = !string.IsNullOrWhiteSpace(model.LOADIN) ? int.Parse(model.LOADIN) : 0,
-                STATUSCHANGE = !string.IsNullOrWhiteSpace(model.STATUSCHANGE) ? model.STATUSCHANGE == "1" ? true : false : false,
-                IsSubRow = !string.IsNullOrWhiteSpace(model.STATUSCHANGE) ? model.STATUSCHANGE == "1" ? true : false : false,
+                IsStatusChange = isStatusChange,
+                STATUSCHANGE = !string.IsNullOrWhiteSpace(model.STATUSCHANGE) ? model.STATUSCHANGE == "1" || model.STATUSCHANGE == "2" ? true : false : false,
+                IsAddSlot = !string.IsNullOrWhiteSpace(model.STATUSCHANGE) ? model.STATUSCHANGE == "2" ? true : false : false,
+                IsSave = true
             };
         }
 
         public static SaveChangeProductData SaveChangeProductDataModel(ChangeProductDetail2 model)
         {
+            var status = model.IsAddSlot ? "2" : model.STATUSCHANGE ? "1" : "0";
             return new SaveChangeProductData
             {
                 MACHINE_CODE = model.MACHINE_CODE,
@@ -353,12 +356,12 @@ namespace PlanningRouteWeb.Helpers
                 PRODUCT_CODE = model.PRODUCT_CODE,
                 PRODUCT_NAME = model.PRODUCT_NAME,
                 SLOT_NO = model.SLOT_NO.ToString(),
-                SLOT_INSTALLPRICE = model.SLOT_INSTALLPRICE,
+                SLOT_INSTALLPRICE = model.SLOT_INSTALLPRICE.ToString(),
                 SLOT_REALPRICE = model.SLOT_REALPRICE.ToString(),
-                SLOT_CONTRACT_PRICE = model.SLOT_CONTRACT_PRICE,
+                SLOT_CONTRACT_PRICE = model.SLOT_CONTRACT_PRICE.ToString(),
                 SLOTSTATUS = model.SLOTSTATUS ? "1" : "0",
                 LOADIN = model.LOADIN.ToString(),
-                STATUSCHANGE = model.STATUSCHANGE ? "1" : "0"
+                STATUSCHANGE =status
             };
         }
     }

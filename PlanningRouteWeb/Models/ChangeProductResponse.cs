@@ -54,16 +54,17 @@
         public string PRODUCT_CODE { get; set; } = string.Empty;
         public string PRODUCT_NAME { get; set; } = string.Empty;
         public int SLOT_NO { get; set; }
-        public string SLOT_INSTALLPRICE { get; set; } = string.Empty;
+        public int SLOT_INSTALLPRICE { get; set; }
         public int SLOT_REALPRICE { get; set; }
-        public string SLOT_CONTRACT_PRICE { get; set; } = string.Empty;
+        public int SLOT_CONTRACT_PRICE { get; set; }
         public bool SLOTSTATUS { get; set; } 
         public string SALEPRICE { get; set; } = string.Empty;
         public string SALETOTAL { get; set; } = string.Empty;
         public int LOADIN { get; set; }
         public bool STATUSCHANGE { get; set; }
-        public bool IsAddSlot { get; set; }
-        public bool IsSubRow { get; set; }
+        public bool IsAddSlot { get; set; } // เพิ่ม slot
+        public bool IsStatusChange { get; set; } // เปลี่ยน status ที่ UI
+        public bool IsSave { get;set; }
     }
 
     public class SaveChangeProductResponse : HttpResponse
