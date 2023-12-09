@@ -22,6 +22,7 @@ namespace PlanningRouteWeb.Models
     {
         public string FieldDate { get; set; } = string.Empty;
         public int COUNT_STATUS_MANUAL { get; set; }
+        public int COUNT_STATUS_MANUAL2 { get; set; }
         public int MAX_DROP { get; set; }
         public bool IsCurrent { get; set; }
         public double SUM_SALETOTAL { get; set; }

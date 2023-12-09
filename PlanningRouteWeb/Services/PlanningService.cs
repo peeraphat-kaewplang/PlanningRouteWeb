@@ -233,7 +233,6 @@ namespace PlanningRouteWeb.Services
                 Content = JsonContent.Create(body)
 
             };
-
             var response = await _httpClient.SendAsync(requestMessage);
             var content = await response.Content.ReadAsStringAsync();
             if (!response.IsSuccessStatusCode)

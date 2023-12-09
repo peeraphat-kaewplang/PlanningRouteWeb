@@ -102,8 +102,8 @@ namespace PlanningRouteWeb.Helpers
             {
                 CALENDAR_DATE = model.CALENDAR_DATE,
                 STATUS_ORIGINAL = model.STATUS_ORIGINAL,
+                //STATUS_MANUAL = true,
                 STATUS_MANUAL = !string.IsNullOrWhiteSpace(model.STATUS_MANUAL) ? model.STATUS_MANUAL == "Y" ? true : false : false,
-                //STATUS_MANUAL = model.CALENDAR_DATE == "06/11/2023" ? true : false,
                 DOC_TYPE = model.DOC_TYPE,
                 SALETOTAL = !string.IsNullOrWhiteSpace(model.SALETOTAL) ? double.Parse(model.SALETOTAL) : 0,
                 RANK = !string.IsNullOrWhiteSpace(model.RANK) ? int.Parse(model.RANK) : null,
