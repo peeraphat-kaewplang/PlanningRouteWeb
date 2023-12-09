@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor().AddCircuitOptions(x => x.DetailedErrors = true);
 builder.Services.AddRadzenComponents();
+builder.Services.AddLocalization();
 
 builder.Services.AddScoped(
    sp => new HttpClient(new CustomHeaderHandler(builder.Configuration)) { BaseAddress = new Uri(builder.Configuration.GetValue<string>("Configs:UrlApi")!) });
@@ -23,7 +24,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
+app.UseRequestLocalization("en-US");
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();

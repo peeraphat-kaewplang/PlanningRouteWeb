@@ -227,7 +227,6 @@ namespace PlanningRouteWeb.Models
         public string HOLIDAY { get; set; } = string.Empty;
         public string MACHINE_CODE { get; set; } = string.Empty;
         public string CHANGEPRODUCT { get; set; } = string.Empty;
-
     }
 
    

@@ -16,6 +16,7 @@ namespace PlanningRouteWeb.Services
 
         public async Task BusyDialog(string message)
         {
+           
             await _dialogService.OpenAsync("", ds =>
             {
                 RenderFragment content = b =>
@@ -33,7 +34,6 @@ namespace PlanningRouteWeb.Services
                 return content;
             }, new DialogOptions() { ShowTitle = false, Style = "min-height:auto;min-width:auto;width:auto", CloseDialogOnEsc = false });
         }
-
         public void DialogClose()
         {
             _dialogService.Close();

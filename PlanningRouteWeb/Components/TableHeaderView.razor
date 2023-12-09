@@ -1,5 +1,5 @@
 ﻿@{
-    var date = GetDatetimeClass.currentDate;
+    var date = StateContainer.DateCurrent;
     var total = GetDatetimeClass.monthObjects.Single(x => x.Number == (int.Parse(SelectMonth.Number) - 1).ToString("D2")).ShortName;
     var mdtBefore = GetDatetimeClass.monthObjects.Single(x => x.Number == (int.Parse(SelectMonth.Number) - 1).ToString("D2")).ShortName;
     var colSpan = (Columns.Count() * 3) + ((Columns.Count() / 7) * 2);
@@ -129,6 +129,8 @@
             class="@(date.ToContainsDate(obj.Key) ? "today" : $"{obj.Value.ClassColor} color" )"
             style="font-size: 12px; text-align: center;">
             @obj.Value.FieldDateName
+            @* @StateContainer.DateCurrent
+            @DateTime.ParseExact(obj.Key, "dd/MM/yyyy", null) *@
         </th>
     }
 </tr>
@@ -210,7 +212,7 @@
         }
         else
         {
-            var name = CultureInfo.InvariantCulture.Calendar.GetDayOfWeek(GetDatetimeClass.currentDate);
+            var name = CultureInfo.InvariantCulture.Calendar.GetDayOfWeek(StateContainer.DateCurrent);
             var index = GetDatetimeClass.defultday.FirstOrDefault(x => x.FullName.Contains(name.ToString()))!.Number;
             var con = (7 - index) - StateContainer.BeforeConfig;
 
@@ -255,12 +257,12 @@
             DateTime end;
             if (!chk)
             {
-                start = GetDatetimeClass.currentDate.AddDays(1 + StateContainer.BeforeConfig);
+                start = StateContainer.DateCurrent.AddDays(1 + StateContainer.BeforeConfig);
                 end = start.LastDayOfWeek();
             }
             else
             {
-                start = GetDatetimeClass.currentDate.LastDayOfWeek().AddDays(1);
+                start = StateContainer.DateCurrent.LastDayOfWeek().AddDays(1);
                 end = start.AddDays(6);
             }
             await OnCalPlanningCallback.InvokeAsync((start.ToStringDate(), end.ToStringDate()));

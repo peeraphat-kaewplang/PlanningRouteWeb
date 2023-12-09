@@ -133,15 +133,15 @@
 
         @foreach (var (i, idx) in item.GETPLAN_DETAIL.WithIndex())
         {
-            var boolToday = GetDatetimeClass.currentDate.ToContainsDate(i.CALENDAR_DATE);
+            var boolToday = StateContainer.DateCurrent.ToContainsDate(i.CALENDAR_DATE);
             var color = i.SALETOTAL == 0 ? "text-amount" : null;
             var today = boolToday ? "today" : null;
 
             var stylePlan = i.DOC_TYPE == "1" && i.STATUS_MANUAL ? "plan-success" :
             i.STATUS_MANUAL && string.IsNullOrWhiteSpace(i.DOC_TYPE) && !i.IsCurrent && !boolToday ? "plan-error" :
             !i.STATUS_MANUAL && i.SALETOTAL != 0 ? "plan-out" :
-            boolToday && string.IsNullOrWhiteSpace(i.DOC_TYPE) ? "plan-notdue" : "";
-            @* || DateTime.ParseExact(i.CALENDAR_DATE, "dd/MM/yyyy", null) > DateTime.Parse(GetDatetimeClass.currentDate.ToString("MMM d, yyyy", CultureInfo.GetCultureInfo("en-US")))  *@
+            boolToday && string.IsNullOrWhiteSpace(i.DOC_TYPE) ? "plan-notdue" : i.IsCurrent && i.STATUS_MANUAL ? "plan-change" : "";
+
             @if (i.IsCurrent)
             {
 
@@ -150,7 +150,10 @@
                         <RadzenCheckBox Disabled="@(!i.IsCurrent)"
                         @key="item"
                         @bind-Value=@i.STATUS_MANUAL
-                        @onclick="()=> OnChangCallback.InvokeAsync((index, i ,item.GETPLAN_DETAIL))" />
+                        @onclick=@(()=> 
+                            OnChangCallback.InvokeAsync((index, i ,item.GETPLAN_DETAIL))
+                        )
+                        />
                     </div>
                 </td>
                 <td class=@($"{today} {stylePlan} text-end fw-bold") style="width: 20px; font-size: 12px;">
@@ -158,15 +161,19 @@
                         @if (i.STATUS_MANUAL)
                         {
                             var changePrd = i.CHANGEPRODUCT == "1" ? "change-pro" : "change-pro-chk";
-                            <div class="d-flex justify-content-between">
-                                <RadzenIcon @onclick="() => ShowdialogChangeProductCallback.InvokeAsync((new ChangeProductRequest{ 
-                                    ChangeDate = i.CALENDAR_DATE ,
-                                    Location = item.LOCATION_CODE , 
-                                    Machine = item.MACHINE_CODE , 
-                                    ORG = item.ORGANIZATION_CODE } , i.IsCurrent))" 
-                                            Icon="cached"
-                                            class=@(changePrd)
-                                            style="font-weight: 700;font-size: 16px;" />
+                            var flex = !ActionChangeProduct ? "d-flex justify-content-between" : "text-end";
+                            <div class=@($"{flex}")>
+                                @if(!ActionChangeProduct)
+                                {
+                                    <RadzenIcon @onclick="() => ShowdialogChangeProductCallback.InvokeAsync((new ChangeProductRequest{
+                                        ChangeDate = i.CALENDAR_DATE ,
+                                        Location = item.LOCATION_CODE ,
+                                        Machine = item.MACHINE_CODE ,
+                                        ORG = item.ORGANIZATION_CODE } , i.IsCurrent))"
+                                        Icon="cached"
+                                        class=@(changePrd)
+                                        style="font-weight: 700;font-size: 16px;" />
+                                }
                                 <p class="m-0">
                                     @(i.SALETOTAL == 0 ? i.AMOUNT : i.SALETOTAL)
                                 </p>
@@ -183,51 +190,30 @@
                 <td class=@($"{today} text-center p-0")>
                     @if (i.STATUS_MANUAL)
                     {
-                       @*  @if (item.GroupData.Count() == 1)
-                        {
-                            var styleRank = i.RANK == null ? "rank-warning" : FindRankGroup(i.RANK, i.CALENDAR_DATE, item.LOCATION_CODE) ? "rank-error" : "rank-success";
-                            var iGrp = data[index].GroupData[0].GETPLAN_DETAIL.FindIndex(x => x.CALENDAR_DATE == i.CALENDAR_DATE);
-                            <div class="d-flex flex-column">
-                                <div class="d-flex">
+                        <div class="d-flex flex-column">
+                          
+                            @foreach (var (g, seq) in item.GroupData.WithIndex())
+                            {
+                                var borderGrp = seq == item.GroupData.Count() - 1 ? null : "border-bottom border-dark";
+                                var iGrp = data[index].GroupData[seq].GETPLAN_DETAIL.FindIndex(x => x.CALENDAR_DATE == i.CALENDAR_DATE);
+
+                                @* var rankError = ActionButton!.Date.Find(x => x.Date == g.GETPLAN_DETAIL.Find(x => x.CALENDAR_DATE == i.CALENDAR_DATE)!.CALENDAR_DATE); *@
+
+                                var styleRank = data[index].GroupData[seq].GETPLAN_DETAIL[iGrp].RANK == null ? "rank-warning" : FindRankGroup(data[index].GroupData[seq].GETPLAN_DETAIL[iGrp].RANK, i.CALENDAR_DATE, item.LOCATION_CODE) ? "rank-error" : "rank-success";
+                                <div class=@($"d-flex {borderGrp}")>
                                     <div class="p-1 w-100">
+                                       
                                         <RadzenNumeric class=@($"text-size {styleRank} w-100")
                                                         ShowUpDown="false"
                                                         Disabled="@(!i.IsCurrent)"
                                                         TextAlign="TextAlign.Center"
                                                         TValue="int?"
-                                                        Change=@(args => ChageRank(args , i.CALENDAR_DATE , item.LOCATION_CODE ))
-                                        @bind-Value=@i.RANK />
+                                                        @bind-Value=@data[index].GroupData[seq].GETPLAN_DETAIL[iGrp].RANK
+                                                        Change=@(args => ChageRank(args , i.CALENDAR_DATE , item.LOCATION_CODE , index , seq , true)) />
                                     </div>
                                 </div>
-                            </div>
-                        }
-                        else
-                        { *@
-                            <div class="d-flex flex-column">
-                          
-                                @foreach (var (g, seq) in item.GroupData.WithIndex())
-                                {
-                                    var borderGrp = seq == item.GroupData.Count() - 1 ? null : "border-bottom border-dark";
-                                    var iGrp = data[index].GroupData[seq].GETPLAN_DETAIL.FindIndex(x => x.CALENDAR_DATE == i.CALENDAR_DATE);
-
-                                    @* var rankError = ActionButton!.Date.Find(x => x.Date == g.GETPLAN_DETAIL.Find(x => x.CALENDAR_DATE == i.CALENDAR_DATE)!.CALENDAR_DATE); *@
-
-                                    var styleRank = data[index].GroupData[seq].GETPLAN_DETAIL[iGrp].RANK == null ? "rank-warning" : FindRankGroup(data[index].GroupData[seq].GETPLAN_DETAIL[iGrp].RANK, i.CALENDAR_DATE, item.LOCATION_CODE) ? "rank-error" : "rank-success";
-                                    <div class=@($"d-flex {borderGrp}")>
-                                        <div class="p-1 w-100">
-                                       
-                                            <RadzenNumeric class=@($"text-size {styleRank} w-100")
-                                                            ShowUpDown="false"
-                                                            Disabled="@(!i.IsCurrent)"
-                                                            TextAlign="TextAlign.Center"
-                                                            TValue="int?"
-                                                            @bind-Value=@data[index].GroupData[seq].GETPLAN_DETAIL[iGrp].RANK
-                                                            Change=@(args => ChageRank(args , i.CALENDAR_DATE , item.LOCATION_CODE , index , seq , true)) />
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                        @* } *@
+                            }
+                        </div>
                     }
                     else
                     {
@@ -270,15 +256,15 @@
                         @* @(i.SALETOTAL == 0 ? "" : string.IsNullOrWhiteSpace(i.DOC_TYPE) ? "" : i.SALETOTAL) *@
                         <div class=@(i.CHANGEPRODUCT == "1" ? "d-flex justify-content-between" : "d-flex justify-content-end")>
                         @if (i.CHANGEPRODUCT == "1")
-                            {
-                                <RadzenIcon @onclick="() => ShowdialogChangeProductCallback.InvokeAsync((new ChangeProductRequest{ 
-                                    ChangeDate = i.CALENDAR_DATE , 
-                                    Location = item.LOCATION_CODE , 
-                                    Machine = item.MACHINE_CODE , 
-                                    ORG = item.ORGANIZATION_CODE }, i.IsCurrent))"
-                                            Icon="cached"
-                                            style="font-weight: 700;font-size: 16px;cursor: pointer;" />
-                            }
+                        {
+                            <RadzenIcon @onclick="() => ShowdialogChangeProductCallback.InvokeAsync((new ChangeProductRequest{
+                                ChangeDate = i.CALENDAR_DATE ,
+                                Location = item.LOCATION_CODE ,
+                                Machine = item.MACHINE_CODE ,
+                                ORG = item.ORGANIZATION_CODE }, i.IsCurrent))"
+                                Icon="cached"
+                                style="font-weight: 700;font-size: 16px;cursor: pointer;" />
+                        }
                             <p class=@($"m-0 {color}") style="font-size: 12px;">
                                 @(!string.IsNullOrWhiteSpace(i.DOC_TYPE) ? i.SALETOTAL : i.AMOUNT)
                             </p>
@@ -299,11 +285,11 @@
                         <div class="d-flex flex-column">
                             @foreach (var (g, seq) in item.GroupData.WithIndex())
                             {
-                                var val = g.GETPLAN_DETAIL.Single(x => x.CALENDAR_DATE == i.CALENDAR_DATE);
+                                var val = g.GETPLAN_DETAIL.Find(x => x.CALENDAR_DATE == i.CALENDAR_DATE);
                                 var borderGrp = seq == item.GroupData.Count() - 1 ? null : "border-bottom border-dark";
                                 <div class=@($"{borderGrp}")>
                                     <div class="d-flex align-items-center justify-content-center w-100" style="height: 2rem;">
-                                        @val.RANK
+                                        @val!.RANK
                                     </div>
                                 </div>
                             }
@@ -349,6 +335,8 @@
     public EventCallback<(PlanningMasterData2 item, Group2 grp, string action)> OnChangeRowCallback { get; set; }
     [Parameter]
     public ChangeActionButton? ActionButton { get; set; }
+    [Parameter]
+    public bool ActionChangeProduct { get; set;}
 
     private void ShowTooltip(ElementReference elementReference, string text, TooltipOptions? options = null) => TooltipService.Open(elementReference, $"ตู้ปัจจุบัน : {text}", new TooltipOptions { Style = "font-size: 16px" });
 

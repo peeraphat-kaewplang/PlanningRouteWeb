@@ -12,6 +12,15 @@
                 NotifyStateChanged();
             }
         }
+
+        
+        public DateTime _dateTime { get; set; } = DateTime.Now;
+
+        public DateTime DateCurrent
+        {
+            get => _dateTime;
+           
+        }
        
         public event Action? OnChange;
         private void NotifyStateChanged() => OnChange?.Invoke();

@@ -96,7 +96,7 @@ namespace PlanningRouteWeb.Helpers
             };
         }
 
-        public static PlanningDetail2 PlanningDetailModeltoModel(PlanningDetail model, int addDay)
+        public static PlanningDetail2 PlanningDetailModeltoModel(PlanningDetail model, DateTime date ,int addDay)
         {
             return new PlanningDetail2
             {
@@ -107,7 +107,7 @@ namespace PlanningRouteWeb.Helpers
                 DOC_TYPE = model.DOC_TYPE,
                 SALETOTAL = !string.IsNullOrWhiteSpace(model.SALETOTAL) ? double.Parse(model.SALETOTAL) : 0,
                 RANK = !string.IsNullOrWhiteSpace(model.RANK) ? int.Parse(model.RANK) : null,
-                IsCurrent = DateTime.ParseExact(model.CALENDAR_DATE, "dd/MM/yyyy", null).CheckDateInCurrentWeek(addDay),
+                IsCurrent = DateTime.ParseExact(model.CALENDAR_DATE, "dd/MM/yyyy", null).CheckDateInCurrentWeek(date , addDay),
                 MAX_DROP = model.MAX_DROP,
                 AMOUNT = !string.IsNullOrWhiteSpace(model.AMOUNT) ? double.Parse(model.AMOUNT) : 0,
                 HOLIDAY = model.HOLIDAY,
@@ -186,7 +186,7 @@ namespace PlanningRouteWeb.Helpers
                 GETPLAN_DETAIL = model.GETPLAN_DETAIL.Select(x => NewPlanningDetail2(x)).ToList()
             };
         }
-        public static PlanningMasterData2 PlanningMasterDataModeltoModel(PlanningMasterData model, int addDay, IEnumerable<PlanningMasterData> Grp)
+        public static PlanningMasterData2 PlanningMasterDataModeltoModel(PlanningMasterData model, DateTime date, IEnumerable<PlanningMasterData> Grp , int addDay)
         {
             var data = new PlanningMasterData2
             {
@@ -200,7 +200,7 @@ namespace PlanningRouteWeb.Helpers
                 LOCATION_NAME = model.LOCATION_NAME,
                 MACHINE_CODE = model.MACHINE_CODE,
                 MACHINE_MODEL = model.MACHINE_MODEL,
-                CHANGE_ACTION = model.MACHINE_CODE == "19785" ? "C" : "",
+                CHANGE_ACTION = model.MACHINE_CODE,
                 TOTAL_FEE = model.TOTAL_FEE,
                 BEFORE_SALE = model.BEFORE_SALE,
                 BEFORE_MTD = model.BEFORE_MTD,
@@ -220,17 +220,17 @@ namespace PlanningRouteWeb.Helpers
                 SALE_LAST_WEEK = !string.IsNullOrWhiteSpace(model.SALE_LAST_WEEK) ? double.Parse(model.SALE_LAST_WEEK) : 0,
                 SALE_LAST_WEEK_END = !string.IsNullOrWhiteSpace(model.SALE_LAST_WEEK_END) ? double.Parse(model.SALE_LAST_WEEK_END) : 0,
                 GETPLAN_DETAIL = model.GETPLAN_DETAIL
-                                .Select(x => PlanningDetailModeltoModel(x, addDay))
+                                .Select(x => PlanningDetailModeltoModel(x, date , addDay))
                                 .ToList(),
                 GroupData = Grp
-                            .Select(x => ConvertModel.PlanningMasterDataModeltoModel2(x, addDay))
+                            .Select(x => ConvertModel.PlanningMasterDataModeltoModel2(x, date, addDay))
                             .OrderBy(x => int.Parse(x.MSORT))
                             .ToList(),
             };
             return data;
         }
 
-        public static Group2 PlanningMasterDataModeltoModel2(PlanningMasterData model, int addDay)
+        public static Group2 PlanningMasterDataModeltoModel2(PlanningMasterData model, DateTime date , int addDay)
         {
 
             return new Group2
@@ -265,7 +265,7 @@ namespace PlanningRouteWeb.Helpers
                 SALE_LAST_WEEK = !string.IsNullOrWhiteSpace(model.SALE_LAST_WEEK) ? double.Parse(model.SALE_LAST_WEEK) : 0,
                 SALE_LAST_WEEK_END = !string.IsNullOrWhiteSpace(model.SALE_LAST_WEEK_END) ? double.Parse(model.SALE_LAST_WEEK_END) : 0,
                 GETPLAN_DETAIL = model.GETPLAN_DETAIL
-                                .Select(x => PlanningDetailModeltoModel(x, addDay))
+                                .Select(x => PlanningDetailModeltoModel(x, date , addDay))
                                 .ToList()
             };
         }
@@ -332,12 +332,14 @@ namespace PlanningRouteWeb.Helpers
                 PRODUCT_CODE = model.PRODUCT_CODE,
                 PRODUCT_NAME = model.PRODUCT_NAME,
                 SLOT_NO = int.Parse(model.SLOT_NO),
-                SLOT_INSTALLPRICE = !string.IsNullOrWhiteSpace(model.SLOT_INSTALLPRICE) ? int.Parse(model.SLOT_INSTALLPRICE) : 0,
-                SLOT_REALPRICE = !string.IsNullOrWhiteSpace(model.SLOT_REALPRICE) ? int.Parse(model.SLOT_REALPRICE) : 0,
-                SLOT_CONTRACT_PRICE = !string.IsNullOrWhiteSpace(model.SLOT_CONTRACT_PRICE) ? int.Parse(model.SLOT_CONTRACT_PRICE) : 0,
+                SLOT_INSTALLPRICE = !string.IsNullOrWhiteSpace(model.SLOT_INSTALLPRICE) ? double.Parse(model.SLOT_INSTALLPRICE) : 0,
+                SLOT_REALPRICE = !string.IsNullOrWhiteSpace(model.SLOT_REALPRICE) ? double.Parse(model.SLOT_REALPRICE) : 0,
+                SlotRealPriceOld = !string.IsNullOrWhiteSpace(model.SLOT_REALPRICE) ? double.Parse(model.SLOT_REALPRICE) : 0,
+                SlotRealPriceInit = !string.IsNullOrWhiteSpace(model.SLOT_REALPRICE) ? double.Parse(model.SLOT_REALPRICE) : 0,
+                SLOT_CONTRACT_PRICE = !string.IsNullOrWhiteSpace(model.SLOT_CONTRACT_PRICE) ? double.Parse(model.SLOT_CONTRACT_PRICE) : 0,
                 SLOTSTATUS = !string.IsNullOrWhiteSpace(model.SLOTSTATUS) ? model.SLOTSTATUS == "1" ? true : false : false,
-                SALEPRICE = model.SALEPRICE,
-                SALETOTAL = model.SALETOTAL,
+                SALEPRICE = !string.IsNullOrWhiteSpace(model.SALEPRICE) ? double.Parse(model.SALEPRICE) : 0,
+                SALETOTAL = !string.IsNullOrWhiteSpace(model.SALETOTAL) ? model.SALETOTAL : "0",
                 LOADIN = !string.IsNullOrWhiteSpace(model.LOADIN) ? int.Parse(model.LOADIN) : 0,
                 IsStatusChange = isStatusChange,
                 STATUSCHANGE = !string.IsNullOrWhiteSpace(model.STATUSCHANGE) ? model.STATUSCHANGE == "1" || model.STATUSCHANGE == "2" ? true : false : false,

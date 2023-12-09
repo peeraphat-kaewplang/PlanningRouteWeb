@@ -8,8 +8,8 @@ namespace PlanningRouteWeb.Helpers
         {
             var stop = false;
             var stack = new List<PlanningDetail2>();
-            var first = GetDatetimeClass.currentDate.FirstDayOfMonth();
-            var last = GetDatetimeClass.currentDate.LastDayOfMonth();
+            var first = DateTime.Now.FirstDayOfMonth();
+            var last = DateTime.Now.LastDayOfMonth();
 
             var recordsCal = records.Select(x =>
             {

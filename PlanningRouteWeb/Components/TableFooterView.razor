@@ -82,6 +82,8 @@
     }
 </tr>
 
+@inject StateContainer StateContainer
+
 @code {
     [Parameter]
     public IDictionary<string, ColumnProperty> Columns { get; set; } = new Dictionary<string, ColumnProperty>();
@@ -108,28 +110,40 @@
     private List<ColumnFooter> LoadFooter()
     {
         var planDetail = new List<PlanningDetail2>();
+        var planDrop = new List<PlanningDetail2>();
         foreach (var x in Data)
         {
             if(x.GroupData.Count() > 1)
             {
                 foreach (var i in x.GroupData.Skip(0))
                 {
-                    planDetail.AddRange(i.GETPLAN_DETAIL);
+                    foreach (var d in i.GETPLAN_DETAIL)
+                    {
+                        if (d.RANK != null)
+                        {
+                            planDrop.Add(d);
+                        }
+                    }
                 }
             }
             else
             {
-                planDetail.AddRange(x.GETPLAN_DETAIL);
+                planDrop.AddRange(x.GETPLAN_DETAIL);
             }
+
+            planDetail.AddRange(x.GETPLAN_DETAIL);
         }
 
         return planDetail.GroupBy(a => a.CALENDAR_DATE, (key, grp) => new ColumnFooter
         {
             FieldDate = key,
-            COUNT_STATUS_MANUAL = grp.Where(x => x.STATUS_MANUAL).Count(),
+            // COUNT_STATUS_MANUAL =  grp.Count(x => x.DOC_TYPE == "1"),
+            COUNT_STATUS_MANUAL = planDrop.Where(x => x.CALENDAR_DATE == key && x.DOC_TYPE == "1").Count(),
             MAX_DROP = !string.IsNullOrWhiteSpace(grp.FirstOrDefault()!.MAX_DROP) ? int.Parse(grp.FirstOrDefault()!.MAX_DROP) : 0,
-            IsCurrent = GetDatetimeClass.currentDate.ToContainsDate(key) ,
-            SUM_SALETOTAL = grp.Sum(x => x.STATUS_MANUAL && !string.IsNullOrWhiteSpace(x.DOC_TYPE) || x.IsCurrent ? x.SALETOTAL : 0),
+            IsCurrent = StateContainer.DateCurrent.ToContainsDate(key),
+            SUM_SALETOTAL = StateContainer.DateCurrent.ToContainsDate(key) ?
+            grp.Sum(x => x.STATUS_MANUAL && !string.IsNullOrWhiteSpace(x.DOC_TYPE) || x.IsCurrent ? x.SALETOTAL : 0):
+            grp.Sum(x => !string.IsNullOrWhiteSpace(x.DOC_TYPE) ? x.SALETOTAL : 0),
             SUM_SALETOTAL_TOTAL = grp.Sum(x => x.SALETOTAL != 0 ? x.SALETOTAL : x.AMOUNT),
         })
         .ToList();

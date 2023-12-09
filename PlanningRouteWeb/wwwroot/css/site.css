@@ -211,7 +211,7 @@ tfoot td.success {
     z-index: 1;
     margin: auto;
     overflow: auto;
-    height: 370px;
+    height: 43.5rem;
 }
 
 .table-scroll table {
@@ -418,6 +418,21 @@ thead , tr {
     background-color: blanchedalmond !important;
 }
 
+.plan-change {
+    background-color: #dcebf8 !important;
+}
+
 .rank-error.color {
     background-color: red !important;
+}
+
+
+.grp-color-new {
+    background: #d1e7dd !important;
+}
+.grp-color-change {
+    background: lightyellow !important;
+}
+.grp-color-off {
+    background: #e2e3e5 !important;
 }

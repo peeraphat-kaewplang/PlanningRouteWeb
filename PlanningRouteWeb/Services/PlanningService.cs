@@ -106,15 +106,15 @@ namespace PlanningRouteWeb.Services
                             FieldRankName = "Seq",
                             FieldValueName = "Value",
                             ClassColor = SubStrDay(item.CALENDAR_DATE).FullName.ToLower(),
-                            IsCurrent = DateTime.ParseExact(item.CALENDAR_DATE, "dd/MM/yyyy", null).CheckDateInCurrentWeek(1 + _stateContainer.BeforeConfig),
-                        });
+                                IsCurrent = DateTime.ParseExact(item.CALENDAR_DATE, "dd/MM/yyyy", null).CheckDateInCurrentWeek(_stateContainer.DateCurrent , _stateContainer.BeforeConfig),
+                            });
                     }
 
                     var mapModel = plannings?.Data.Plan
                         //.Where(x => x.LOCATION_CODE == "0163915")
                         .GroupBy(x => x.LOCATION_CODE,
                                 (key, grp) =>
-                                ConvertModel.PlanningMasterDataModeltoModel(grp.OrderBy(x => int.Parse(x.MSORT)).FirstOrDefault()!, _stateContainer.BeforeConfig, grp))
+                                ConvertModel.PlanningMasterDataModeltoModel(grp.OrderBy(x => int.Parse(x.MSORT)).FirstOrDefault()!, _stateContainer.DateCurrent, grp , _stateContainer.BeforeConfig))
                         .OrderBy(x => x.LOCATION_CODE)
                         .ThenBy(x => int.Parse(x.MSORT))
                         //.Skip(0).Take(2)
@@ -240,6 +240,8 @@ namespace PlanningRouteWeb.Services
             {
                 throw new ApplicationException(content);
             }
+
+            var json = JsonSerializer.Serialize(body);
 
             var save = JsonSerializer.Deserialize<SavePlanResponse>(content, _options);
             return save!;

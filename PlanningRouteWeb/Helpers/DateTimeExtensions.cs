@@ -20,7 +20,7 @@ namespace PlanningRouteWeb.Helpers
             return dt.AddDays(-diff).Date;
         }
         public static DateTime LastDayOfWeek(this DateTime dt) 
-            => dt.FirstDayOfWeek().AddDays(6);
+            => dt.FirstDayOfWeek().AddDays(7);
         public static string ToStringDate(this DateTime date, string format = "dd/MM/yyyy")
            => date.ToString(format ,CultureInfo.GetCultureInfo("en-US"));
         public static bool ToContainsDate(this DateTime date, string current)
@@ -34,10 +34,9 @@ namespace PlanningRouteWeb.Helpers
            => new DateTime(inDate.Year, inDate.Month, DateTime.DaysInMonth(inDate.Year, inDate.Month));
         public static int GetWeekNumberOfMonth(this DateTime date)
             => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
-        public static bool CheckDateInCurrentWeek(this DateTime date , int addDay)
+        public static bool CheckDateInCurrentWeek(this DateTime date , DateTime dateiIn , int addDay)
         {
-
-            var currentDate = GetDatetimeClass.currentDate.AddDays(addDay);
+            var currentDate = dateiIn.AddDays(addDay);
             var week = date.GetWeekNumberOfMonth();
             var currentWeek = currentDate.GetWeekNumberOfMonth();
 
@@ -51,25 +50,11 @@ namespace PlanningRouteWeb.Helpers
                 {
                     return false;
                 }
-                //return true; 
             }
             else if (week - 1 == currentWeek)
             {
                 return true;
             }
-
-            //if (week - 1 == currentWeek) return true;
-
-            //if (week != currentWeek) return false;
-
-            //var weekStart = currentDate.FirstDayOfWeek();
-            //var weekEnd = weekStart.LastDayOfWeek();
-
-            //TimeSpan diffResult = date.Subtract(currentDate);
-            //TimeSpan diffResult2 = weekEnd.Subtract(date);
-
-            //if (diffResult >= TimeSpan.Zero && diffResult2 >= TimeSpan.Zero) return true;
-
             return false;
         }
        
