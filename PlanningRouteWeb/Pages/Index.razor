@@ -49,7 +49,9 @@
                     OnChangeRowCallback="@((args) => OnChangeRow(args.Item1 , args.Item2 ,args.Item3))"
                     OnChangeMasterCallback="@OnChangeMater"
                     OnChageRankCallback="@((args) => OnChageRank( args.Item2))"
-                    ShowdialogChangeProductCallback="@((args) => ShowdialogChangeProduct(args.Item1 , args.Item2))"/>
+                    ShowdialogChangeProductCallback="@((args) => ShowdialogChangeProduct(args.Item1 , args.Item2))"
+                    ShowdialogBestProductCallback="@ShowdialogBestProduct"/>
+                    
             </tbody>
             <tfoot>
                 <TableFooterView 
@@ -319,20 +321,20 @@
         }
         var recordData = dataSave.Select(x => ConvertModel.PlanningMasterData2ModeltoSave(x)).ToList();
 
-        // var response = await PlanningService.PlanningSavePlan(recordData);
+        var response = await PlanningService.PlanningSavePlan(recordData);
 
-        // if(response.ErrorMessage == "success")
-        // {
-        //     var Task = InvokeAsync(async () => {
-        //        actionButton = new();
-        //         await LoadMaster();
-        //         DialogServiceCustom.DialogClose();
-        //     });
-        //     await DialogServiceCustom.BusyDialog("กำลังบันทึกข้อมูล...");
+        if(response.ErrorMessage == "success")
+        {
+            var Task = InvokeAsync(async () => {
+               actionButton = new();
+                await LoadMaster();
+                DialogServiceCustom.DialogClose();
+            });
+            await DialogServiceCustom.BusyDialog("กำลังบันทึกข้อมูล...");
             
-        // }
-        // ds.Close(false);
-        // StateHasChanged();
+        }
+        ds.Close(false);
+        StateHasChanged();
     }
     //   private async Task OnClickSavePlan(DialogService ds)
     // {
@@ -528,8 +530,14 @@
 
     private async Task ShowdialogChangeProduct(ChangeProductRequest item , bool isCurrent) {
         var result = await DialogService.OpenAsync("เปลี่ยนสินค้า", ds =>
-        @<ModalChangeProduct Item="item" IsCurrent="isCurrent" Dialog="ds"/>,new DialogOptions() { Width = "1700px", Height = "950px" });
+        @<ModalChangeProduct Item="item" IsCurrent="isCurrent" Dialog="ds" ShowdialogBestProductCallback="@ShowdialogBestProduct"/>,new DialogOptions() { Width = "1700px", Height = "950px" });
         await ShowBusyDialog();
+    }
+
+    private async Task ShowdialogBestProduct(BestProductRequest item)
+    {
+        var result = await DialogService.OpenAsync("สินค้าขายดี", ds =>
+        @<BestProduct Request="item"/>,new DialogOptions() { Width = "1700px", Height = "950px" });
     }
 
     private async Task SaveTarget(DialogService ds)
