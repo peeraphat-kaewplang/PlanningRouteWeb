@@ -1,0 +1,99 @@
+﻿<table class="table table-hover table-sm ">
+    <thead>
+        <tr>
+            <th colspan="1" class="text-center" style="font-size: 16px;">
+                ลำดับสินค้า
+            </th>
+            <th colspan="9" class="text-center" style="font-size: 16px;">
+                master ณ วันที่ @DateTime.Now.ToString("dd/MM/yyyy" ,CultureInfo.GetCultureInfo("en-US"))
+            </th>
+        </tr>
+        <tr>
+            <th class="text-center" style="font-size: 14px;">ลำดับที่</th>
+            <th style="font-size: 14px;">รหัสสินค้า</th>
+            <th style="font-size: 14px;">ชื่อสินค้า</th>
+            <th class="text-end" style="font-size: 14px;">จำนวนช่องสินค้า</th>
+            <th class="text-end" style="font-size: 14px;">ราคามาตรฐาน</th>
+            <th class="text-end" style="font-size: 14px;">ราคาหน้าตู้</th>
+            <th class="text-end" style="font-size: 14px;">ราคาตั้ง</th>
+            <th class="text-end" style="font-size: 14px;">ราคาเรียกเก็บ</th>
+            <th class="text-end" style="font-size: 14px;">ระยะเวลาเฉลี่ย</th>
+            <th class="text-end" style="font-size: 14px;">ชิ้น</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var (item, index) in bestProduct.WithIndex())
+        {
+            <tr>
+                <td class="text-center" style="font-size: 14px;width: 5rem;">
+                    <div >
+                        @(index + 1)
+                    </div>
+                </td>
+                <td style="font-size: 14px;width: 5rem;">
+                    <div>
+                        @item.PRODUCT_CODE
+                    </div>
+                    
+                </td>
+                <td style="font-size: 14px;width: 30rem;">
+                    <div>
+                        @item.PRODUCT_NAME
+                    </div>
+                    
+                </td>
+                <td class="text-end" style="font-size: 14px;width: 8rem;">
+                    <div >
+                        @item.TOTALSLOT
+                    </div>
+                </td>
+                <td class="text-end" style="font-size: 14px;width: 8rem;">
+                    <div >
+                        @item.SALEPRICE
+                    </div>
+                </td>
+                <td class="text-end" style="font-size: 14px;width: 8rem;">
+                    <div >
+                        @item.INSTALLPRICE
+                    </div>
+                    
+                </td>
+                <td class="text-end" style="font-size: 14px;width: 8rem;">
+                </td>
+                <td class="text-end" style="font-size: 14px;width: 8rem;">
+                    <div >
+                        @item.DIFFPRICE
+                    </div>
+                </td>
+                <td class="text-end" style="font-size: 14px;width: 8rem;">
+                    <div >
+                        @item.DURATION
+                    </div>
+                </td>
+                <td class="text-end" style="font-size: 14px;width: 3rem;">
+                    <div style="font-size: 14px;">
+                        @item.QTY
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@inject IBestProduct BestProductService
+@code {
+    [Parameter]
+    public BestProductRequest? Request { get; set; }
+
+    public List<BestProduct2> bestProduct { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await BestProductService.GetBestProduct(Request!);
+
+        if (response.ErrorMessage == "success")
+        {
+            bestProduct = response.Data.Select(x => ConvertModel.BestProductToBestProduct2(x)).ToList();
+        }
+    }
+}

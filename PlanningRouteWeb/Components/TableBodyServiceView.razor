@@ -118,6 +118,17 @@
                     }
                 </div>
             </td>
+            <td class="text-center" >
+                <RadzenButton Click=@(()=> ShowdialogBestProductCallback.InvokeAsync(new BestProductRequest{
+                      Location = item.LOCATION_CODE ,
+                      Machine = item.MACHINE_CODE ,
+                      ORG = item.ORGANIZATION_CODE
+                 }))
+                Text="สินค้าขายดี"
+                ButtonStyle="ButtonStyle.Primary"
+                Size="ButtonSize.ExtraSmall"
+                Style="text-transform: none;" />
+            </td>
         }
        
         <td class="text-end" >
@@ -329,6 +340,8 @@
     public EventCallback<PlanningMasterData2> OnChangeMasterCallback { get; set; }
     [Parameter]
     public EventCallback<(ChangeProductRequest ,bool)> ShowdialogChangeProductCallback { get; set; }
+    [Parameter]
+    public EventCallback<BestProductRequest> ShowdialogBestProductCallback { get; set; }
     [Parameter]
     public EventCallback<(int?, string, string)> OnChageRankCallback { get; set; }
     [Parameter]

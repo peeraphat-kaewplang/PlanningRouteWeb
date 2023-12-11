@@ -51,7 +51,9 @@ feature-chage-product-group
                     OnChangeRowCallback="@((args) => OnChangeRow(args.Item1 , args.Item2 ,args.Item3))"
                     OnChangeMasterCallback="@OnChangeMater"
                     OnChageRankCallback="@((args) => OnChageRank( args.Item2))"
-                    ShowdialogChangeProductCallback="@((args) => ShowdialogChangeProduct(args.Item1 , args.Item2))"/>
+                    ShowdialogChangeProductCallback="@((args) => ShowdialogChangeProduct(args.Item1 , args.Item2))"
+                    ShowdialogBestProductCallback="@ShowdialogBestProduct"/>
+                    
             </tbody>
             <tfoot>
                 <TableFooterView 
@@ -314,6 +316,7 @@ feature-chage-product-group
                 record.SUNDAY = item.SUNDAY;
                 record.IS_DUPLICATE = save.IS_DUPLICATE;
                 record.SALE_LAST_WEEK = save.SALE_LAST_WEEK;
+               
                 dataSave.Add(record);
             }
 
@@ -529,8 +532,14 @@ feature-chage-product-group
 
     private async Task ShowdialogChangeProduct(ChangeProductRequest item , bool isCurrent) {
         var result = await DialogService.OpenAsync("เปลี่ยนสินค้า", ds =>
-        @<ModalChangeProduct Item="item" IsCurrent="isCurrent" Dialog="ds"/>,new DialogOptions() { Width = "1700px", Height = "950px" });
+        @<ModalChangeProduct Item="item" IsCurrent="isCurrent" Dialog="ds" ShowdialogBestProductCallback="@ShowdialogBestProduct"/>,new DialogOptions() { Width = "1700px", Height = "950px" });
         await ShowBusyDialog();
+    }
+
+    private async Task ShowdialogBestProduct(BestProductRequest item)
+    {
+        var result = await DialogService.OpenAsync("สินค้าขายดี", ds =>
+        @<BestProduct Request="item"/>,new DialogOptions() { Width = "1700px", Height = "950px" });
     }
 
     private async Task SaveTarget(DialogService ds)
@@ -561,9 +570,9 @@ feature-chage-product-group
             EndDate = end
         };
 
-        var jsonstr = Newtonsoft.Json.JsonConvert.SerializeObject (body);
+        // var jsonstr = Newtonsoft.Json.JsonConvert.SerializeObject (body);
         var response = await PlanningService.PlanningCalPlan(body);
-
+        // var jsonstr = Newtonsoft.Json.JsonConvert.SerializeObject(response);
         if(response.ErrorMessage == "success")
         {
             await LoadMaster();

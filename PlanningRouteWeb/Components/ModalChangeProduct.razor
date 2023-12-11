@@ -28,9 +28,10 @@
         <p>วันที่ : @Item.ChangeDate</p>
     </div>
 </div>
-@if (header.TYPE_METER != "2")
-{
-    <div class="row">
+
+<div class="row">
+    @if (header.TYPE_METER != "2")
+    {
         <div class="col-1">
             <RadzenLabel Text="Filter" />
         </div>
@@ -43,8 +44,19 @@
                 </Items>
             </RadzenRadioButtonList>
         </div>
+    }
+    <div class="col-6">
+        <RadzenButton 
+        Click=@(()=> ShowdialogBestProductCallback.InvokeAsync(new BestProductRequest{
+                      Location = Item.Location ,
+                      Machine = Item.Machine ,
+                      ORG = Item.ORG }))
+        Text="สินค้าขายดี"
+        ButtonStyle="ButtonStyle.Primary"
+        Size="ButtonSize.ExtraSmall"
+        Style="text-transform: none;" />
     </div>
-}
+</div>
 
 <div id="table-scroll" class="table-scroll mb-2">
 
@@ -604,6 +616,8 @@
     public DialogService? Dialog { get; set; }
     [Parameter]
     public bool IsCurrent { get; set; }
+    [Parameter]
+    public EventCallback<BestProductRequest> ShowdialogBestProductCallback { get; set; }
 
     class FormModel
     {

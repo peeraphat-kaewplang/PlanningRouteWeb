@@ -1,6 +1,8 @@
 ﻿
 @{
     var grpData = LoadFooter();
+
+    
 }
 <tr>
     <td rowspan="2" colspan="4" class="sticky-col first-col" style="z-index:20;"></td>
@@ -35,8 +37,18 @@
     @foreach (var (obj, index) in grpData.WithIndex())
     {
         var error = obj.COUNT_STATUS_MANUAL == obj.MAX_DROP ? "success" : "error";
-        <td class=@($"text-center fw-bold {error}") style="font-size: 12px;">@obj.COUNT_STATUS_MANUAL</td>
-        <td rowspan="@(obj.IsCurrent ? 1 : 2)" class="text-end fw-bold" style="font-size: 12px;">
+        <td class=@($"text-center fw-bold {error}") style="font-size: 12px;">
+            @if(!obj.IsCurrent)
+            {
+                @obj.COUNT_STATUS_MANUAL
+            }
+            else
+            {
+                @obj.COUNT_STATUS_MANUAL2
+            }
+
+        </td>
+        <td rowspan="@(StateContainer.DateCurrent.ToContainsDate(obj.FieldDate) ? 1 : 2)" class="text-end fw-bold" style="font-size: 12px;">
             @obj.SUM_SALETOTAL
         </td>
         <td rowspan="2" style="font-size: 12px;"></td>
@@ -75,7 +87,7 @@
     {
         var error = obj.COUNT_STATUS_MANUAL == obj.MAX_DROP ? "success" : "error";
         <td class=@($"text-center fw-bold {error}") style="font-size: 12px;">@obj.MAX_DROP</td>
-        if (obj.IsCurrent)
+        if (StateContainer.DateCurrent.ToContainsDate(obj.FieldDate))
         {
             <td class="text-end fw-bold" style="font-size: 12px;">@obj.SUM_SALETOTAL_TOTAL</td>
         }
@@ -107,6 +119,7 @@
         currentMTD = Data.Sum(x => !string.IsNullOrWhiteSpace(x.CURRENT_MTD) ? int.Parse(x.CURRENT_MTD) : 0);
     }
 
+
     private List<ColumnFooter> LoadFooter()
     {
         var planDetail = new List<PlanningDetail2>();
@@ -134,13 +147,15 @@
             planDetail.AddRange(x.GETPLAN_DETAIL);
         }
 
+        var aa = planDrop.Where(x => x.CALENDAR_DATE == "11/12/2023").ToList();
+
         return planDetail.GroupBy(a => a.CALENDAR_DATE, (key, grp) => new ColumnFooter
         {
             FieldDate = key,
-            // COUNT_STATUS_MANUAL =  grp.Count(x => x.DOC_TYPE == "1"),
-            COUNT_STATUS_MANUAL = planDrop.Where(x => x.CALENDAR_DATE == key && x.DOC_TYPE == "1").Count(),
+            COUNT_STATUS_MANUAL = planDrop.Where(x => x.CALENDAR_DATE == key && x.DOC_TYPE == "1" ).Count(),
+            COUNT_STATUS_MANUAL2 = planDrop.Where(x => x.CALENDAR_DATE == key && x.STATUS_MANUAL ).Count(),
             MAX_DROP = !string.IsNullOrWhiteSpace(grp.FirstOrDefault()!.MAX_DROP) ? int.Parse(grp.FirstOrDefault()!.MAX_DROP) : 0,
-            IsCurrent = StateContainer.DateCurrent.ToContainsDate(key),
+            IsCurrent = grp.FirstOrDefault()!.IsCurrent,
             SUM_SALETOTAL = StateContainer.DateCurrent.ToContainsDate(key) ?
             grp.Sum(x => x.STATUS_MANUAL && !string.IsNullOrWhiteSpace(x.DOC_TYPE) || x.IsCurrent ? x.SALETOTAL : 0):
             grp.Sum(x => !string.IsNullOrWhiteSpace(x.DOC_TYPE) ? x.SALETOTAL : 0),

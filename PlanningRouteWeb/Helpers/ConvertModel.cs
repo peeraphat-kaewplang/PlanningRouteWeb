@@ -102,8 +102,8 @@ namespace PlanningRouteWeb.Helpers
             {
                 CALENDAR_DATE = model.CALENDAR_DATE,
                 STATUS_ORIGINAL = model.STATUS_ORIGINAL,
+                //STATUS_MANUAL = true,
                 STATUS_MANUAL = !string.IsNullOrWhiteSpace(model.STATUS_MANUAL) ? model.STATUS_MANUAL == "Y" ? true : false : false,
-                //STATUS_MANUAL = model.CALENDAR_DATE == "06/11/2023" ? true : false,
                 DOC_TYPE = model.DOC_TYPE,
                 SALETOTAL = !string.IsNullOrWhiteSpace(model.SALETOTAL) ? double.Parse(model.SALETOTAL) : 0,
                 RANK = !string.IsNullOrWhiteSpace(model.RANK) ? int.Parse(model.RANK) : null,
@@ -366,5 +366,20 @@ namespace PlanningRouteWeb.Helpers
                 STATUSCHANGE =status
             };
         }
+
+        public static BestProduct2 BestProductToBestProduct2(BestProduct model)
+        {
+            return new BestProduct2
+            {
+                PRODUCT_CODE = model.PRODUCT_CODE,
+                PRODUCT_NAME = model.PRODUCT_NAME,
+                TOTALSLOT = !string.IsNullOrWhiteSpace(model.TOTALSLOT) ? int.Parse(model.TOTALSLOT) : 0,
+                SALEPRICE = !string.IsNullOrWhiteSpace(model.SALEPRICE) ? double.Parse(model.SALEPRICE) : 0,
+                INSTALLPRICE = !string.IsNullOrWhiteSpace(model.INSTALLPRICE) ? double.Parse(model.INSTALLPRICE) : 0,
+                DIFFPRICE = !string.IsNullOrWhiteSpace(model.DIFFPRICE) ? double.Parse(model.DIFFPRICE) : 0,
+                DURATION = !string.IsNullOrWhiteSpace(model.DURATION) ? int.Parse(model.DURATION) : 0,
+                QTY = !string.IsNullOrWhiteSpace(model.QTY) ? int.Parse(model.QTY) : 0,
+            };
+        }   
     }
 }
