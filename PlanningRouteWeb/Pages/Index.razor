@@ -5,8 +5,6 @@
     var styleWidth = !hideMaster ? "widht-show-master" : "widht-hide-master";
 }
 
-feature-chage-product-group
-
 <div class=@($"width-screen {styleWidth} command-wrapper")>
         <RadzenDropDown TValue="string"  Style="width: 100%; max-width: 200px; position: sticky;left: 0px;" TextProperty="ORGANIZATION_NAME"
             ValueProperty="ORGANIZATION_CODE" @bind-Value=@selectOrg Data=@optionsOrg Change="@(args => ChangeOrg(args))" />

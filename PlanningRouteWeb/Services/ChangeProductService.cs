@@ -77,6 +77,26 @@ namespace PlanningRouteWeb.Services
             return data;
         }
 
+        public async Task<ChangeProductResponse> GetChangeProductGroup(ChangeProductRequest body)
+        {
+            var requestMessage = new HttpRequestMessage()
+            {
+                Method = new HttpMethod("POST"),
+                RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}API_PLANNING/V1/GETCHANGEPRODUCT"),
+                Content = JsonContent.Create(body)
+            };
+
+            var response = await _httpClient.SendAsync(requestMessage);
+            var content = await response.Content.ReadAsStringAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new ApplicationException(content);
+            }
+
+            var changeProduct = JsonSerializer.Deserialize<ChangeProductResponse>(content, _options);
+            return changeProduct!;
+        }
+
         public async Task<RawproductResponse> GetRawproduct(RawproductRequest body)
         {
             var requestMessage = new HttpRequestMessage()
