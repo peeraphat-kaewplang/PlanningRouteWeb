@@ -37,15 +37,15 @@
         <RadzenLabel Text="Filter" />
     </div>
     <div class="col-6">
-        <RadzenRadioButtonList @bind-Value=@formModel.Filter Orientation=Orientation.Horizontal TValue="int">
+        <RadzenRadioButtonList @bind-Value=@formModel.Filter Orientation=Orientation.Horizontal TValue="string">
             <Items>
-                <RadzenRadioButtonListItem Text="มากไปน้อย" Value="1" />
-                <RadzenRadioButtonListItem Text="น้อยไปมาก" Value="2" />
-                <RadzenRadioButtonListItem Text="กำหนดเอง" Value="3" />
+                <RadzenRadioButtonListItem Text="มากไปน้อย" Value=@("DESC") />
+                <RadzenRadioButtonListItem Text="น้อยไปมาก" Value=@("ASC") />
+                <RadzenRadioButtonListItem Text="กำหนดเอง" Value=@("FIXED") />
             </Items>
         </RadzenRadioButtonList>
     </div>
-    <div class="col-6">
+    <div class="col-5 d-flex justify-content-end">
         <RadzenButton 
         Click=@(()=> ShowdialogBestProductCallback.InvokeAsync(new BestProductRequest{
         Location = Item.Location ,
@@ -95,7 +95,7 @@
                 var disableMove = selectRowGroup != null && selectRowGroupProduct != null;
                 var option = optionsSlot.Where(x => x != i.SLOT_REALPRICE);
 
-                <tr role="button" draggable="@(formModel.Filter == 3 ? "true" : "false")" @ondrop="@(()=> Drop(i))" @ondrag="@(e => StartDrag(i))" class=@($"{trClassColor}")>
+                <tr role="button" draggable="@(formModel.Filter == "FIXED" ? "true" : "false")" @ondrop="@(()=> Drop(i))" @ondrag="@(e => StartDrag(i))" class=@($"{trClassColor}")>
                     <td style="width:5rem" rowspan=@rowSpan>
                         <div class="row gy-2 justify-content-center">
                             <RadzenButton Click=@(() => OnOpenRowGroup(i , i.IsAddSlot))
@@ -234,7 +234,7 @@
                     var trClassColorDetail = d.IsAddSlot ? "table-success" : trClassColor;
                     var tdClassColorDetail = d.IsAddSlot ? "grp-color-new" : d.IsStatusChange ? "grp-color-change" : !d.SLOTSTATUS ? "grp-color-off" : null;
 
-                    <tr role="button" draggable="@(formModel.Filter == 3 ? "true" : "false")" @ondrop="@(()=> Drop(i))" @ondrag="@(e => StartDrag(i))" class=@($"{trClassColorDetail}")>
+                    <tr role="button" draggable="@(formModel.Filter == "FIXED" ? "true" : "false")" @ondrop="@(()=> Drop(i))" @ondrag="@(e => StartDrag(i))" class=@($"{trClassColorDetail}")>
                         <td class=@($"{tdClassColorDetail}") style="width:2rem"> @(d != null ? d.SlotRealPriceOld : "")</td>
                         <td class=@($"{tdClassColorDetail}") style="width:2rem"> @(d != null ? d.SLOT_CONTRACT_PRICE : "")</td>
                         <td class=@($"{tdClassColorDetail}")>
@@ -368,7 +368,7 @@
     class FormModel
     {
         public int SlotRealPrice { get; set; }
-        public int Filter { get; set; } = 1;
+        public string Filter { get; set; } = string.Empty ;
     }
 
     int currentIndex;
@@ -387,7 +387,7 @@
     #region Load data
     protected override async Task OnInitializedAsync()
     {
-       
+
         await LoadDataChangeProduct();
 
     }
@@ -398,6 +398,11 @@
         {
             Data = Data.FilterGroup(formModel.Filter);
             optionsSlot = Data.Select(x => x.SLOT_REALPRICE).ToList();
+        }
+
+        if (Header is not null)
+        {
+            formModel.Filter = Header.STATUS_SORT;
         }
     }
 
@@ -439,7 +444,8 @@
                     </RadzenStack>
                 </RadzenTemplateForm>
             </div>
-        </div>);
+        </div>
+    );
 
         formModel = new();
     }
@@ -469,7 +475,7 @@
 
         DialogService.Close(true);
     }
-    
+
     bool ValidateRealPrice(int val)
     {
         if (val == 0) return true;
@@ -633,9 +639,27 @@
     void DeleteProduct(ChangeProductDetail2 item, int index)
     {
         var grp = Data![index];
+
         var slot = Data.Find(x => x.SLOT_REALPRICE == item.SlotRealPriceInit && x.SLOT_REALPRICE != grp.SLOT_REALPRICE);
+
+        if (grp.Products.Count() == 1)
+        {
+            grp.Products[0] = new ChangeProductDetail2
+                    {
+                        SLOT_NO = item.SLOT_NO,
+                        SLOTSTATUS = false
+                    };
+            grp.IsEmptySlot = true;
+        }
+        else
+        {
+            grp.Products.Remove(item);
+        }
+
         if (slot != null)
         {
+           
+
             if (grp.IsAddSlot)
             {
                 if (slot.Products.Count() == 1 && slot.IsEmptySlot)
@@ -662,19 +686,19 @@
                 }
 
 
-                if (grp.Products.Count() == 1)
-                {
-                    grp.Products[0] = new ChangeProductDetail2
-                            {
-                                SLOT_NO = item.SLOT_NO,
-                                SLOTSTATUS = true
-                            };
-                    grp.IsEmptySlot = true;
-                }
-                else
-                {
-                    grp.Products.Remove(item);
-                }
+                // if (grp.Products.Count() == 1)
+                // {
+                //     grp.Products[0] = new ChangeProductDetail2
+                //             {
+                //                 SLOT_NO = item.SLOT_NO,
+                //                 SLOTSTATUS = true
+                //             };
+                //     grp.IsEmptySlot = true;
+                // }
+                // else
+                // {
+                //     grp.Products.Remove(item);
+                // }
             }
             else
             {
@@ -689,7 +713,7 @@
                 if (!slot.IsEmptySlot)
                 {
                     slot.Products.Add(item);
-                    grp.Products.Remove(item);
+                    // grp.Products.Remove(item);
                 }
                 else
                 {
@@ -709,22 +733,22 @@
                 }
             }
         }
-        else
-        {
-            if (grp.Products.Count() == 1)
-            {
-                grp.Products[0] = new ChangeProductDetail2
-                        {
-                            SLOT_NO = item.SLOT_NO,
-                            SLOTSTATUS = true
-                        };
-                grp.IsEmptySlot = true;
-            }
-            else
-            {
-                grp.Products.Remove(item);
-            }
-        }
+        // else
+        // {
+        //     if (grp.Products.Count() == 1)
+        //     {
+        //         grp.Products[0] = new ChangeProductDetail2
+        //                 {
+        //                     SLOT_NO = item.SLOT_NO,
+        //                     SLOTSTATUS = true
+        //                 };
+        //         grp.IsEmptySlot = true;
+        //     }
+        //     else
+        //     {
+        //         grp.Products.Remove(item);
+        //     }
+        // }
         selectRowGroup = null;
         selectRowGroupProduct = null;
     }
