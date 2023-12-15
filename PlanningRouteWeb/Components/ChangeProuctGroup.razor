@@ -5,27 +5,27 @@
 
 <div class="row">
     <div class="col-3">
-        <p>ตู้ : @header.MACHINE_CODE</p>
+        <p>ตู้ : @Header.MACHINE_CODE</p>
     </div>
     <div class="col-3">
-        <p>รหัสสาขา : @header.ORGANIZATION_CODE</p>
+        <p>รหัสสาขา : @Header.ORGANIZATION_CODE</p>
     </div>
     <div class="col-3">
-        <p>ประเภทตู้ : @header.MACHINE_TYPE</p>
+        <p>ประเภทตู้ : @Header.MACHINE_TYPE</p>
     </div>
     <div class="col-3">
-        <p>ชื่อประเภทตู้ : @header.MACHINE_TYPE_NAME</p>
+        <p>ชื่อประเภทตู้ : @Header.MACHINE_TYPE_NAME</p>
     </div>
 </div>
 <div class="row">
     <div class="col-3">
-        <p>โมเดลตู้ : @header.MACHINE_MODEL</p>
+        <p>โมเดลตู้ : @Header.MACHINE_MODEL</p>
     </div>
     <div class="col-3">
-        <p>ตู้ @(header.TYPE_METER == "2" ? "1:1" : "กลุ่ม")</p>
+        <p>ตู้ @(Header.TYPE_METER == "2" ? "1:1" : "กลุ่ม")</p>
     </div>
     <div class="col-3">
-        <p>@(header.ISONLINE == "1" ? "ออนไลน์" : "ออฟไลน์")</p>
+        <p>@(Header.ISONLINE == "1" ? "ออนไลน์" : "ออฟไลน์")</p>
     </div>
     <div class="col-3">
         <p>วันที่ : @Item.ChangeDate</p>
@@ -84,7 +84,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var (i, index) in data.WithIndex())
+            @foreach (var (i, index) in Data.WithIndex())
             {
                 var rawProductName = product.Find(x => x.RAWPRODUCTCODE == (i.Products.Count() != 0 ? i.Products[0].RAWPRODUCTCODE : ""));
                 var rowSpan = i.Products.Count();
@@ -346,7 +346,7 @@
                           Style="width: 200px;text-transform: none;"
                           Disabled=@(selectRowGroup != null && selectRowGroupProduct != null) />
         </RadzenStack>
-        <RadzenButton Text="ปิด" Click="(() => Dialog!.Close(false))" ButtonStyle="ButtonStyle.Light" Style="text-transform: none;" />
+        <RadzenButton Text="ปิด" Click="(() => DialogService.Close(false))" ButtonStyle="ButtonStyle.Light" Style="text-transform: none;" />
     }
 </RadzenStack>
 
@@ -355,12 +355,15 @@
     [Parameter]
     public ChangeProductRequest Item { get; set; } = new();
     [Parameter]
-    public EventCallback<BestProductRequest> ShowdialogBestProductCallback { get; set; }
-    [Parameter]
     public bool IsCurrent { get; set; }
     [Parameter]
-    public DialogService? Dialog { get; set; }
+    public ChangeProductHeader Header { get; set; } = new();
+    [Parameter]
+    public List<ChangeProductGroup>? Data { get; set; } 
+    [Parameter]
+    public EventCallback<BestProductRequest> ShowdialogBestProductCallback { get; set; }
     #endregion
+
     #region Data State 
     class FormModel
     {
@@ -375,8 +378,7 @@
 
     List<double> optionsSlot = new();
     List<Rawproduct> product = new();
-    List<ChangeProductGroup> data = new();
-    ChangeProductHeader header = new();
+    // List<ChangeProductGroup> data = new();
     FormModel formModel = new();
     CompareOperator compareOperator = CompareOperator.NotEqual;
     List<RawproductDetail2> optionProducts = new();
@@ -385,44 +387,33 @@
     #region Load data
     protected override async Task OnInitializedAsync()
     {
-       await LoadDataChangeProduct();
+       
+        await LoadDataChangeProduct();
+
     }
 
-    List<ChangeProductGroup> GroupDetail(List<ChangeProductDetail2> detail)
+    protected override void OnParametersSet()
     {
-        var data = detail.GroupBy(x => new { x.SLOT_NO, x.SLOT_REALPRICE })
-                        .Select(g => new ChangeProductGroup
-                            {
-                                SLOT_NO = g.Key.SLOT_NO.ToString(),
-                                SLOT_REALPRICE = g.Key.SLOT_REALPRICE,
-                                Products = g.ToList(),
-                                IsEmptySlot = g.Count() == 1 ? string.IsNullOrWhiteSpace(g.FirstOrDefault()!.PRODUCT_CODE) : false
-                            }).ToList();
-        return data;
+        if(Data is not null)
+        {
+            Data = Data.FilterGroup(formModel.Filter);
+            optionsSlot = Data.Select(x => x.SLOT_REALPRICE).ToList();
+        }
     }
 
     async Task LoadDataChangeProduct()
     {
         var body = new RawproductRequest { RawProductCode = "" };
-        var resChange = await ChangeProductService.GetChangeProductGroup(Item);
-        if (resChange.ErrorMessage == "success")
+        var resProduct = await ChangeProductService.GetRawproduct(body);
+        if (resProduct.ErrorMessage == "success")
         {
-            var resProduct = await ChangeProductService.GetRawproduct(body);
-            if (resProduct.ErrorMessage == "success")
-            {
-                header = resChange.Data.Header;
-                product = resProduct.Data;
-                data = GroupDetail(resChange.Data.Detail.Select(x => ConvertModel.ChangeProductDetailModal(x, x.STATUSCHANGE == "0" ? false : true))
-            .OrderBy(x => x.SLOT_NO)
-            .ThenBy(x => x.STATUSCHANGE)
-            .ToList())
-            .FilterGroup(formModel.Filter);
-                optionsSlot = data.Select(x => x.SLOT_REALPRICE).ToList();
-            }
+            product = resProduct.Data;
+            
         }
         StateHasChanged();
     }
     #endregion
+
     #region Add New RealPrice
     async Task AddRowGrpup()
     {
@@ -455,9 +446,9 @@
 
     void OnSubmit(FormModel model)
     {
-        data.Add(new ChangeProductGroup
+        Data!.Add(new ChangeProductGroup
             {
-                SLOT_NO = (data.Count() + 1).ToString(),
+                    SLOT_NO = (Data!.Count() + 1).ToString(),
                 SLOT_REALPRICE = model.SlotRealPrice,
                 IsAddSlot = true,
                 IsEmptySlot = true,
@@ -465,16 +456,16 @@
                 {
                     new ChangeProductDetail2
                     {
-                        SLOT_NO = data.Count() + 1,
+                        SLOT_NO = Data!.Count() + 1,
                         SLOTSTATUS = true,
                     }
                 }
             });
 
-        data = data.FilterGroup(formModel.Filter);
+        Data = Data!.FilterGroup(formModel.Filter);
 
 
-        optionsSlot = data.Select(x => x.SLOT_REALPRICE).ToList();
+        optionsSlot = Data!.Select(x => x.SLOT_REALPRICE).ToList();
 
         DialogService.Close(true);
     }
@@ -482,9 +473,10 @@
     bool ValidateRealPrice(int val)
     {
         if (val == 0) return true;
-        return data.Find(x => x.SLOT_REALPRICE == val) == null;
+        return Data!.Find(x => x.SLOT_REALPRICE == val) == null;
     }
     #endregion
+
     #region Add New Product
     void AddNewProductGroup(ChangeProductGroup group, int grpIndex)
     {
@@ -514,9 +506,11 @@
         StateHasChanged();
     }
     #endregion
+
     #region On & Off Row
     void OffRowProduct(ChangeProductDetail2 item) => item.SLOTSTATUS = !item.SLOTSTATUS;
     #endregion
+
     #region On & Off Row Group
     void OnOpenRowGroup(ChangeProductGroup item, bool action)
     {
@@ -532,14 +526,15 @@
         }
         else
         {
-            data.Remove(item);
+            Data!.Remove(item);
         }
     }
     #endregion
+
     #region Change Product
     void OnChangeSlot(double val, ChangeProductDetail2 item, ChangeProductGroup grp)
     {
-        var slot = data.Find(x => x.SLOT_REALPRICE == val);
+        var slot = Data!.Find(x => x.SLOT_REALPRICE == val);
         item.Move = null;
         if (slot != null)
         {
@@ -602,10 +597,11 @@
         }
     }
     #endregion
+
     #region Change Product Group
     void onChangeSlotGroup(double val, ChangeProductGroup grp)
     {
-        var slot = data.Find(x => x.SLOT_REALPRICE == val);
+        var slot = Data!.Find(x => x.SLOT_REALPRICE == val);
 
         if (slot != null)
         {
@@ -632,11 +628,12 @@
         }
     }
     #endregion
+
     #region Delete Product
     void DeleteProduct(ChangeProductDetail2 item, int index)
     {
-        var grp = data[index];
-        var slot = data.Find(x => x.SLOT_REALPRICE == item.SlotRealPriceInit && x.SLOT_REALPRICE != grp.SLOT_REALPRICE);
+        var grp = Data![index];
+        var slot = Data.Find(x => x.SLOT_REALPRICE == item.SlotRealPriceInit && x.SLOT_REALPRICE != grp.SLOT_REALPRICE);
         if (slot != null)
         {
             if (grp.IsAddSlot)
@@ -732,6 +729,7 @@
         selectRowGroupProduct = null;
     }
     #endregion
+
     #region Drag & Drop Row Table
     private void StartDrag(ChangeProductGroup item)
     {
@@ -740,7 +738,7 @@
 
     private int GetIndex(ChangeProductGroup item)
     {
-        return data.FindIndex(x => x.SLOT_NO == item.SLOT_NO);
+        return Data!.FindIndex(x => x.SLOT_NO == item.SLOT_NO);
     }
 
     private void Drop(ChangeProductGroup item)
@@ -749,11 +747,11 @@
         {
             var index = GetIndex(item);
 
-            var current = data[currentIndex];
+            var current = Data![currentIndex];
 
-            data.RemoveAt(currentIndex);
+            Data!.RemoveAt(currentIndex);
 
-            data.Insert(index, current);
+            Data!.Insert(index, current);
 
             StateHasChanged();
         }
@@ -765,7 +763,7 @@
     {
         List<ChangeProductDetail2> prd = new();
         #region หาสินค้าที่มีอยู่
-        foreach (var g in data)
+        foreach (var g in Data!)
         {
             foreach (var p in g.Products)
             {
@@ -811,7 +809,7 @@
             #region เจอสินค้าในช่องอื่น
             if (prdInSlot != null)
             {
-                var g = data.Find(x => x.SLOT_REALPRICE == prdInSlot.SLOT_REALPRICE);
+                var g = Data!.Find(x => x.SLOT_REALPRICE == prdInSlot.SLOT_REALPRICE);
 
                 if (g!.Products.Count > 1)
                 {
@@ -857,19 +855,20 @@
         return result;
     }
     #endregion
+
     #region Save Change Product To DataBase
     async Task SaveChangeProduct(int cancel)
     {
         List<SaveChangeProductData> prod = new();
 
-        foreach (var item in data)
+        foreach (var item in Data!)
         {
             foreach (var prd in item.Products)
             {
                 var status = prd.IsAddSlot ? "2" : prd.STATUSCHANGE ? "1" : "0";
                 prod.Add(new SaveChangeProductData
                         {
-                            MACHINE_CODE = header.MACHINE_CODE,
+                            MACHINE_CODE = Header.MACHINE_CODE,
                             RAWPRODUCTCODE = prd.RAWPRODUCTCODE,
                             PRODUCT_CODE = prd.PRODUCT_CODE,
                             PRODUCT_NAME = prd.PRODUCT_NAME,
@@ -915,21 +914,23 @@
         StateHasChanged();
     }
     #endregion
+
     #region Event DropDown Product
     void OnChangeProductGroup(object args, int index, int idx)
     {
-        var prod = data[index].Products[idx];
+        var prod = Data![index].Products[idx];
         var option = optionProducts.Find(x => x.PRODUCTCODE == $"{args}");
         prod.PRODUCT_NAME = option!.PRODUCTNAME;
         prod.SALETOTAL = !string.IsNullOrWhiteSpace(option!.SALETOTAL) ? option!.SALETOTAL : "0";
         prod.SALEPRICE = int.Parse(option!.SALEPRICE);
-        prod.SLOT_REALPRICE = data[index].SLOT_REALPRICE;
-        prod.SlotRealPriceOld = data[index].SLOT_REALPRICE;
-        prod.SlotRealPriceInit = data[index].SLOT_REALPRICE;
+        prod.SLOT_REALPRICE = Data![index].SLOT_REALPRICE;
+        prod.SlotRealPriceOld = Data![index].SLOT_REALPRICE;
+        prod.SlotRealPriceInit = Data![index].SLOT_REALPRICE;
         prod.IsStatusChange = !prod.IsAddSlot ? true : false;
         prod.STATUSCHANGE = !prod.IsAddSlot ? true : false;
     }
     #endregion
+
     #region Event Validate Input LOADIN
     bool OnValidateInputLoadin(double val, string slot, bool isDup = true)
     {
@@ -939,7 +940,7 @@
         }
         else if (isDup)
         {
-            var fn = data.Find(x => x.SLOT_REALPRICE == val && x.SLOT_NO != slot);
+            var fn = Data!.Find(x => x.SLOT_REALPRICE == val && x.SLOT_NO != slot);
             if (fn != null)
             {
                 return true;
@@ -955,10 +956,12 @@
         }
     }
     #endregion
+
     #region Event Disable Btn Save
     bool DisableBtnSave(ChangeProductGroup item, int index = 0) => item.Products[index].PRODUCT_CODE == "" || item.Products[index].RAWPRODUCTCODE == "" ? true :
         OnValidateInputLoadin(item.SLOT_REALPRICE, item.SLOT_NO) || OnValidateInputLoadin(item.Products[index].LOADIN, item.SLOT_NO, false);
     #endregion
+
     #region Event Input LOADIN Change Value
     void OnChangeInputLoadin(ChangeEventArgs arg, ChangeProductDetail2 item, string field)
     {
@@ -983,6 +986,7 @@
         await DialogServiceCustom.BusyDialog("กำลังบันทึกข้อมูลดข้อมูล...");
     }
     #endregion
+
     #region Render Component
     RenderFragment RenderButtonDeleteChange(ChangeProductDetail2? item, int index, int idx)
     {
