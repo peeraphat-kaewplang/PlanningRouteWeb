@@ -160,7 +160,7 @@
             VALUE_PER_DAY = !string.IsNullOrWhiteSpace(targets.VALUE_PER_DAY) ? int.Parse(targets.VALUE_PER_DAY) : 0,
             VALUE_PER_MONTH = !string.IsNullOrWhiteSpace(targets.VALUE_PER_MONTH) ? int.Parse(targets.VALUE_PER_MONTH) : 0,
         };
-       
+
         CalDropMonth();
         FindRankEmpty(record);
 
@@ -314,7 +314,7 @@
                 record.SUNDAY = item.SUNDAY;
                 record.IS_DUPLICATE = save.IS_DUPLICATE;
                 record.SALE_LAST_WEEK = save.SALE_LAST_WEEK;
-               
+
                 dataSave.Add(record);
             }
 
@@ -326,14 +326,18 @@
         if(response.ErrorMessage == "success")
         {
             var Task = InvokeAsync(async () => {
-               actionButton = new();
+                actionButton = new();
                 await LoadMaster();
                 DialogServiceCustom.DialogClose();
+                ds.Close(false);
             });
             await DialogServiceCustom.BusyDialog("กำลังบันทึกข้อมูล...");
+        }
+        else
+        {
             
         }
-        ds.Close(false);
+      
         StateHasChanged();
     }
     //   private async Task OnClickSavePlan(DialogService ds)
@@ -568,9 +572,7 @@
             EndDate = end
         };
 
-        // var jsonstr = Newtonsoft.Json.JsonConvert.SerializeObject (body);
         var response = await PlanningService.PlanningCalPlan(body);
-        // var jsonstr = Newtonsoft.Json.JsonConvert.SerializeObject(response);
         if(response.ErrorMessage == "success")
         {
             await LoadMaster();
