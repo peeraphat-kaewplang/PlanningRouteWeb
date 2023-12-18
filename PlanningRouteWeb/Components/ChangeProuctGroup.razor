@@ -37,7 +37,7 @@
         <RadzenLabel Text="Filter" />
     </div>
     <div class="col-6">
-        <RadzenRadioButtonList @bind-Value=@formModel.Filter Orientation=Orientation.Horizontal TValue="string">
+        <RadzenRadioButtonList Disabled="!IsCurrent" @bind-Value=@formModel.Filter Orientation=Orientation.Horizontal TValue="string">
             <Items>
                 <RadzenRadioButtonListItem Text="มากไปน้อย" Value=@("DESC") />
                 <RadzenRadioButtonListItem Text="น้อยไปมาก" Value=@("ASC") />
@@ -62,14 +62,17 @@
     <table class="table table-sm " ondragover="event.preventDefault();">
         <thead>
             <tr>
-                <th class="text-center" style="font-size: 12px;">
-                    <RadzenButton Click="()=> AddRowGrpup()"
-                                  Icon="add"
-                                  ButtonStyle="ButtonStyle.Primary"
-                                  Size="ButtonSize.ExtraSmall"
-                                  Disabled=@(selectRowGroup != null && selectRowGroupProduct != null)
-                                  Style="text-transform: none;width:4.5rem;" />
-                </th>
+                @if (IsCurrent)
+                {
+                    <th class="text-center" style="font-size: 12px;">
+                        <RadzenButton Click="()=> AddRowGrpup()"
+                                      Icon="add"
+                                      ButtonStyle="ButtonStyle.Primary"
+                                      Size="ButtonSize.ExtraSmall"
+                                      Disabled=@(selectRowGroup != null && selectRowGroupProduct != null)
+                                      Style="text-transform: none;width:4.5rem;" />
+                    </th>
+                }
                 <th style="font-size: 12px;">ช่องสินค้า</th>
                 <th style="font-size: 12px;">กลุ่มราคาขาย</th>
                 <th style="font-size: 12px;">กลุ่มราคาเดิม</th>
@@ -79,55 +82,62 @@
                 <th style="font-size: 12px;">ยอดขายเฉลี่ย</th>
                 <th style="font-size: 12px;">ยอดโหลด</th>
                 <th style="font-size: 12px;">ราคากลาง</th>
-                <th style="font-size: 12px;">เปลี่ยนกลุ่มราคาขาย</th>
-                <th style="font-size: 12px;" colspan="2"></th>
+                @if (IsCurrent)
+                {
+                    <th style="font-size: 12px;">เปลี่ยนกลุ่มราคาขาย</th>
+                    <th style="font-size: 12px;" colspan="2"></th>
+                }
             </tr>
         </thead>
         <tbody>
-            @foreach (var (i, index) in Data.WithIndex())
+            @foreach (var (i, index) in Data!.WithIndex())
             {
                 var rawProductName = product.Find(x => x.RAWPRODUCTCODE == (i.Products.Count() != 0 ? i.Products[0].RAWPRODUCTCODE : ""));
                 var rowSpan = i.Products.Count();
                 var trClassColor = i.IsAddSlot ? "table-success" :
-                i.SlotStatus ? "table-secondary" :
-                index % 2 != 1 ? "table-primary" : null;
+                i.SlotStatus ? "table-secondary" : null;
+                @* index % 2 != 1 ? "table-primary" : null; *@
                 var tdClassColor = i.Products[0].IsAddSlot ? "grp-color-new" : i.Products[0].IsStatusChange ? "grp-color-change" : !i.Products[0].SLOTSTATUS ? "grp-color-off" : null;
                 var disableMove = selectRowGroup != null && selectRowGroupProduct != null;
                 var option = optionsSlot.Where(x => x != i.SLOT_REALPRICE);
 
                 <tr role="button" draggable="@(formModel.Filter == "FIXED" ? "true" : "false")" @ondrop="@(()=> Drop(i))" @ondrag="@(e => StartDrag(i))" class=@($"{trClassColor}")>
-                    <td style="width:5rem" rowspan=@rowSpan>
-                        <div class="row gy-2 justify-content-center">
-                            <RadzenButton Click=@(() => OnOpenRowGroup(i , i.IsAddSlot))
-                                          Text=@(i.IsAddSlot || i.IsEmptySlot ? "del" : i.SlotStatus ? "on" : "off")
-                                          ButtonStyle=@(i.SlotStatus ? ButtonStyle.Success : ButtonStyle.Danger)
-                                          Size="ButtonSize.ExtraSmall"
-                                          Style="text-transform: none;width:4.5rem;"
-                                          Disabled=@(selectRowGroup != null && selectRowGroupProduct != null || i.IsAddSlot && !i.IsEmptySlot) />
-                            <RadzenButton Click=@(()=> AddNewProductGroup(i,index))
-                                          Text="เพิ่มสินค้า"
-                                          ButtonStyle="ButtonStyle.Primary"
-                                          Size="ButtonSize.ExtraSmall"
-                                          Disabled=@(selectRowGroup != null && selectRowGroupProduct != null)
-                                          Style="text-transform: none;width:4.5rem;" />
-                            @if (i.Products.Count() != 1)
-                            {
-                                <div style="width:6rem">
-                                    <RadzenDropDown class="dropdown-sm fw-bold w-100"
-                                                    TValue="double?"
-                                    @bind-Value=@i.Products[0].Move
-                                                    Data=@option
-                                                    Change="@(val => onChangeSlotGroup((double)val , i))"
-                                                    Disabled=@(i.IsEmptySlot) />
-                                </div>
-                            }
-                        </div>
-                    </td>
+                    @if (IsCurrent)
+                    {
+                        <td style="width:5rem" rowspan=@rowSpan>
+                            <div class="row gy-2 justify-content-center">
+                                <RadzenButton Click=@(() => OnOpenRowGroup(i , i.IsAddSlot))
+                                              Text=@(i.IsAddSlot || i.IsEmptySlot ? "del" : i.SlotStatus ? "on" : "off")
+                                              ButtonStyle=@(i.SlotStatus ? ButtonStyle.Success : ButtonStyle.Danger)
+                                              Size="ButtonSize.ExtraSmall"
+                                              Style="text-transform: none;width:4.5rem;"
+                                              Disabled=@(selectRowGroup != null && selectRowGroupProduct != null || i.IsAddSlot && !i.IsEmptySlot) />
+                                <RadzenButton Click=@(()=> AddNewProductGroup(i,index))
+                                              Text="เพิ่มสินค้า"
+                                              ButtonStyle="ButtonStyle.Primary"
+                                              Size="ButtonSize.ExtraSmall"
+                                              Disabled=@(selectRowGroup != null && selectRowGroupProduct != null)
+                                              Style="text-transform: none;width:4.5rem;" />
+                                @if (i.Products.Count() != 1)
+                                {
+                                    <div style="width:6rem">
+                                        <RadzenDropDown class="dropdown-sm fw-bold w-100"
+                                                        TValue="double?"
+                                        @bind-Value=@i.Products[0].Move
+                                                        Data=@option
+                                                        Change="@(val => onChangeSlotGroup((double)val , i))"
+                                                        Disabled=@(i.IsEmptySlot) />
+                                    </div>
+                                }
+                            </div>
+                        </td>
+                    }
+                    
                     <td style="width:2rem" rowspan=@rowSpan>@i.SLOT_NO</td>
                     <td style="width:2rem" rowspan=@rowSpan>
                         @i.SLOT_REALPRICE
                     </td>
-                    <td style="width:2rem">
+                    <td class=@($"{tdClassColor}") style="width:2rem">
                         @(i.Products.Count() != 0 && !i.IsEmptySlot || i.Products[0].IsCopy ? i.Products[0].SlotRealPriceOld : "")
                     </td>
                     <td class=@($"{tdClassColor}") style="width:2rem">
@@ -192,41 +202,45 @@
                     <td class=@($"{tdClassColor}") style="width:3rem">
                         @(i.Products.Count() != 0 && !i.IsEmptySlot || i.Products[0].IsCopy ? i.Products[0].SALEPRICE : "")
                     </td>
-                    <td class=@($"{tdClassColor}") style="width:4.5rem">
-                        <div style="width:4rem">
+                   
+                    @if (IsCurrent)
+                    {
+                        <td class=@($"{tdClassColor}") style="width:4.5rem">
+                            <div style="width:4rem">
 
 
-                            @if (!i.IsEmptySlot && i.Products[0].SLOTSTATUS)
-                            {
-                                <RadzenDropDown class="dropdown-sm fw-bold w-100"
-                                                TValue="double?"
-                                @bind-Value=@i.Products[0].Move
-                                                Data=@option
-                                                Change="@(val => OnChangeSlot((double)val , i.Products[0] , i))"
-                                                Disabled=@disableMove />
-                            }
-                        </div>
-                    </td>
-                    <td class=@($"{tdClassColor} text-center") style="width:6rem">
-                        <div>
-                            @if (!i.IsEmptySlot && i.Products[0].SLOTSTATUS)
-                            {
-                                if (selectRowGroup == index && selectRowGroupProduct == 0)
+                                @if (!i.IsEmptySlot && i.Products[0].SLOTSTATUS)
                                 {
-                                    <RadzenButton Click=@(() => OnSaveChange(i , i.Products[0]))
-                                                  Text="บันทึก"
-                                                  ButtonStyle="ButtonStyle.Primary"
-                                                  Size="ButtonSize.ExtraSmall"
-                                                  Disabled=@(DisableBtnSave(i,0)) />
+                                    <RadzenDropDown class="dropdown-sm fw-bold w-100"
+                                                    TValue="double?"
+                                    @bind-Value=@i.Products[0].Move
+                                                    Data=@option
+                                                    Change="@(val => OnChangeSlot((double)val , i.Products[0] , i))"
+                                                    Disabled=@disableMove />
                                 }
-                            }
+                            </div>
+                        </td>
+                        <td class=@($"{tdClassColor} text-center") style="width:6rem">
+                            <div>
+                                @if (!i.IsEmptySlot && i.Products[0].SLOTSTATUS)
+                                {
+                                    if (selectRowGroup == index && selectRowGroupProduct == 0)
+                                    {
+                                        <RadzenButton Click=@(() => OnSaveChange(i , i.Products[0]))
+                                                      Text="บันทึก"
+                                                      ButtonStyle="ButtonStyle.Primary"
+                                                      Size="ButtonSize.ExtraSmall"
+                                                      Disabled=@(DisableBtnSave(i,0)) />
+                                    }
+                                }
 
-                            @if (!i.IsEmptySlot)
-                            {
-                                @RenderButtonDeleteChange(i.Products.Count() != 0 ? i.Products[0] : null , index , 0)
-                            }
-                        </div>
-                    </td>
+                                @if (!i.IsEmptySlot)
+                                {
+                                    @RenderButtonDeleteChange(i.Products.Count() != 0 ? i.Products[0] : null , index , 0)
+                                }
+                            </div>
+                        </td>
+                    }
                 </tr>
                 @foreach (var (d, idx) in i.Products.Skip(1).WithIndex())
                 {
@@ -294,36 +308,40 @@
 
                             @(d != null ? d.SALEPRICE : "")
                         </td>
-                        <td class=@($"{tdClassColorDetail}") style="width:4.5rem">
-                            @{
-                                var disableMove2 = selectRowGroup != null && selectRowGroupProduct != null || !d!.SLOTSTATUS;
-                            }
-
-                            @if (d!.SLOTSTATUS && !d.STATUSCHANGE || d.IsSave)
-                            {
-                                <div style="width:4rem">
-                                    <RadzenDropDown class="dropdown-sm fw-bold w-100"
-                                                    TValue="double?"
-                                    @bind-Value=@d!.Move
-                                                    Data=@option
-                                                    Change="@(val => OnChangeSlot((double)val , d! , i))"
-                                                    Disabled=@disableMove2 />
-                                </div>
-                            }
-                        </td>
-                        <td class=@($"{tdClassColorDetail} text-center") style="width:5rem">
-                            <div>
-                                @if (selectRowGroup == index && selectRowGroupProduct == idx + 1)
-                                {
-                                    <RadzenButton Click=@(() => OnSaveChange(i , d))
-                                                  Text="บันทึก"
-                                                  ButtonStyle="ButtonStyle.Primary"
-                                                  Size="ButtonSize.ExtraSmall"
-                                                  Disabled=@(DisableBtnSave(i,idx + 1)) />
+                        
+                        @if (IsCurrent)
+                        {
+                            <td class=@($"{tdClassColorDetail}") style="width:4.5rem">
+                                @{
+                                    var disableMove2 = selectRowGroup != null && selectRowGroupProduct != null || !d!.SLOTSTATUS;
                                 }
-                                @RenderButtonDeleteChange(d , index , idx + 1)
-                            </div>
-                        </td>
+
+                                @if (d!.SLOTSTATUS && !d.STATUSCHANGE || d.IsSave)
+                                {
+                                    <div style="width:4rem">
+                                        <RadzenDropDown class="dropdown-sm fw-bold w-100"
+                                                        TValue="double?"
+                                        @bind-Value=@d!.Move
+                                                        Data=@option
+                                                        Change="@(val => OnChangeSlot((double)val , d! , i))"
+                                                        Disabled=@disableMove2 />
+                                    </div>
+                                }
+                            </td>
+                            <td class=@($"{tdClassColorDetail} text-center") style="width:5rem">
+                                <div>
+                                    @if (selectRowGroup == index && selectRowGroupProduct == idx + 1)
+                                    {
+                                        <RadzenButton Click=@(() => OnSaveChange(i , d))
+                                                      Text="บันทึก"
+                                                      ButtonStyle="ButtonStyle.Primary"
+                                                      Size="ButtonSize.ExtraSmall"
+                                                      Disabled=@(DisableBtnSave(i,idx + 1)) />
+                                    }
+                                    @RenderButtonDeleteChange(d , index , idx + 1)
+                                </div>
+                            </td>
+                        }
                     </tr>
                 }
             }
