@@ -31,6 +31,7 @@ namespace PlanningRouteWeb.Models
         public string TYPE_METER { get; set; } = string.Empty;
         public string TYPELOAD { get; set; } = string.Empty;
         public string ISONLINE { get; set; } = string.Empty;
+        public string STATUS_SORT {  get; set; } = string.Empty;
     }
 
     public class ChangeProductDetail

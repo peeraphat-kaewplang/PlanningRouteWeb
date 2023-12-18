@@ -19,7 +19,7 @@ namespace PlanningRouteWeb.Services
             _configuration = configuration;
             _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         }
-        public async Task<ChangeProductData2> GetChangeProduct(ChangeProductRequest body)
+        public async Task<ChangeProductResponse> GetChangeProduct(ChangeProductRequest body)
         {
             var requestMessage = new HttpRequestMessage()
             {
@@ -39,26 +39,24 @@ namespace PlanningRouteWeb.Services
 
             //var aa = changeProduct!.Data.Detail.OrderBy(x => x.SLOT_NO).ToList();
 
-            //var json = JsonSerializer.Serialize(aa);
 
-
-            var data = new ChangeProductData2
-            {
-                Header = changeProduct!.Data.Header,
-                Detail = changeProduct!.Data.Detail
-                .Select(x =>
-                {
-                    var chagePrd = changeProduct!.Data.Detail.Find(d => d.SLOT_NO == x.SLOT_NO && d.STATUSCHANGE != x.STATUSCHANGE);
-                    if (chagePrd != null)
-                    {
-                        return ConvertModel.ChangeProductDetailModal(x, true);
-                    }
-                    return ConvertModel.ChangeProductDetailModal(x);
-                })
-                .OrderBy(x => x.SLOT_NO)
-                .ThenBy(x => x.STATUSCHANGE)
-                .ToList()
-            };
+            //var data = new ChangeProductData2
+            //{
+            //    Header = changeProduct!.Data.Header,
+            //    Detail = changeProduct!.Data.Detail
+            //    .Select(x =>
+            //    {
+            //        var chagePrd = changeProduct!.Data.Detail.Find(d => d.SLOT_NO == x.SLOT_NO && d.STATUSCHANGE != x.STATUSCHANGE);
+            //        if (chagePrd != null)
+            //        {
+            //            return ConvertModel.ChangeProductDetailModal(x, true);
+            //        }
+            //        return ConvertModel.ChangeProductDetailModal(x);
+            //    })
+            //    .OrderBy(x => x.SLOT_NO)
+            //    .ThenBy(x => x.STATUSCHANGE)
+            //    .ToList()
+            //};
 
             //var data = new ChangeProductData2
             //{
@@ -74,7 +72,7 @@ namespace PlanningRouteWeb.Services
             //};
 
 
-            return data;
+            return changeProduct!;
         }
 
         public async Task<RawproductResponse> GetRawproduct(RawproductRequest body)

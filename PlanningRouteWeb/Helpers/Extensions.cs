@@ -15,10 +15,10 @@ namespace PlanningRouteWeb.Helpers
         public static IEnumerable<(T item, int index)> WithIndex<T>(this IEnumerable<T> self)
             => self.Select((item, index) => (item, index));
 
-        public static List<ChangeProductGroup> FilterGroup(this List<ChangeProductGroup> data , int filter)
+        public static List<ChangeProductGroup> FilterGroup(this List<ChangeProductGroup> data , string filter)
         {
             List<ChangeProductGroup> newData =new ();
-            if (filter == 1)
+            if (filter == "DESC")
             {
                 newData = data.OrderByDescending(x => x.SLOT_REALPRICE).ToList();
             }
