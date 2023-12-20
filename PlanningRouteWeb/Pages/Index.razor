@@ -530,7 +530,7 @@
 
     private async Task ShowdialogChangeProduct(ChangeProductRequest item , bool isCurrent) {
         var result = await DialogService.OpenAsync("เปลี่ยนสินค้า", ds =>
-        @<ModalChangeProduct Item="item" IsCurrent="isCurrent" Dialog="ds" ShowdialogBestProductCallback="@ShowdialogBestProduct"/>,new DialogOptions() { Width = "1700px", Height = "950px" });
+        @<ModalChangeProduct Item="item" IsCurrent="isCurrent" Dialog="ds" ShowdialogBestProductCallback="@ShowdialogBestProduct"/>,new DialogOptions() { Width = "76rem", Height = "36rem" });
         await ShowBusyDialog();
     }
 
