@@ -501,7 +501,7 @@
     {
         var result = await DialogService.OpenAsync("Change Config", ds =>
         @<RadzenStack Gap="1.5rem">
-            <RadzenFormField Text="DROP PER DAY" Variant="@variant">
+            <RadzenFormField Text="จำนวนการเข้าเติมสิ้นต่อวัน" Variant="@variant">
                 <RadzenNumeric ShowUpDown="false" TValue="int"@bind-Value=@target.DROP_PER_DAY/>
             </RadzenFormField>
             <RadzenFormField Text="VALUE PER DAY" Variant="@variant">
@@ -512,8 +512,8 @@
             </RadzenFormField>
             <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
                 <RadzenStack Orientation="Orientation.Horizontal">
-                    <RadzenButton Text="Ok" Click="() => SaveTarget(ds)"  Style="width: 80px;" />
-                    <RadzenButton Text="Cancel" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" />
+                    <RadzenButton Text="บันทึก" Click="() => SaveTarget(ds)"  Style="width: 80px;" />
+                    <RadzenButton Text="ยกเลิก" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" />
                 </RadzenStack>
             </RadzenStack>
         </RadzenStack>);
