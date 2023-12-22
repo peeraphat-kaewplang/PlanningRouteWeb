@@ -31,6 +31,5 @@ namespace PlanningRouteWeb.Helpers
             new MonthObject {Number = "12" , Name = "ธันวาคม",ShortName = "ธ.ค."},
         };
 
-        public static int defultYear = 2023;
     }
 }

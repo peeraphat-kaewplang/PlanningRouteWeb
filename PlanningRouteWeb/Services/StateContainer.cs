@@ -19,9 +19,10 @@
         public DateTime DateCurrent
         {
             get => _dateTime;
-           
         }
-       
+
+        public int defultYear = 2023;
+
         public event Action? OnChange;
         private void NotifyStateChanged() => OnChange?.Invoke();
     }

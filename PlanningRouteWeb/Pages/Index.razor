@@ -86,15 +86,15 @@
     [SupplyParameterFromQuery]
     public string? ROUTE { get; set; }
 
-    
+
     Variant variant = Variant.Outlined;
     public bool hideMaster = false;
     public string selectOrg = "";
     public string selectRoute = "";
     public Target2 target = new();
     public MonthObject selectMonth = new();
-    int year = GetDatetimeClass.defultYear;
-    public List<int> yearOptions = new List<int> { GetDatetimeClass.defultYear };
+    int year;
+    public List<int> yearOptions = new ();
     public List<int> dropMonth = new();
     public List<PlanningMasterData2> data = new();
     public IDictionary<string, ColumnProperty> columns { get; set; } = new Dictionary<string, ColumnProperty>();
@@ -114,15 +114,19 @@
 
         selectOrg = ORG!;
         selectRoute = ROUTE!;
-        var y = StateContainer.DateCurrent.Year - GetDatetimeClass.defultYear;
+        year = StateContainer.defultYear;
+        var y = StateContainer.DateCurrent.Year - StateContainer.defultYear;
 
         if(y > 0)
         {
-
+            for(var i = 0 ; i<= y; i++)
+            {
+                yearOptions.Add(StateContainer.defultYear + i);
+            }
         }
         else
         {
-             yearOptions.Add(GetDatetimeClass.defultYear + 1);
+            yearOptions.AddRange(new List<int> {StateContainer.defultYear  ,  StateContainer.defultYear + 1});
         }
 
         var dd = StateContainer.DateCurrent.Month.ToString("D2");
@@ -547,14 +551,14 @@
 
     private async Task ShowdialogChangeProduct(ChangeProductRequest item , bool isCurrent) {
         var result = await DialogService.OpenAsync("เปลี่ยนสินค้า", ds =>
-        @<ModalChangeProduct Item="item" IsCurrent="isCurrent" Dialog="ds" ShowdialogBestProductCallback="@ShowdialogBestProduct"/>,new DialogOptions() { Width = "76rem", Height = "36rem" });
+        @<ModalChangeProduct Item="item" IsCurrent="isCurrent" Dialog="ds" ShowdialogBestProductCallback="@ShowdialogBestProduct"/>,new DialogOptions() { Width = "80%", Height = "90%" });
         await ShowBusyDialog();
     }
 
     private async Task ShowdialogBestProduct(BestProductRequest item)
     {
         var result = await DialogService.OpenAsync("สินค้าขายดี", ds =>
-        @<BestProduct Request="item"/>,new DialogOptions() { Width = "1700px", Height = "950px" });
+        @<BestProduct Request="item"/>,new DialogOptions() { Width = "80%", Height = "90%" });
     }
 
     private async Task SaveTarget(DialogService ds)
