@@ -261,7 +261,8 @@
                                         <RadzenButton Click="()=> AddSlot(idx, i)"
                                                       Icon="add"
                                                       ButtonStyle="ButtonStyle.Primary"
-                                                      Size="ButtonSize.ExtraSmall" />
+                                                      Size="ButtonSize.ExtraSmall"
+                                                      Disabled=@(!i.SLOTSTATUS || SelectRowEdit != null) />
                                     }
                                 </div>
                             </td>
@@ -272,12 +273,14 @@
                                         var text = !i.IsSave ? "del" :
                                         i.SLOTSTATUS ? "off" : "on";
                                     }
+                              
                                     <RadzenButton Click="()=> OptionRow(i , delete)"
                                                   Text=@(text)
                                                   Shade=@(i.IsAddSlot ? Shade.Default : Shade.Light)
                                                   ButtonStyle=@(i.SLOTSTATUS ? ButtonStyle.Danger : ButtonStyle.Success)
                                                   Size="ButtonSize.ExtraSmall"
-                                                  Style="text-transform: none;" />
+                                                  Style="text-transform: none;"
+                                                  Disabled=@(SelectRowEdit != null && SelectRowEdit != idx) />
                                 </div>
                             </td>
                         }
