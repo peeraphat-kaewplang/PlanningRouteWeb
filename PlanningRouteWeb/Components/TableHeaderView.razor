@@ -1,7 +1,7 @@
 ﻿@{
     var date = StateContainer.DateCurrent;
-    var total = GetDatetimeClass.monthObjects.Single(x => x.Number == (int.Parse(SelectMonth.Number) - 1).ToString("D2")).ShortName;
-    var mdtBefore = GetDatetimeClass.monthObjects.Single(x => x.Number == (int.Parse(SelectMonth.Number) - 1).ToString("D2")).ShortName;
+    var total = SelectMonth.Number == "01" ? "ธ.ค." : GetDatetimeClass.monthObjects.Single(x => x.Number == (int.Parse(SelectMonth.Number) - 1).ToString("D2")).ShortName;
+    var mdtBefore = SelectMonth.Number == "01" ? "ธ.ค." : GetDatetimeClass.monthObjects.Single(x => x.Number == (int.Parse(SelectMonth.Number) - 1).ToString("D2")).ShortName;
     var colSpan = (Columns.Count() * 3) + ((Columns.Count() / 7) * 2);
 }
 <tr>
