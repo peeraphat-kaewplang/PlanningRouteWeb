@@ -71,9 +71,9 @@
         @foreach (var (obj, index) in Columns.WithIndex())
         {
             if ((index + 1) % 7 == 0)
-            {
+            {    
                 var chk1 = obj.Value.IsCurrent;
-                var chk2 = date.GetWeekNumberOfMonth() == obj.Key.StringToDateTime("dd/MM/yyyy").GetWeekNumberOfMonth() - 1;
+                var chk2 = date.GetWeekNumberOfMonth() == obj.Key.StringToDateTime("dd/MM/yyyy").GetWeekNumberOfMonth() - 1 || (ISOWeek.GetWeeksInYear(date.Year) == date.GetWeekNumberOfMonth() &&  obj.Key.StringToDateTime("dd/MM/yyyy").GetWeekNumberOfMonth() == 1);
                 var action = ActionButton.Date.FirstOrDefault(x => x.Date.StringToDateTime("dd/MM/yyyy").GetWeekNumberOfMonth() == obj.Key.StringToDateTime("dd/MM/yyyy").GetWeekNumberOfMonth());
                 var disable = ActionButton.Date.Count(x => x.Error);
                 if (chk1 || chk2)

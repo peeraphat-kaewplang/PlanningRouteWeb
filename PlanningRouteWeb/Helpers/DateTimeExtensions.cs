@@ -34,11 +34,15 @@ namespace PlanningRouteWeb.Helpers
            => new DateTime(inDate.Year, inDate.Month, DateTime.DaysInMonth(inDate.Year, inDate.Month));
         public static int GetWeekNumberOfMonth(this DateTime date)
             => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
-        public static bool CheckDateInCurrentWeek(this DateTime date , DateTime dateiIn , int addDay)
+        public static bool CheckDateInCurrentWeek(this DateTime date, DateTime dateiIn, int addDay)
         {
             var currentDate = dateiIn.AddDays(addDay);
             var week = date.GetWeekNumberOfMonth();
             var currentWeek = currentDate.GetWeekNumberOfMonth();
+
+            var year = DateTime.Now.Year;
+
+            var lastWeek = ISOWeek.GetWeeksInYear(year);
 
             if (week == currentWeek)
             {
@@ -55,8 +59,11 @@ namespace PlanningRouteWeb.Helpers
             {
                 return true;
             }
+            else if (lastWeek == currentWeek && week == 1)
+            {
+                return true;
+            }
             return false;
         }
-       
     }
 }

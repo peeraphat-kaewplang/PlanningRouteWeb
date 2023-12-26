@@ -116,7 +116,7 @@
         selectRoute = ROUTE!;
         year = StateContainer.defultYear;
         var y = StateContainer.DateCurrent.Year - StateContainer.defultYear;
-
+        
         if(y > 0)
         {
             for(var i = 0 ; i<= y; i++)
@@ -163,7 +163,6 @@
     {
         var req = new PanningMasterRequest 
         { 
-            // YEARMONTH = $"{StateContainer.DateCurrent.ToStringDate("yyyy")}{selectMonth.Number}",
             YEARMONTH = $"{year}{selectMonth.Number}",
             ORG = $"{selectOrg}", 
             Route = $"{selectRoute}" 
@@ -352,7 +351,7 @@
         }
         else
         {
-            
+            await DialogService.Alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล!", "เเจ้งเตือน", new AlertOptions() { OkButtonText = "ปิด" });
         }
       
         StateHasChanged();
@@ -593,6 +592,10 @@
         if(response.ErrorMessage == "success")
         {
             await LoadMaster();
+        }
+        else
+        {
+            await DialogService.Alert($"Error : {response.ErrorMessage}", $"เเจ้งเตือน { response.Status }", new AlertOptions() { OkButtonText = "ปิด" ,ShowClose = false });
         }
     }
 
