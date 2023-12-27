@@ -716,8 +716,18 @@
             }
             else
             {
-               actionButton = new();
-               actionButton.Action = "create";
+                
+                if(action != null)
+                {
+                   actionButton.Date.Remove(action);
+                }
+
+                if(actionButton.Date.Count() == 0)
+                {
+                    actionButton = new();
+                    actionButton.Action = "create";
+                }
+               
             }
         }
     }
