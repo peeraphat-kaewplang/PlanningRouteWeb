@@ -36,20 +36,31 @@
     </td>
     @foreach (var (obj, index) in grpData.WithIndex())
     {
-        var error = obj.COUNT_STATUS_MANUAL == obj.MAX_DROP ? "success" : "error";
-        <td class=@($"text-center fw-bold {error}") style="font-size: 12px;">
-            @if(!obj.IsCurrent)
-            {
-                @obj.COUNT_STATUS_MANUAL
-            }
-            else
-            {
-                @obj.COUNT_STATUS_MANUAL2
-            }
-
+        var error = obj.COUNT_STATUS_MANUAL == obj.MAX_DROP ? "success" : obj.COUNT_STATUS_MANUAL > obj.MAX_DROP ? "over" : "error";
+        <td class=@($"text-center fw-bold {error}") >
+            <RadzenText  class="mb-0" Style="font-size: 12px; cursor : pointer;">
+                <div class="fw-bold">
+                    @if (!obj.IsCurrent)
+                    {
+                        @obj.COUNT_STATUS_MANUAL
+                    }
+                    else
+                    {
+                        @obj.COUNT_STATUS_MANUAL2
+                    }
+                </div>
+            </RadzenText>
+           
         </td>
-        <td rowspan="@(StateContainer.DateCurrent.ToContainsDate(obj.FieldDate) ? 1 : 2)" class="text-end fw-bold" style="font-size: 12px;">
+      @*   <td rowspan="@(StateContainer.DateCurrent.ToContainsDate(obj.FieldDate) ? 1 : 2)" class="text-end fw-bold" style="font-size: 12px;">
             @obj.SUM_SALETOTAL
+        </td> *@
+        <td rowspan="1" class="text-end" style=" cursor : pointer;">
+            <RadzenText MouseEnter="@(args => ShowTooltip(args , "ยอดขาย") )" class="mb-0" Style="font-size: 12px;">
+                <div class="fw-bold">
+                    @obj.SUM_SALETOTAL
+                </div>
+            </RadzenText>
         </td>
         <td rowspan="2" style="font-size: 12px;"></td>
         if ((index + 1) % 7 == 0)
@@ -85,17 +96,31 @@
 
     @foreach (var (obj, index) in grpData.WithIndex())
     {
-        var error = obj.COUNT_STATUS_MANUAL == obj.MAX_DROP ? "success" : "error";
-        <td class=@($"text-center fw-bold {error}") style="font-size: 12px;">@obj.MAX_DROP</td>
-        if (StateContainer.DateCurrent.ToContainsDate(obj.FieldDate))
+        var error = obj.COUNT_STATUS_MANUAL == obj.MAX_DROP ? "success" : obj.COUNT_STATUS_MANUAL > obj.MAX_DROP ? "over" :  "error";
+
+        <td class=@($"text-center fw-bold {error}")>
+            <RadzenText class="mb-0" Style="font-size: 12px; cursor : pointer;">
+                <div class="fw-bold">@obj.MAX_DROP</div>
+            </RadzenText>
+        </td>
+      @*   if (StateContainer.DateCurrent.ToContainsDate(obj.FieldDate))
         {
-            <td class="text-end fw-bold" style="font-size: 12px;">@obj.SUM_SALETOTAL_TOTAL</td>
-        }
+            <td class="text-end fw-bold" style="font-size: 12px;">
+                @obj.SUM_SALETOTAL_TOTAL
+            </td>
+        } *@
+        <td class="text-end" style="cursor : pointer;">
+            <RadzenText MouseEnter="@(args => ShowTooltip(args , "ยอดขายประมาณการณ์") )" class="mb-0" Style="font-size: 12px; ">
+                <div class="fw-bold">
+                    @obj.SUM_SALETOTAL_TOTAL
+                </div>
+            </RadzenText>
+        </td>
     }
 </tr>
 
 @inject StateContainer StateContainer
-
+@inject TooltipService TooltipService
 @code {
     [Parameter]
     public IDictionary<string, ColumnProperty> Columns { get; set; } = new Dictionary<string, ColumnProperty>();
@@ -111,6 +136,8 @@
     public int beforeSale;
     public int beforeMTD;
     public int currentMTD;
+
+    private void ShowTooltip(ElementReference elementReference, string text, TooltipOptions? options = null) => TooltipService.Open(elementReference, $"{text}", new TooltipOptions { Style = "font-size: 16px", Position = TooltipPosition.Top });
 
     protected override void OnInitialized()
     {
@@ -159,7 +186,7 @@
             SUM_SALETOTAL = StateContainer.DateCurrent.ToContainsDate(key) ?
             grp.Sum(x => x.STATUS_MANUAL && !string.IsNullOrWhiteSpace(x.DOC_TYPE) || x.IsCurrent ? x.SALETOTAL : 0):
             grp.Sum(x => !string.IsNullOrWhiteSpace(x.DOC_TYPE) ? x.SALETOTAL : 0),
-            SUM_SALETOTAL_TOTAL = grp.Sum(x => x.SALETOTAL != 0 ? x.SALETOTAL : x.AMOUNT),
+            SUM_SALETOTAL_TOTAL = grp.Where(x => x.STATUS_MANUAL).Sum(x => string.IsNullOrWhiteSpace(x.DOC_TYPE) ? x.SALETOTAL : x.AMOUNT),
         })
         .ToList();
     }

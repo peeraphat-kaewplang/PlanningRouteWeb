@@ -119,7 +119,8 @@
                 </div>
             </td>
             <td class="text-center" >
-                <RadzenButton Click=@(()=> ShowdialogBestProductCallback.InvokeAsync(new BestProductRequest{
+                <RadzenButton 
+                 Click=@(()=> ShowdialogBestProductCallback.InvokeAsync(new BestProductRequest{
                       Location = item.LOCATION_CODE ,
                       Machine = item.MACHINE_CODE ,
                       ORG = item.ORGANIZATION_CODE
@@ -145,7 +146,7 @@
         @foreach (var (i, idx) in item.GETPLAN_DETAIL.WithIndex())
         {
             var boolToday = StateContainer.DateCurrent.ToContainsDate(i.CALENDAR_DATE);
-            var color = i.SALETOTAL == 0 ? "text-amount" : null;
+            var color = string.IsNullOrWhiteSpace(i.DOC_TYPE) ? "text-amount" : null;
             var today = boolToday ? "today" : null;
 
             var stylePlan = i.DOC_TYPE == "1" && i.STATUS_MANUAL ? "plan-success" :
@@ -264,7 +265,6 @@
 
                 <td class=@($"{today} {stylePlan} text-end fw-bold") style="width: 20px; ">
                     
-                        @* @(i.SALETOTAL == 0 ? "" : string.IsNullOrWhiteSpace(i.DOC_TYPE) ? "" : i.SALETOTAL) *@
                         <div class=@(i.CHANGEPRODUCT == "1" ? "d-flex justify-content-between" : "d-flex justify-content-end")>
                         @if (i.CHANGEPRODUCT == "1")
                         {
@@ -277,7 +277,7 @@
                                 style="font-weight: 700;font-size: 16px;cursor: pointer;" />
                         }
                             <p class=@($"m-0 {color}") style="font-size: 12px;">
-                                @(!string.IsNullOrWhiteSpace(i.DOC_TYPE) ? i.SALETOTAL : i.AMOUNT)
+                                @i.SALETOTAL
                             </p>
                         </div>
                    
@@ -361,12 +361,6 @@
         await OnChageRankCallback.InvokeAsync((rank, date, location));
     }
 
-    // private PlanningMasterData2? FindRank(int? rank, string date, string location)
-    // {
-    //     var f = data.Find(x => x.GETPLAN_DETAIL.Find(d => d.CALENDAR_DATE == date && d.RANK == rank) != null && x.LOCATION_CODE != location);
-    //     return f;
-    // }
-
     private bool FindRankGroup(int? rank, string date, string location)
     {
         var detail = new List<DeatilRank>();
@@ -383,26 +377,7 @@
                         })
                     .ToList();
                 detail.AddRange(d);
-
-                // var gg = g.GETPLAN_DETAIL.Where(x => x.STATUS_MANUAL && x.CALENDAR_DATE == date).ToList();
-                // detail.AddRange(gg);
             }
-
-            // if (i.GroupData.Count() > 1)
-            // {
-            //     var d = i.GroupData.First().GETPLAN_DETAIL.Where(x => x.STATUS_MANUAL && x.CALENDAR_DATE == date);
-            //     detail.AddRange(d);
-            //     foreach (var g in i.GroupData.Skip(1))
-            //     {
-            //         var gg = g.GETPLAN_DETAIL.Where(x => x.STATUS_MANUAL && x.CALENDAR_DATE == date).ToList();
-            //         detail.AddRange(gg);
-            //     }
-            // }
-            // else
-            // {
-            //     var d = i.GETPLAN_DETAIL.Where(x => x.STATUS_MANUAL && x.CALENDAR_DATE == date).ToList();
-            //     detail.AddRange(d);
-            // }
         }
 
         var chk = detail.Where(x => x.RANK == rank).ToList();
@@ -413,36 +388,7 @@
 
         return false;
     }
-    // private bool FindRankGroup(int? rank, string date, string location)
-    // {
-    //     var detail = new List<PlanningDetail2>();
-    //     foreach (var i in data)
-    //     {
-    //         if (i.GroupData.Count() > 1)
-    //         {
-    //             var d = i.GroupData.First().GETPLAN_DETAIL.Where(x => x.STATUS_MANUAL && x.CALENDAR_DATE == date);
-    //             detail.AddRange(d);
-    //             foreach (var g in i.GroupData.Skip(1))
-    //             {
-    //                 var gg = g.GETPLAN_DETAIL.Where(x => x.STATUS_MANUAL && x.CALENDAR_DATE == date).ToList();
-    //                 detail.AddRange(gg);
-    //             }
-    //         }
-    //         else
-    //         {
-    //             var d = i.GETPLAN_DETAIL.Where(x => x.STATUS_MANUAL && x.CALENDAR_DATE == date).ToList();
-    //             detail.AddRange(d);
-    //         }
-    //     }
-
-    //     var chk = detail.Where(x => x.RANK == rank).ToList();
-    //     if (chk.Count() > 1)
-    //     {
-    //         return true;
-    //     }
-
-    //     return false;
-    // }
+    
     private double CalSaleWeek(List<PlanningDetail2> row, int index, PlanningMasterData2? plan = null)
     {
         var task = 7;
@@ -470,5 +416,4 @@
             }
         }
     }
-
 }

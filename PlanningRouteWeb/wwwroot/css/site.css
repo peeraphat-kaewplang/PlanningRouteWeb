@@ -183,8 +183,8 @@ tfoot td.sum-error-mtd {
     background-color: #ffccc7 !important;
 }
 
-tfoot td.error, 
-tfoot td.success {
+tfoot td.error div, 
+tfoot td.success div {
     color:white;
 }
 
@@ -198,6 +198,10 @@ tfoot td {
 
 tfoot td.error {
     background: red ;
+}
+
+tfoot td.over {
+    background: orange;
 }
 
 tfoot td.success {
@@ -411,6 +415,11 @@ thead , tr {
 .plan-error {
     background-color: #ff9191 !important;
 }
+
+.plan-error .text-amount {
+    color: white !important;
+}
+
 .plan-out {
     background-color: #fabd85 !important;
 }

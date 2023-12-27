@@ -70,6 +70,14 @@
         <p>Data is empty!</P>
     }
 
+   @*   <script>
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    </script> *@
+
 @inject IPlanningService PlanningService
 @inject DialogService DialogService
 @inject IDialogService DialogServiceCustom
@@ -269,7 +277,6 @@
 
         actionButton = new();
         await ShowBusyDialog();
-        // NavManager.NavigateTo(NavManager.GetUriWithQueryParameter("ROUTE", selectRoute));
         StateHasChanged();
     }
 
@@ -652,12 +659,12 @@
                     detail.AddRange(d);
                 }
             }
+            var action = actionButton.Date.Find(x => x.Date == date)!;
+            var rankEmpty = detail.Where(d => d.RANK == null).ToList();
 
             if (detail.Count() != 0)
             {
-                var action = actionButton.Date.Find(x => x.Date == date)!;
-                var rankEmpty = detail.Where(d => d.RANK == null).ToList();
-
+                
                 var rankDup = detail.GroupBy(x => new { x.RANK, x.CALENDAR_DATE }, (key, grp) => new
                 {
                     Date = key.CALENDAR_DATE,
@@ -704,11 +711,14 @@
                     action.Date = date;
                     action.Error = (rankEmpty.Count() > 0 || rankDup.Count() > 0);
                 }
-
+               actionChangeProduct = true;
+               actionButton.Action = "Save";
             }
-
-            actionChangeProduct = true;
-            actionButton.Action = "save";
+            else
+            {
+               actionButton = new();
+               actionButton.Action = "create";
+            }
         }
     }
      

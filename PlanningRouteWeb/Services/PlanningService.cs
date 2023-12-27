@@ -117,7 +117,7 @@ namespace PlanningRouteWeb.Services
                                 ConvertModel.PlanningMasterDataModeltoModel(grp.OrderBy(x => int.Parse(x.MSORT)).FirstOrDefault()!, _stateContainer.DateCurrent, grp , _stateContainer.BeforeConfig))
                         .OrderBy(x => x.LOCATION_CODE)
                         .ThenBy(x => int.Parse(x.MSORT))
-                        //.Skip(0).Take(2)
+                         //.Skip(11).Take(1)
                         .ToList();
 
                     var data = mapModel!.Select(x =>
@@ -131,7 +131,6 @@ namespace PlanningRouteWeb.Services
                         x.GETPLAN_DETAIL = calData;
                         return x;
                     })
-                    //.Skip(0).Take(1)
                     .ToList();
                     return Tuple.Create(columns, data, plannings!.Data.Target);
                 }
