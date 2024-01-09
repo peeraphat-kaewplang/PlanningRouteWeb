@@ -1,0 +1,13 @@
+﻿@page "/dashboard/detail"
+
+<h3>DashboardDetail</h3>
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "org")]
+    public string? ORG { get; set; }
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "month")]
+    public string? Month { get; set; }
+
+}
