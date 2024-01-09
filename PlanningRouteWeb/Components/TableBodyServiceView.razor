@@ -3,9 +3,9 @@
     var countDropMonth = item.GETPLAN_DETAIL.Count(x => x.STATUS_MANUAL);
     var styleMachine = item.CHANGE_ACTION == "C" ? "change-machine" : item.CHANGE_ACTION == "R" ? "return-machine" : item.CHANGE_ACTION == "N" ? "new-machine" : null;
     <tr>
-        <td class="sticky-col first-col">
+        @* <td class="sticky-col first-col">
             <RadzenText MouseEnter="@(args => ShowTooltip(args , item.CUSTOMER_NAME) )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
-                <div class="d-inline-block text-truncate" style="width:17rem">@item.CUSTOMER_NAME</div>
+                <div class="d-inline-block text-truncate" style="width:10rem">@item.CUSTOMER_NAME</div>
             </RadzenText>
         </td>
         <td class="sticky-col second-col">
@@ -18,18 +18,51 @@
         </td>
         <td class="sticky-col last-col" style="font-size: 12px;">
             <div class="d-inline-block text-truncate" style="width: 7rem;"> @item.MACHINE_MODEL</div>
+        </td> *@
+        <td class="sticky-col first-col">
+            <RadzenText MouseEnter="@(args => ShowTooltip(args , item.CUSTOMER_NAME) )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
+                <div class="d-inline-block text-truncate" style="width:7rem">@item.CUSTOMER_NAME</div>
+            </RadzenText>
+        </td>
+        <td class="sticky-col second-col">
+            <RadzenText MouseEnter="@(args => ShowTooltip(args , item.LOCATION_NAME) )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
+                <div class="d-inline-block text-truncate" style="width: 5rem;">@item.LOCATION_NAME</div>
+            </RadzenText>
+        </td>
+        <td class=@($"sticky-col thired-col {styleMachine}") style="font-size: 12px;">
+            <div class="d-inline-block text-truncate" style="width: 3rem;"> 
+                @item.MACHINE_CODE
+            </div>
+        </td>
+        <td class="sticky-col last-col" style="font-size: 12px;">
+            <div class="d-inline-block text-truncate" style="width: 3rem;"> 
+                @item.MACHINE_MODEL
+            </div>
         </td>
         <td class="text-end" style="font-size: 12px;">
-            <div class="d-inline-block" style="width:99%"> @item.TOTAL_FEE</div>
+            <div class="d-inline-block" style="width:99%">
+                @(
+                    !string.IsNullOrWhiteSpace(item.TOTAL_FEE) ? 
+                    double.Parse(item.TOTAL_FEE) == 0 ? item.TOTAL_FEE :
+                    double.Parse(item.TOTAL_FEE).ToString("0,0.00", CultureInfo.InvariantCulture) : 
+                    item.TOTAL_FEE
+                 )
+            </div>
         </td>
         <td class="text-end" style="font-size: 12px;">
-            <div class="d-inline-block" style="width:99%"> @item.BEFORE_SALE</div>
+            <div class="d-inline-block" style="width:99%">
+                @(!string.IsNullOrWhiteSpace(item.BEFORE_SALE) ? double.Parse(item.BEFORE_SALE).ToString("0,0", CultureInfo.InvariantCulture) : item.BEFORE_SALE)
+            </div>
         </td>
         <td class="text-end" style="font-size: 12px;">
-            <div class="d-inline-block" style="width:99%"> @item.BEFORE_MTD</div>
+            <div class="d-inline-block" style="width:99%">
+                @(!string.IsNullOrWhiteSpace(item.BEFORE_MTD) ? double.Parse(item.BEFORE_MTD).ToString("0,0", CultureInfo.InvariantCulture) : item.BEFORE_MTD)
+             </div>
         </td>
         <td class="text-end" style="font-size: 12px;">
-            <div class="d-inline-block" style="width:99%"> @item.CURRENT_MTD</div>
+            <div class="d-inline-block" style="width:99%">
+                @(!string.IsNullOrWhiteSpace(item.CURRENT_MTD) ? double.Parse(item.CURRENT_MTD).ToString("0,0", CultureInfo.InvariantCulture) : item.CURRENT_MTD)
+            </div>
         </td>
 
         @* ค่ามาตรฐาน *@
@@ -125,7 +158,7 @@
                       Machine = item.MACHINE_CODE ,
                       ORG = item.ORGANIZATION_CODE
                  }))
-                Text="สินค้าขายดี"
+                Icon="pageview"
                 ButtonStyle="ButtonStyle.Primary"
                 Size="ButtonSize.ExtraSmall"
                 Style="text-transform: none;" />
@@ -134,7 +167,7 @@
        
         <td class="text-end" >
             <div style="font-size: 12px;width: 100%">
-                @item.SALE_LAST_WEEK
+                @(item.SALE_LAST_WEEK.ToString("0,0", CultureInfo.InvariantCulture))
             </div>
         </td>
         <td class="text-end" style="font-size: 12px;">
@@ -165,8 +198,8 @@
                         />
                     </div>
                 </td>
-                <td class=@($"{today} {stylePlan} text-end fw-bold") style="width: 20px; font-size: 12px;">
-                    <p class=@($"mb-0 {color}")>
+                <td class=@($"{today} {stylePlan} text-end") style="width: 20px; ">
+                    <RadzenText class=@($"mb-0 fw-bold") Style="font-size: 12px;">
                         @if (i.STATUS_MANUAL)
                         {
                             var changePrd = i.CHANGEPRODUCT == "1" ? "change-pro" : "change-pro-chk";
@@ -184,17 +217,17 @@
                                         style="font-weight: 700;font-size: 16px;" />
                                 }
                                 <p class="m-0">
-                                    @(i.SALETOTAL == 0 ? i.AMOUNT : i.SALETOTAL)
+                                    @(i.SALETOTAL == 0 ? i.AMOUNT == 0 ? i.AMOUNT : i.AMOUNT.ToString("0,0", CultureInfo.InvariantCulture) : i.SALETOTAL.ToString("0,0", CultureInfo.InvariantCulture))
                                 </p>
                             </div>
                         }
                         else
                         {
-                            <p class="m-0"> 
-                                @(i.SALETOTAL == 0 ? i.AMOUNT : i.SALETOTAL)
-                            </p>
+                            <p class="m-0 text-amount">
+                                @(i.SALETOTAL == 0 ? i.AMOUNT == 0 ? i.AMOUNT : i.AMOUNT.ToString("0,0", CultureInfo.InvariantCulture) : i.SALETOTAL.ToString("0,0", CultureInfo.InvariantCulture))
+                            </p>    
                         }
-                    </p>
+                    </RadzenText>
                 </td>
                 <td class=@($"{today} text-center p-0")>
                     @if (i.STATUS_MANUAL)
@@ -272,9 +305,20 @@
                             Icon="cached"
                             style="font-weight: 700;font-size: 16px;cursor: pointer;" />
                     }
-                        <p class=@($"m-0 {color}") style="font-size: 12px;">
+                    <RadzenText MouseEnter="@(args => ShowTooltipValue(args ,i.AMOUNT.ToString()) )" class=@($"m-0 fw-bold {color}") style="font-size: 12px;cursor : pointer;">
+                            @if(i.SALETOTAL == 0)
+                            {
+                                @i.SALETOTAL
+                            }
+                            else
+                            {
+                                @i.SALETOTAL.ToString("0,0", CultureInfo.InvariantCulture)
+                            }
+                    </RadzenText>
+                       @*  <p class=@($"m-0 {color}") style="font-size: 12px;">
                             @i.SALETOTAL
-                        </p>
+                            @i.AMOUNT
+                        </p> *@
                     </div>
                 </td>
                 <td class=@($"{today} text-center fw-bold p-0") style="width: 20px; font-size: 12px;">
@@ -306,12 +350,14 @@
 
             if ((idx + 1) % 7 == 0)
             {
+                var saleWeek = CalSaleWeek(item.GETPLAN_DETAIL, idx + 1);
+                var diff = CalSaleWeek(item.GETPLAN_DETAIL, idx + 1, item);
                 var clsStyle = CalSaleWeek(item.GETPLAN_DETAIL, idx + 1, item) > 1 ? "success" : "danger";
                 <td class="text-end salweek fw-bold" style="width: 20px; font-size: 12px;">
-                    @CalSaleWeek(item.GETPLAN_DETAIL , idx + 1)
+                    @(saleWeek == 0 ? saleWeek : saleWeek.ToString("0,0", CultureInfo.InvariantCulture))
                 </td>
                 <td class=@($"text-end fw-bold {clsStyle}") style="width: 20px; font-size: 12px;">
-                    @CalSaleWeek(item.GETPLAN_DETAIL , idx + 1 , item)
+                    @(diff == 0 ? diff : diff.ToString("0,0", CultureInfo.InvariantCulture))
                 </td>
             }
         }
@@ -345,7 +391,8 @@
     [Parameter]
     public bool ActionChangeProduct { get; set;}
 
-    private void ShowTooltip(ElementReference elementReference, string text, TooltipOptions? options = null) => TooltipService.Open(elementReference, $"ตู้ปัจจุบัน : {text}", new TooltipOptions { Style = "font-size: 16px" });
+    private void ShowTooltip(ElementReference elementReference, string text, TooltipOptions? options = null) => TooltipService.Open(elementReference, $"{text}", new TooltipOptions { Style = "font-size: 16px" });
+    private void ShowTooltipValue(ElementReference elementReference, string text) => TooltipService.Open(elementReference, $"ยอดขายประมาณการณ์ : {text}", new TooltipOptions { Style = "font-size: 16px" });
 
     private async Task ChageRank(int? rank, string date, string location, int index = 0, int seq = 0 ,bool fbool = false)
     {

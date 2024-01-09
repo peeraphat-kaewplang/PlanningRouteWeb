@@ -51,15 +51,15 @@
 }
 
 .second-col {
-    left: 17.5rem;
+    left: 7.5rem;
 }
 
 .thired-col {
-    left: 28rem;
+    left: 13rem;
 }
 
 .last-col {
-    left: 31.55rem;
+    left: 16.5rem;
 }
 
 /*fix column header*/
@@ -158,8 +158,6 @@ table thead th {
 tfoot tr {
   height: 30px;
 }
-
-
 
 tfoot,
 tfoot th,

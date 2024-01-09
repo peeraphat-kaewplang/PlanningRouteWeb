@@ -1,6 +1,13 @@
 ﻿@page "/"
 @using Microsoft.AspNetCore.WebUtilities;
 
+@inject IPlanningService PlanningService
+@inject IDialogService DialogServiceCustom
+@inject DialogService DialogService
+@inject TooltipService TooltipService
+@inject NavigationManager NavManager
+@inject StateContainer StateContainer
+
 @{  
     var styleWidth = !hideMaster ? "widht-show-master" : "widht-hide-master";
 }
@@ -35,7 +42,7 @@
                     ActionButton="actionButton"
                     SortRankCallback="@SortRank"
                     OnClickSavePlanCallback="@ShowDialogSave" 
-                    OnCalPlanningCallback="@((args) => OnCalPlanning(args.Item1 , args.Item2 ))"/>
+                    OnCalPlanningCallback="@((args) => ShowDialogCalPlan(args.Item1 , args.Item2 ,args.Item3))"/>
             </thead>
              <tbody>
                 <TableBodyServiceView 
@@ -69,22 +76,6 @@
     {
         <p>Data is empty!</P>
     }
-
-   @*   <script>
-        // Initialize tooltips
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl)
-        })
-    </script> *@
-
-@inject IPlanningService PlanningService
-@inject DialogService DialogService
-@inject IDialogService DialogServiceCustom
-@inject TooltipService TooltipService
-@inject NavigationManager NavManager
-@inject StateContainer StateContainer
-
 @code {
     [Parameter]
     [SupplyParameterFromQuery]
@@ -119,11 +110,10 @@
 
     protected override async Task OnInitializedAsync() 
     {
-
         selectOrg = ORG!;
         selectRoute = ROUTE!;
-        year = StateContainer.defultYear;
-        var y = StateContainer.DateCurrent.Year - StateContainer.defultYear;
+        year = StateContainer.DateCurrent.Year;
+        var y = year - StateContainer.defultYear;
         
         if(y > 0)
         {
@@ -143,11 +133,6 @@
 
         await LoadOrg(ORG!);
         await LoadRoute();
-
-        // if(!string.IsNullOrEmpty(selectRoute))
-        // {
-
-        // }
 
         if(ROUTE == null) selectRoute = optionsRoute.First().ROUTE_CODE;
         // await ShowBusyDialog();
@@ -522,15 +507,15 @@
 
     private async Task ShowInlineDialog()
     {
-        var result = await DialogService.OpenAsync("Change Config", ds =>
+        var result = await DialogService.OpenAsync("ตั้งค่าเริ่มต้น", ds =>
         @<RadzenStack Gap="1.5rem">
-            <RadzenFormField Text="จำนวนการเข้าเติมสิ้นต่อวัน" Variant="@variant">
+            <RadzenFormField Text="จำนวนการเข้าเติมสินค้าต่อวัน" Variant="@variant">
                 <RadzenNumeric ShowUpDown="false" TValue="int"@bind-Value=@target.DROP_PER_DAY/>
             </RadzenFormField>
-            <RadzenFormField Text="VALUE PER DAY" Variant="@variant">
+            <RadzenFormField Text="เป้ายอดขายต่อวัน" Variant="@variant">
                 <RadzenNumeric ShowUpDown="false" TValue="int"@bind-Value=@target.VALUE_PER_DAY/>
             </RadzenFormField>
-            <RadzenFormField Text="VALUE PER MONTH" Variant="@variant">
+            <RadzenFormField Text="เป้ายอดขายต่อเดือน" Variant="@variant">
                 <RadzenNumeric ShowUpDown="false" TValue="int"@bind-Value=@target.VALUE_PER_MONTH/>
             </RadzenFormField>
             <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
@@ -552,7 +537,28 @@
                     <RadzenButton Text="ยกเลิก" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" />
                 </RadzenStack>
             </RadzenStack>
+        </RadzenStack>
+    );
+    }
+
+    private async Task ShowDialogCalPlan(string start , string end , string action)
+    {
+        if(action != "create")
+        {
+            var result = await DialogService.OpenAsync("ยืนยันล้างค่า สร้างเเพลนใหม่ใหม่", ds =>
+            @<RadzenStack Gap="1.5rem">
+                <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End">
+                    <RadzenStack Orientation="Orientation.Horizontal">
+                        <RadzenButton Text="ยืนยัน" Click="() => OnCalPlanning(start ,end, ds)"  Style="width: 80px;" />
+                        <RadzenButton Text="ยกเลิก" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" />
+                    </RadzenStack>
+                </RadzenStack>
         </RadzenStack>);
+        }
+        else
+        {
+           await OnCalPlanning(start, end);
+        }
     }
 
     private async Task ShowdialogChangeProduct(ChangeProductRequest item , bool isCurrent) {
@@ -584,8 +590,9 @@
         }
     }
 
-    private async Task OnCalPlanning(string start , string end)
+    private async Task OnCalPlanning(string start , string end ,DialogService? ds = null)
     {
+        
         var body = new CalPlanning
         {
             YEARMONTH = $"{StateContainer.DateCurrent.ToStringDate("yyyy")}{selectMonth.Number}",
@@ -598,12 +605,16 @@
         var response = await PlanningService.PlanningCalPlan(body);
         if(response.ErrorMessage == "success")
         {
-            await LoadMaster();
+            await ShowBusyDialog();
+            
+        
         }
         else
         {
             await DialogService.Alert($"Error : {response.ErrorMessage}", $"เเจ้งเตือน { response.Status }", new AlertOptions() { OkButtonText = "ปิด" ,ShowClose = false });
         }
+
+        if(ds!= null) ds.Close(true);
     }
 
     public class ChkRank
@@ -712,11 +723,10 @@
                     action.Error = (rankEmpty.Count() > 0 || rankDup.Count() > 0);
                 }
                actionChangeProduct = true;
-               actionButton.Action = "Save";
+               actionButton.Action = "save";
             }
             else
             {
-                
                 if(action != null)
                 {
                    actionButton.Date.Remove(action);
