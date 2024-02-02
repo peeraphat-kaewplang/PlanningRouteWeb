@@ -329,22 +329,22 @@
         }
         var recordData = dataSave.Select(x => ConvertModel.PlanningMasterData2ModeltoSave(x)).ToList();
 
-        var response = await PlanningService.PlanningSavePlan(recordData);
+        // var response = await PlanningService.PlanningSavePlan(recordData);
 
-        if(response.ErrorMessage == "success")
-        {
-            var Task = InvokeAsync(async () => {
-                actionButton = new();
-                await LoadMaster();
-                DialogServiceCustom.DialogClose();
-                ds.Close(false);
-            });
-            await DialogServiceCustom.BusyDialog("กำลังบันทึกข้อมูล...");
-        }
-        else
-        {
-            await DialogService.Alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล!", "เเจ้งเตือน", new AlertOptions() { OkButtonText = "ปิด" });
-        }
+        // if(response.ErrorMessage == "success")
+        // {
+        //     var Task = InvokeAsync(async () => {
+        //         actionButton = new();
+        //         await LoadMaster();
+        //         DialogServiceCustom.DialogClose();
+        //         ds.Close(false);
+        //     });
+        //     await DialogServiceCustom.BusyDialog("กำลังบันทึกข้อมูล...");
+        // }
+        // else
+        // {
+        //     await DialogService.Alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล!", "เเจ้งเตือน", new AlertOptions() { OkButtonText = "ปิด" });
+        // }
       
         StateHasChanged();
     }
@@ -606,8 +606,6 @@
         if(response.ErrorMessage == "success")
         {
             await ShowBusyDialog();
-            
-        
         }
         else
         {

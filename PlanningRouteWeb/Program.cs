@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor().AddCircuitOptions(x => x.DetailedErrors = true);
 builder.Services.AddRadzenComponents();
+builder.Services.AddControllers();
 builder.Services.AddLocalization();
 
 builder.Services.AddScoped(
@@ -32,6 +33,10 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
