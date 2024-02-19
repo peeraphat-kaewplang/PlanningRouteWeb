@@ -1,3 +1,12 @@
+:root {
+  --table-border-color: #dee2e6;
+  --table-font-md: 14px;
+  --table-font-sm: 12px;
+  --table-hover-color: #cfe2ff;
+  --color-error: red;
+  --colot-success: green;
+}
+
 #blazor-error-ui {
   background: lightyellow;
   bottom: 0;
@@ -35,31 +44,31 @@
 }
 
 .wrapper {*/
-    /*position: relative;*/
-    /*overflow-y: auto;
+/*position: relative;*/
+/*overflow-y: auto;
     border: 1px solid black;
     white-space: nowrap;
 }*/
 
 .sticky-col {
-    position: -webkit-sticky;
-    position: sticky;
+  position: -webkit-sticky;
+  position: sticky;
 }
 
 .first-col {
-    left: 0rem;
+  left: 0rem;
 }
 
 .second-col {
-    left: 7.5rem;
+  left: 7.5rem;
 }
 
 .thired-col {
-    left: 13rem;
+  left: 13rem;
 }
 
 .last-col {
-    left: 16.5rem;
+  left: 16.5rem;
 }
 
 /*fix column header*/
@@ -67,7 +76,7 @@ table thead tr th.sticky-col.first-col,
 table thead tr th.sticky-col.second-col,
 table thead tr th.sticky-col.thired-col,
 table thead tr th.sticky-col.last-col {
-    z-index: 20;
+  z-index: 20;
 }
 
 /*fix column body*/
@@ -75,7 +84,7 @@ table tbody tr td.sticky-col.first-col,
 table tbody tr td.sticky-col.second-col,
 table tbody tr td.sticky-col.thired-col,
 table tbody tr td.sticky-col.last-col {
-    z-index: 1;
+  z-index: 1;
 }
 
 /*tfoot th.sticky-col.first-col {
@@ -85,8 +94,8 @@ table tbody tr td.sticky-col.last-col {
     width: 600px;
 } */
 table {
-    /*width: 100%;*/
-    border-collapse: collapse;
+  /*width: 100%;*/
+  border-collapse: collapse;
 }
 
 table tr th,
@@ -103,37 +112,36 @@ table tr td {
 }*/
 
 table.width-screen thead {
-    top: 60px;
+  top: 60px;
 }
 
 table thead,
 table thead {
-    position: -webkit-sticky;
-    position: sticky;
-    z-index: 10;
+  position: -webkit-sticky;
+  position: sticky;
+  z-index: 10;
 }
 
 table.width-screen tbody:nth-of-type(1) tr:nth-of-type(1) td {
-    border-top: none !important;
+  border-top: none !important;
 }
 
 table.width-screen thead th {
-    border-top: none !important;
-    border-bottom: none !important;
-    box-shadow: inset 0 0 0 #000000, inset 0 -0.5px 0 #000000 !important;
-    padding: 2px 0;
+  border-top: none !important;
+  border-bottom: none !important;
+  box-shadow: inset 0 0 0 #000000, inset 0 -0.5px 0 #000000 !important;
+  padding: 2px 0;
 }
 
 .width-screen {
-   
 }
 
 .widht-show-master {
-    width: 531.25rem !important;
+  width: 531.25rem !important;
 }
 
 .widht-hide-master {
-    width: 494rem !important;
+  width: 494rem !important;
 }
 
 .command-wrapper {
@@ -147,7 +155,7 @@ table.width-screen thead th {
 }
 
 table > tbody > tr > td {
-    vertical-align: middle;
+  vertical-align: middle;
 }
 
 table thead th {
@@ -161,118 +169,118 @@ tfoot tr {
 tfoot,
 tfoot th,
 tfoot td {
-    position: -webkit-sticky;
-    position: sticky;
-    bottom: 0;
-    z-index: 10;
-    /*background: #d9d9d9 !important;*/
+  position: -webkit-sticky;
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  /*background: #d9d9d9 !important;*/
 }
 
 tfoot td.sum-before-mtd {
-    background: #75c596 !important;
+  background: #75c596 !important;
 }
 
 tfoot td.sum-current-mtd {
-    background: #75c596 !important;
+  background: #75c596 !important;
 }
 
 tfoot td.sum-error-mtd {
-    background-color: #ffccc7 !important;
+  background-color: #ffccc7 !important;
 }
 
-tfoot td.error div, 
+tfoot td.error div,
 tfoot td.success div {
-    color:white;
+  color: white;
 }
 
 tfoot td {
-    border-top: none !important;
-    border-bottom: none !important;
-    border-right: none !important;
-    border-left: none !important;
-    box-shadow: inset 0.5px 0 0 #000000, inset 0 -0.5px 0 #000000 !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  border-right: none !important;
+  border-left: none !important;
+  box-shadow: inset 0.5px 0 0 #000000, inset 0 -0.5px 0 #000000 !important;
 }
 
 tfoot td.error {
-    background: red ;
+  background: red;
 }
 
 tfoot td.over {
-    background: orange;
+  background: orange;
 }
 
 tfoot td.success {
-    background: green !important;
+  background: green !important;
 }
 
 /*table change product*/
 .table-scroll {
-    position: relative;
-    width: 100%;
-    z-index: 1;
-    margin: auto;
-    overflow: auto;
-    height: 20rem;
+  position: relative;
+  width: 100%;
+  z-index: 1;
+  margin: auto;
+  overflow: auto;
+  height: 20rem;
 }
 
 .table-scroll table {
   /*  width: 100%;
     min-width: 1280px;*/
-    margin: auto;
-    /*border-collapse: separate;*/
-    border-spacing: 0;
+  margin: auto;
+  /*border-collapse: separate;*/
+  border-spacing: 0;
 }
 
 .table-scroll table thead th {
-   border-top: none !important;
-   border-bottom: none !important;
-   box-shadow: inset 0 0.5px 0 #000000, inset 0 -0.5px 0 #000000 !important;
-    /*padding: 14px;*/
-    /*background-color: #a9e7ed !important;*/
+  border-top: none !important;
+  border-bottom: none !important;
+  box-shadow: inset 0 0.5px 0 #000000, inset 0 -0.5px 0 #000000 !important;
+  /*padding: 14px;*/
+  /*background-color: #a9e7ed !important;*/
 }
 
 .table-wrap {
-    position: relative;
+  position: relative;
 }
 
-thead , tr {
-    border-style: none !important;
+thead,
+tr {
+  border-style: none !important;
 }
 
 .table-scroll tbody tr {
-    border-bottom-style: solid !important; 
+  border-bottom-style: solid !important;
 }
 
 .table-scroll th,
 .table-scroll td {
-    /*padding: 5px 10px;*/
-    /*border: 1px solid #000;*/
-    /*vertical-align: top;*/
-    border-top-width: 0px;
+  /*padding: 5px 10px;*/
+  /*border: 1px solid #000;*/
+  /*vertical-align: top;*/
+  border-top-width: 0px;
 }
 
 .table-scroll thead th {
-   /* background: #333;
+  /* background: #333;
     color: #fff;*/
-    position: -webkit-sticky;
-    position: sticky;
-    top: 0px;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0px;
 }
 /* safari and ios need the tfoot itself to be position:sticky also */
 .table-scroll tfoot,
 .table-scroll tfoot th,
 .table-scroll tfoot td {
-    position: -webkit-sticky;
-    position: sticky;
-    bottom: 0;
-    background: #666;
-    color: #fff;
-    z-index: 4;
+  position: -webkit-sticky;
+  position: sticky;
+  bottom: 0;
+  background: #666;
+  color: #fff;
+  z-index: 4;
 }
 
-
 .no-arrow {
-    -moz-appearance: textfield;
+  -moz-appearance: textfield;
 }
 
 .no-arrow::-webkit-outer-spin-button,
@@ -285,160 +293,161 @@ thead , tr {
   color: red;
 }
 
-.salweek, 
+.salweek,
 .salweek > td {
-    background-color: #c7cdff !important;
+  background-color: #c7cdff !important;
 }
 
 .success {
-    background: #61eba1 !important;
+  background: #61eba1 !important;
 }
 
 .danger,
 .danger > td {
-    background-color: #ffccc7 !important;
+  background-color: #ffccc7 !important;
 }
 
 .today {
-    background: #f7e73f !important;
+  background: #f7e73f !important;
 }
 
 /*check box*/
 .rz-chkbox-box.rz-state-active:hover:not(.rz-state-disabled):after {
-    background-color: var(--rz-success) !important;
+  background-color: var(--rz-success) !important;
 }
-
 
 /*text number*/
 .text-size {
-    height: unset !important;
+  height: unset !important;
 }
-.text-size .rz-inputtext , .text-size.rz-textbox {
-    font-size: 12px;
-    padding: 3px 3px 3px 0 !important;
+.text-size .rz-inputtext,
+.text-size.rz-textbox {
+  font-size: 12px;
+  padding: 3px 3px 3px 0 !important;
 }
-
-
 
 /*dropdown*/
 .dropdown-sm {
-    width: 100%;
-    padding: 3px 0 3px 5px !important;
-    height: unset !important;
-    font-size: 12px !important;
+  width: 100%;
+  padding: 3px 0 3px 5px !important;
+  height: unset !important;
+  font-size: 12px !important;
 }
 
 /*group color header*/
 .monday.color {
-    background-color: #fffac7 !important;
+  background-color: #fffac7 !important;
 }
 .tuesday.color {
-    background-color: #ffc7e4 !important;
+  background-color: #ffc7e4 !important;
 }
 .wednesday.color {
-    background-color: #ceffc7 !important;
+  background-color: #ceffc7 !important;
 }
 .thursday.color {
-    background-color: #ffebc7 !important;
+  background-color: #ffebc7 !important;
 }
 .friday.color {
-    background-color: #c7ebff !important;
+  background-color: #c7ebff !important;
 }
 .saturday.color {
-    background-color: #dec7ff !important;
+  background-color: #dec7ff !important;
 }
 .sunday.color {
-    background-color: #ffc7c8 !important;
+  background-color: #ffc7c8 !important;
 }
 
 /*text*/
 .validat {
-    border-color: red !important;
+  border-color: red !important;
 }
 .text-amount {
-    color: #c0bfbe;
+  color: #c0bfbe;
 }
 .text-close > td {
-    color:gray !important;
+  color: gray !important;
 }
 
-.nomal-chk, .change-pro-chk, .change-pro {
-    cursor: pointer;
+.nomal-chk,
+.change-pro-chk,
+.change-pro {
+  cursor: pointer;
 }
 
 .nomal-chk {
-    color: green;
+  color: green;
 }
 
 .change-pro-chk {
-    color:lightblue;
+  color: lightblue;
 }
 
 .change-pro {
-    color: limegreen;
+  color: limegreen;
 }
 
 .rank-error {
-    background-color: red !important;
+  background-color: red !important;
 }
 
 .rank-warning {
-    background-color: #ff9600 !important;
+  background-color: #ff9600 !important;
 }
 
 .rank-success {
-    background: #75c596 !important;
+  background: #75c596 !important;
 }
-
-
 
 /*machine*/
 .new-machine {
-    background-color: lightgreen !important;
+  background-color: lightgreen !important;
 }
 .return-machine {
-    background-color: #ff9191 !important;
+  background-color: #ff9191 !important;
 }
 .change-machine {
-    background-color: lightyellow !important;
+  background-color: lightyellow !important;
 }
 
 /*button*/
 
 /*status*/
 .plan-success {
-    background: #75c596 !important;
+  background: #75c596 !important;
 }
 .plan-error {
-    background-color: #ff9191 !important;
+  background-color: #ff9191 !important;
 }
 
 .plan-error .text-amount {
-    color: white !important;
+  color: white !important;
 }
 
 .plan-out {
-    background-color: #fabd85 !important;
+  background-color: #fabd85 !important;
 }
 .plan-notdue {
-    background-color: blanchedalmond !important;
+  background-color: blanchedalmond !important;
 }
 
 .plan-change {
-    background-color: #dcebf8 !important;
+  background-color: #dcebf8 !important;
 }
 
 .rank-error.color {
-    background-color: red !important;
+  background-color: red !important;
 }
-
 
 .grp-color-new {
-    background: #d1e7dd !important;
+  background: #d1e7dd !important;
 }
 .grp-color-change {
-    background: lightyellow !important;
+  background: lightyellow !important;
 }
 .grp-color-off {
-    background: #e2e3e5 !important;
+  background: #e2e3e5 !important;
+}
+
+.empty-plan {
+    background-color: #ffeb002b !important;
 }

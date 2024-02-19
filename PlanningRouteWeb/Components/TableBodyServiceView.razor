@@ -1,24 +1,26 @@
-﻿@foreach (var (item, index) in data.WithIndex())
+﻿@inject StateContainer StateContainer
+
+@foreach (var (item, index) in data.WithIndex())
 {
     var countDropMonth = item.GETPLAN_DETAIL.Count(x => x.STATUS_MANUAL);
     var styleMachine = item.CHANGE_ACTION == "C" ? "change-machine" : item.CHANGE_ACTION == "R" ? "return-machine" : item.CHANGE_ACTION == "N" ? "new-machine" : null;
     <tr>
         @* <td class="sticky-col first-col">
-            <RadzenText MouseEnter="@(args => ShowTooltip(args , item.CUSTOMER_NAME) )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
-                <div class="d-inline-block text-truncate" style="width:10rem">@item.CUSTOMER_NAME</div>
-            </RadzenText>
-        </td>
-        <td class="sticky-col second-col">
-            <RadzenText MouseEnter="@(args => ShowTooltip(args , item.LOCATION_NAME) )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
-                <div class="d-inline-block text-truncate" style="width: 10rem;">@item.LOCATION_NAME</div>
-            </RadzenText>
-        </td>
-        <td class=@($"sticky-col thired-col {styleMachine}") style="font-size: 12px;">
-            <div class="d-inline-block text-truncate" style="width: 3rem;"> @item.MACHINE_CODE</div>
-        </td>
-        <td class="sticky-col last-col" style="font-size: 12px;">
-            <div class="d-inline-block text-truncate" style="width: 7rem;"> @item.MACHINE_MODEL</div>
-        </td> *@
+    <RadzenText MouseEnter="@(args => ShowTooltip(args , item.CUSTOMER_NAME) )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
+    <div class="d-inline-block text-truncate" style="width:10rem">@item.CUSTOMER_NAME</div>
+    </RadzenText>
+    </td>
+    <td class="sticky-col second-col">
+    <RadzenText MouseEnter="@(args => ShowTooltip(args , item.LOCATION_NAME) )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
+    <div class="d-inline-block text-truncate" style="width: 10rem;">@item.LOCATION_NAME</div>
+    </RadzenText>
+    </td>
+    <td class=@($"sticky-col thired-col {styleMachine}") style="font-size: 12px;">
+    <div class="d-inline-block text-truncate" style="width: 3rem;"> @item.MACHINE_CODE</div>
+    </td>
+    <td class="sticky-col last-col" style="font-size: 12px;">
+    <div class="d-inline-block text-truncate" style="width: 7rem;"> @item.MACHINE_MODEL</div>
+    </td> *@
         <td class="sticky-col first-col">
             <RadzenText MouseEnter="@(args => ShowTooltip(args , item.CUSTOMER_NAME) )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
                 <div class="d-inline-block text-truncate" style="width:7rem">@item.CUSTOMER_NAME</div>
@@ -30,23 +32,25 @@
             </RadzenText>
         </td>
         <td class=@($"sticky-col thired-col {styleMachine}") style="font-size: 12px;">
-            <div class="d-inline-block text-truncate" style="width: 3rem;"> 
+            <div class="d-inline-block text-truncate" style="width: 3rem;">
                 @item.MACHINE_CODE
             </div>
         </td>
         <td class="sticky-col last-col" style="font-size: 12px;">
-            <div class="d-inline-block text-truncate" style="width: 3rem;"> 
-                @item.MACHINE_MODEL
-            </div>
+            <RadzenText MouseEnter="@(args => ShowTooltip(args , item.MACHINE_MODEL) )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
+                <div class="d-inline-block text-truncate" style="width: 3rem;">
+                    @item.MACHINE_MODEL
+                </div>
+            </RadzenText>
         </td>
         <td class="text-end" style="font-size: 12px;">
             <div class="d-inline-block" style="width:99%">
                 @(
-                    !string.IsNullOrWhiteSpace(item.TOTAL_FEE) ? 
+                    !string.IsNullOrWhiteSpace(item.TOTAL_FEE) ?
                     double.Parse(item.TOTAL_FEE) == 0 ? item.TOTAL_FEE :
-                    double.Parse(item.TOTAL_FEE).ToString("0,0.00", CultureInfo.InvariantCulture) : 
+                    double.Parse(item.TOTAL_FEE).ToString("0,0.00", CultureInfo.InvariantCulture) :
                     item.TOTAL_FEE
-                 )
+                    )
             </div>
         </td>
         <td class="text-end" style="font-size: 12px;">
@@ -57,7 +61,7 @@
         <td class="text-end" style="font-size: 12px;">
             <div class="d-inline-block" style="width:99%">
                 @(!string.IsNullOrWhiteSpace(item.BEFORE_MTD) ? double.Parse(item.BEFORE_MTD).ToString("0,0", CultureInfo.InvariantCulture) : item.BEFORE_MTD)
-             </div>
+            </div>
         </td>
         <td class="text-end" style="font-size: 12px;">
             <div class="d-inline-block" style="width:99%">
@@ -103,7 +107,7 @@
                     <RadzenCheckBox @bind-Value=@item.SUNDAY @onclick="()=>OnChangeMasterCallback.InvokeAsync(item)" />
                 </div>
             </td>
-            <td class="text-center" >
+            <td class="text-center">
                 <div style="font-size: 12px;">
                     @item.DROPWEEK
                 </div>
@@ -151,21 +155,20 @@
                     }
                 </div>
             </td>
-            <td class="text-center" >
-                <RadzenButton 
-                 Click=@(()=> ShowdialogBestProductCallback.InvokeAsync(new BestProductRequest{
+            <td class="text-center">
+                <RadzenButton Click=@(()=> ShowdialogBestProductCallback.InvokeAsync(new BestProductRequest{
                       Location = item.LOCATION_CODE ,
                       Machine = item.MACHINE_CODE ,
                       ORG = item.ORGANIZATION_CODE
-                 }))
-                Icon="pageview"
-                ButtonStyle="ButtonStyle.Primary"
-                Size="ButtonSize.ExtraSmall"
-                Style="text-transform: none;" />
+                      }))
+                              Icon="pageview"
+                              ButtonStyle="ButtonStyle.Primary"
+                              Size="ButtonSize.ExtraSmall"
+                              Style="text-transform: none;" />
             </td>
         }
-       
-        <td class="text-end" >
+
+        <td class="text-end">
             <div style="font-size: 12px;width: 100%">
                 @(item.SALE_LAST_WEEK.ToString("0,0", CultureInfo.InvariantCulture))
             </div>
@@ -187,34 +190,50 @@
             !i.STATUS_MANUAL && i.SALETOTAL != 0 ? "plan-out" :
             boolToday && string.IsNullOrWhiteSpace(i.DOC_TYPE) ? "plan-notdue" : i.IsCurrent && i.STATUS_MANUAL ? "plan-change" : "";
 
+
+            var dateDetail = i.CALENDAR_DATE.StringToDateTime("dd/MM/yyyy");
+            int week = StateContainer.DateCurrent.GetWeekNumberOfMonth();
+            int detailWeek = dateDetail.GetWeekNumberOfMonth();
+
+            var isEmptyPlan ="";
+
+            if (week == detailWeek)
+            {
+                isEmptyPlan = item.Week1[item.MACHINE_CODE].Count() == 7 ? "empty-plan" : null;
+            }
+            else if (week + 1 == detailWeek)
+            {
+                isEmptyPlan = item.Week2[item.MACHINE_CODE].Count() == 7 ? "empty-plan" : null;
+            }
+
+
             @if (i.IsCurrent)
             {
-                <td class=@($"{today} {stylePlan} text-center") style="width: 20px;">
+                <td class=@($"{today} {stylePlan} {isEmptyPlan!} text-center") style="width: 20px;">
                     <div>
                         <RadzenCheckBox Disabled="@(!i.IsCurrent)"
                         @key="item"
                         @bind-Value=@i.STATUS_MANUAL
-                        @onclick=@(()=> OnChangCallback.InvokeAsync((index, i ,item.GETPLAN_DETAIL)))
-                        />
+                        @onclick=@(()=> OnChangCallback.InvokeAsync((index, i ,item.GETPLAN_DETAIL))) />
                     </div>
                 </td>
-                <td class=@($"{today} {stylePlan} text-end") style="width: 20px; ">
+                <td class=@($"{today} {stylePlan} {isEmptyPlan!} text-end") style="width: 20px; ">
                     <RadzenText class=@($"mb-0 fw-bold") Style="font-size: 12px;">
                         @if (i.STATUS_MANUAL)
                         {
                             var changePrd = i.CHANGEPRODUCT == "1" ? "change-pro" : "change-pro-chk";
                             var flex = !ActionChangeProduct ? "d-flex justify-content-between" : "text-end";
                             <div class=@($"{flex}")>
-                                @if(!ActionChangeProduct)
+                                @if (!ActionChangeProduct)
                                 {
                                     <RadzenIcon @onclick="() => ShowdialogChangeProductCallback.InvokeAsync((new ChangeProductRequest{
                                         ChangeDate = i.CALENDAR_DATE ,
                                         Location = item.LOCATION_CODE ,
                                         Machine = item.MACHINE_CODE ,
                                         ORG = item.ORGANIZATION_CODE } , i.IsCurrent))"
-                                        Icon="cached"
-                                        class=@(changePrd)
-                                        style="font-weight: 700;font-size: 16px;" />
+                                                Icon="cached"
+                                                class=@(changePrd)
+                                                style="font-weight: 700;font-size: 16px;" />
                                 }
                                 <p class="m-0">
                                     @(i.SALETOTAL == 0 ? i.AMOUNT == 0 ? i.AMOUNT : i.AMOUNT.ToString("0,0", CultureInfo.InvariantCulture) : i.SALETOTAL.ToString("0,0", CultureInfo.InvariantCulture))
@@ -225,15 +244,15 @@
                         {
                             <p class="m-0 text-amount">
                                 @(i.SALETOTAL == 0 ? i.AMOUNT == 0 ? i.AMOUNT : i.AMOUNT.ToString("0,0", CultureInfo.InvariantCulture) : i.SALETOTAL.ToString("0,0", CultureInfo.InvariantCulture))
-                            </p>    
+                            </p>
                         }
                     </RadzenText>
                 </td>
-                <td class=@($"{today} text-center p-0")>
+                <td class=@($"{today} {isEmptyPlan!} text-center p-0")>
                     @if (i.STATUS_MANUAL)
                     {
                         <div class="d-flex flex-column">
-                          
+
                             @foreach (var (g, seq) in item.GroupData.WithIndex())
                             {
                                 var borderGrp = seq == item.GroupData.Count() - 1 ? null : "border-bottom border-dark";
@@ -244,14 +263,13 @@
                                 var styleRank = data[index].GroupData[seq].GETPLAN_DETAIL[iGrp].RANK == null ? "rank-warning" : FindRankGroup(data[index].GroupData[seq].GETPLAN_DETAIL[iGrp].RANK, i.CALENDAR_DATE, item.LOCATION_CODE) ? "rank-error" : "rank-success";
                                 <div class=@($"d-flex {borderGrp}")>
                                     <div class="p-1 w-100">
-                                       
                                         <RadzenNumeric class=@($"text-size {styleRank} w-100")
-                                                        ShowUpDown="false"
-                                                        Disabled="@(!i.IsCurrent)"
-                                                        TextAlign="TextAlign.Center"
-                                                        TValue="int?"
-                                                        @bind-Value=@data[index].GroupData[seq].GETPLAN_DETAIL[iGrp].RANK
-                                                        Change=@(args => ChageRank(args , i.CALENDAR_DATE , item.LOCATION_CODE , index , seq , true)) />
+                                                       ShowUpDown="false"
+                                                       Disabled="@(!i.IsCurrent)"
+                                                       TextAlign="TextAlign.Center"
+                                                       TValue="int?"
+                                        @bind-Value=@data[index].GroupData[seq].GETPLAN_DETAIL[iGrp].RANK
+                                                       Change=@(args => ChageRank(args , i.CALENDAR_DATE , item.LOCATION_CODE , index , seq , true)) />
                                     </div>
                                 </div>
                             }
@@ -272,7 +290,7 @@
                             <div class="d-flex flex-column">
                                 @foreach (var (g, seq) in item.GroupData.WithIndex())
                                 {
-                                    var val = g.GETPLAN_DETAIL.Single(x => x.CALENDAR_DATE == i.CALENDAR_DATE);
+                                    var val = g.GETPLAN_DETAIL.SingleOrDefault(x => x.CALENDAR_DATE == i.CALENDAR_DATE);
                                     var borderGrp = seq == item.GroupData.Count() - 1 ? null : "border-bottom border-dark";
                                     <div class=@($"{borderGrp}")>
                                         <div class="d-flex align-items-center justify-content-center w-100" style="height: 2rem;">
@@ -288,25 +306,26 @@
             else
             {
                 <td class=@($"{today} {stylePlan} text-center") style="width: 20px;">
-                    @if (i.STATUS_MANUAL) {
+                    @if (i.STATUS_MANUAL)
+                    {
                         <RadzenIcon Icon="done" class="nomal-chk" style="font-weight: 700;font-size: 16px;" />
                     }
                 </td>
 
                 <td class=@($"{today} {stylePlan} text-end fw-bold") style="width: 20px; ">
                     <div class=@(i.CHANGEPRODUCT == "1" ? "d-flex justify-content-between" : "d-flex justify-content-end")>
-                    @if (i.CHANGEPRODUCT == "1")
-                    {
-                        <RadzenIcon @onclick="() => ShowdialogChangeProductCallback.InvokeAsync((new ChangeProductRequest{
+                        @if (i.CHANGEPRODUCT == "1")
+                        {
+                            <RadzenIcon @onclick="() => ShowdialogChangeProductCallback.InvokeAsync((new ChangeProductRequest{
                             ChangeDate = i.CALENDAR_DATE ,
                             Location = item.LOCATION_CODE ,
                             Machine = item.MACHINE_CODE ,
                             ORG = item.ORGANIZATION_CODE }, i.IsCurrent))"
-                            Icon="cached"
-                            style="font-weight: 700;font-size: 16px;cursor: pointer;" />
-                    }
-                    <RadzenText MouseEnter="@(args => ShowTooltipValue(args ,i.AMOUNT.ToString()) )" class=@($"m-0 fw-bold {color}") style="font-size: 12px;cursor : pointer;">
-                            @if(i.SALETOTAL == 0)
+                                        Icon="cached"
+                                        style="font-weight: 700;font-size: 16px;cursor: pointer;" />
+                        }
+                        <RadzenText MouseEnter="@(args => ShowTooltipValue(args ,i.AMOUNT.ToString()) )" class=@($"m-0 fw-bold {color}") style="font-size: 12px;cursor : pointer;">
+                            @if (i.SALETOTAL == 0)
                             {
                                 @i.SALETOTAL
                             }
@@ -314,10 +333,10 @@
                             {
                                 @i.SALETOTAL.ToString("0,0", CultureInfo.InvariantCulture)
                             }
-                    </RadzenText>
-                       @*  <p class=@($"m-0 ps-2 {color}") style="font-size: 12px;">
-                            @i.AMOUNT
-                        </p> *@
+                        </RadzenText>
+                        @*  <p class=@($"m-0 ps-2 {color}") style="font-size: 12px;">
+            @i.AMOUNT
+            </p> *@
                     </div>
                 </td>
                 <td class=@($"{today} text-center fw-bold p-0") style="width: 20px; font-size: 12px;">
@@ -378,7 +397,7 @@
     [Parameter]
     public EventCallback<PlanningMasterData2> OnChangeMasterCallback { get; set; }
     [Parameter]
-    public EventCallback<(ChangeProductRequest ,bool)> ShowdialogChangeProductCallback { get; set; }
+    public EventCallback<(ChangeProductRequest, bool)> ShowdialogChangeProductCallback { get; set; }
     [Parameter]
     public EventCallback<BestProductRequest> ShowdialogBestProductCallback { get; set; }
     [Parameter]
@@ -388,16 +407,16 @@
     [Parameter]
     public ChangeActionButton? ActionButton { get; set; }
     [Parameter]
-    public bool ActionChangeProduct { get; set;}
+    public bool ActionChangeProduct { get; set; }
 
     private void ShowTooltip(ElementReference elementReference, string text, TooltipOptions? options = null) => TooltipService.Open(elementReference, $"{text}", new TooltipOptions { Style = "font-size: 16px" });
     private void ShowTooltipValue(ElementReference elementReference, string text) => TooltipService.Open(elementReference, $"ยอดขายประมาณการณ์ : {text}", new TooltipOptions { Style = "font-size: 16px" });
 
-    private async Task ChageRank(int? rank, string date, string location, int index = 0, int seq = 0 ,bool fbool = false)
+    private async Task ChageRank(int? rank, string date, string location, int index = 0, int seq = 0, bool fbool = false)
     {
         var aaa = data[index].GroupData[seq].GETPLAN_DETAIL.FindIndex(x => x.CALENDAR_DATE == date);
         data[index].GroupData[seq].GETPLAN_DETAIL[aaa].RANK = rank;
-        
+
         await OnChageRankCallback.InvokeAsync((rank, date, location));
     }
 
@@ -428,7 +447,7 @@
 
         return false;
     }
-    
+
     private double CalSaleWeek(List<PlanningDetail2> row, int index, PlanningMasterData2? plan = null)
     {
         var task = 7;
@@ -451,7 +470,7 @@
             {
                 var totalWeek = row.Skip(skip).Take(task).Sum(s => !s.IsCurrent && string.IsNullOrWhiteSpace(s.DOC_TYPE) ? 0 : s.SALETOTAL);
                 var lastWeek = row.Skip(skip - task).Take(task).Sum(s => !s.IsCurrent && string.IsNullOrWhiteSpace(s.DOC_TYPE) ? 0 : s.SALETOTAL);
-                sum = totalWeek -lastWeek ;
+                sum = totalWeek - lastWeek;
                 return sum;
             }
         }

@@ -1,4 +1,6 @@
-﻿@{
+﻿@inject TooltipService TooltipService
+@inject StateContainer StateContainer
+@{
     var date = StateContainer.DateCurrent;
     var total = SelectMonth.Number == "01" ? "ธ.ค." : GetDatetimeClass.monthObjects.Single(x => x.Number == (int.Parse(SelectMonth.Number) - 1).ToString("D2")).ShortName;
     var mdtBefore = SelectMonth.Number == "01" ? "ธ.ค." : GetDatetimeClass.monthObjects.Single(x => x.Number == (int.Parse(SelectMonth.Number) - 1).ToString("D2")).ShortName;
@@ -31,7 +33,7 @@
             สินค้าขายดี
         </th>
     }
-  
+
     <th rowspan="4" style="width: 3.5rem;font-size: 12px; padding-left:4px; padding-right:0px;">
         <p class="m-0">Sale</p>
         <p class="m-0">Last</p>
@@ -42,7 +44,7 @@
         <p class="m-0">Month</p>
     </th>
     <th colspan="@colSpan" class="text-center" style="font-size: 12px;">
-         แพลนเดือน @SelectMonth.Name
+        แพลนเดือน @SelectMonth.Name
     </th>
 </tr>
 
@@ -68,62 +70,112 @@
         </th>
         <th rowspan="2" style="width: 12.5rem;font-size: 12px;">Remark</th>
     }
-        @* plan detail *@
-        @foreach (var (obj, index) in Columns.WithIndex())
+    @* plan detail *@
+
+    @foreach (var (obj, index) in Columns.WithIndex())
+    {
+        if ((index + 1) % 7 == 0)
         {
-            if ((index + 1) % 7 == 0)
-            {    
-                var chk1 = obj.Value.IsCurrent;
-                var chk2 = date.GetWeekNumberOfMonth() == obj.Key.StringToDateTime("dd/MM/yyyy").GetWeekNumberOfMonth() - 1 || (ISOWeek.GetWeeksInYear(date.Year) == date.GetWeekNumberOfMonth() &&  obj.Key.StringToDateTime("dd/MM/yyyy").GetWeekNumberOfMonth() == 1);
-                var action = ActionButton.Date.FirstOrDefault(x => x.Date.StringToDateTime("dd/MM/yyyy").GetWeekNumberOfMonth() == obj.Key.StringToDateTime("dd/MM/yyyy").GetWeekNumberOfMonth());
-                var disable = ActionButton.Date.Count(x => x.Error);
-                if (chk1 || chk2)
-                {
-                    <th colspan="21" class="p-0">
-                        <div class="p-2 text-end">
-                        @if (action == null )
+            var chk1 = obj.Value.IsCurrent;
+            var chk2 = date.GetWeekNumberOfMonth() == obj.Key.StringToDateTime("dd/MM/yyyy").GetWeekNumberOfMonth() - 1 || (ISOWeek.GetWeeksInYear(date.Year) == date.GetWeekNumberOfMonth() && obj.Key.StringToDateTime("dd/MM/yyyy").GetWeekNumberOfMonth() == 1);
+            var action = ActionButton.Date.FirstOrDefault(x => x.Date.StringToDateTime("dd/MM/yyyy").GetWeekNumberOfMonth() == obj.Key.StringToDateTime("dd/MM/yyyy").GetWeekNumberOfMonth());
+            var disable = ActionButton.Date.Count(x => x.Error);
+
+            DateTime start;
+            DateTime end;
+            if (!chk2)
+            {
+                start = StateContainer.DateCurrent.AddDays(1 + StateContainer.BeforeConfig);
+                end = start.LastDayOfWeek();
+            }
+            else
+            {
+                start = StateContainer.DateCurrent.LastDayOfWeek().AddDays(1);
+                end = start.AddDays(6);
+            }
+           
+            DateTime dateCurrent = DateTime.ParseExact(obj.Key, "dd/MM/yyyy", null);
+            int week = StateContainer.DateCurrent.GetWeekNumberOfMonth();
+            int currentWeek = dateCurrent.GetWeekNumberOfMonth();
+
+            if (chk1 || chk2)
+            {
+                <th colspan="21" class="p-0">
+                    <div class="p-2 text-end">
+                        @if (week == currentWeek)
+                        {
+                            if ((WeekValue.Week1 || !WeekValue.Week1) && WeekValue.Week1Value)
                             {
-                                <RadzenButton Text=@(ActionButton.Action == "create" ? "สร้าง" : ActionButton.Action == "recreate" ? "ล้างค่า สร้างใหม่" : "บันทึก")
+                                <RadzenButton Text="บันทึก"
                                               ButtonStyle="ButtonStyle.Secondary"
                                               Style="@($"{StyleHeaderButton(chk2)}text-transform: none;")"
                                               Size="Radzen.ButtonSize.Small"
-                                              Click="@(args => CalPlaaning(chk2 ,  obj.Key , ActionButton.Action))" />
+                                              Click="@(() =>  OnClickSavePlanCallback.InvokeAsync((start.ToStringDate(), end.ToStringDate())))"
+                                />
                             }
                             else
                             {
-                                <RadzenButton Text=@(ActionButton.Action == "create" ? "สร้าง" : ActionButton.Action == "recreate" ? "ล้างค่า สร้างใหม่" : "บันทึก")
+                                <RadzenButton Text="สร้าง"
                                               ButtonStyle="ButtonStyle.Secondary"
                                               Style="@($"{StyleHeaderButton(chk2)}text-transform: none;")"
                                               Size="Radzen.ButtonSize.Small"
-                                              Click="OnClickSavePlanCallback"
-                                              Disabled="@(disable > 0 ? true : false)" />
+                                              Click="@(args => CalPlaaning(chk2 ,  obj.Key , "create"))"
+                                              Disabled="@(Target.SYSTEMCART && disable > 0 ? true : false)" />
                             }
-                        </div>
-                    </th>
-                    <th rowspan="3" colspan="1" class="text-end" style="width:4rem;font-size:12px;">
+                        }
+                        else
+                        {
+                            if ((WeekValue.Week2 || !WeekValue.Week2) && WeekValue.Week2Value)
+                            {
+                                <RadzenButton Text="บันทึก"
+                                              ButtonStyle="ButtonStyle.Secondary"
+                                              Style="@($"{StyleHeaderButton(chk2)}text-transform: none;")"
+                                              Size="Radzen.ButtonSize.Small"
+                                              Click="@(() =>  OnClickSavePlanCallback.InvokeAsync((start.ToStringDate(), end.ToStringDate())))" />
+                            }
+                            else
+                            {
+                                <RadzenButton Text="สร้าง"
+                                              ButtonStyle="ButtonStyle.Secondary"
+                                              Style="@($"{StyleHeaderButton(chk2)}text-transform: none;")"
+                                              Size="Radzen.ButtonSize.Small"
+                                              Click="@(args => CalPlaaning(chk2 ,  obj.Key , "create"))"
+                                               />
+                            }
+                        }
+                       
+                        <RadzenButton MouseEnter="@(args => ShowTooltip(args , "โหลดใหม่") )"
+                                      Icon="autorenew"
+                                      Style="width: 1rem"
+                                      ButtonStyle="ButtonStyle.Secondary"
+                                      Size="Radzen.ButtonSize.Small"
+                                      Click="@(args => CalPlaaning(chk2 ,  obj.Key , ActionButton.Action))" />
+                    </div>
+                </th>
+                <th rowspan="3" colspan="1" class="text-end" style="width:4rem;font-size:12px;">
+                    <p class="m-0">Sale</p>
+                    <p class="m-0">Week</p>
+                </th>
+                <th rowspan="3" colspan="1" class="text-end" style="width:4rem;font-size:12px;">Diff</th>
+            }
+            else
+            {
+                <th colspan="21" class="p-0"></th>
+                <th rowspan="3" colspan="1" class="text-center" style="width:4rem; font-size:12px;">
+                    <div class="w-100 text-end">
                         <p class="m-0">Sale</p>
                         <p class="m-0">Week</p>
-                    </th>
-                    <th rowspan="3" colspan="1" class="text-end" style="width:4rem;font-size:12px;">Diff</th>
-                }
-                else
-                {
-                    <th colspan="21" class="p-0"></th>
-                    <th rowspan="3" colspan="1" class="text-center" style="width:4rem; font-size:12px;">
-                        <div class="w-100 text-end">
-                            <p class="m-0">Sale</p>
-                            <p class="m-0">Week</p>
-                        </div>
-                    </th>
-                    <th rowspan="3" colspan="1" class="text-center" style="width:4rem; font-size:12px;">
-                        <div class="w-100 text-end">
-                            Diff
-                        </div>
-                    </th>
-                }
+                    </div>
+                </th>
+                <th rowspan="3" colspan="1" class="text-center" style="width:4rem; font-size:12px;">
+                    <div class="w-100 text-end">
+                        Diff
+                    </div>
+                </th>
             }
         }
- </tr>
+    }
+</tr>
 
 
 <tr>
@@ -134,7 +186,7 @@
             style="font-size: 12px; text-align: center;">
             @obj.Value.FieldDateName
             @* @StateContainer.DateCurrent
-            @DateTime.ParseExact(obj.Key, "dd/MM/yyyy", null) *@
+        @DateTime.ParseExact(obj.Key, "dd/MM/yyyy", null) *@
         </th>
     }
 </tr>
@@ -145,10 +197,10 @@
         <th colspan="10" class="text-center" style="padding: 5px;">
             <div>
                 <RadzenButton Text="บันทึกค่ามาตรฐาน"
-                    ButtonStyle="ButtonStyle.Secondary"
-                    Style="width: 100%;text-transform: none;"
-                    Size="Radzen.ButtonSize.Small"
-                    Click="OnClickSavePlanCallback" />
+                              ButtonStyle="ButtonStyle.Secondary"
+                              Style="width: 100%;text-transform: none;"
+                              Size="Radzen.ButtonSize.Small"
+                              Click="@(() => OnClickSavePlanCallback.InvokeAsync())" />
             </div>
         </th>
     }
@@ -164,7 +216,7 @@
             <div style="width:100%">
                 @obj.Value.FieldValueName
             </div>
-         </th>
+        </th>
 
         <th class="@($"{obj.Value.ClassColor} {errorRank} color")" style="width: 3rem; font-size: 12px;">
             <div class="d-flex" style="width:100%">
@@ -183,19 +235,25 @@
     public MonthObject SelectMonth { get; set; } = new();
 
     [Parameter]
+    public Target2 Target { get; set; } = new();
+
+    [Parameter]
+    public Week WeekValue { get; set; } = new();
+
+    [Parameter]
     public IDictionary<string, ColumnProperty> Columns { get; set; } = new Dictionary<string, ColumnProperty>();
 
     [Parameter]
     public bool HideMaster { get; set; }
 
     [Parameter]
-    public EventCallback OnClickSavePlanCallback { get; set; }
+    public EventCallback<(string, string)> OnClickSavePlanCallback { get; set; }
 
     [Parameter]
     public EventCallback SortRankCallback { get; set; }
 
     [Parameter]
-    public EventCallback<(string , string ,string)> OnCalPlanningCallback { get; set; }
+    public EventCallback<(string, string, string)> OnCalPlanningCallback { get; set; }
 
     [Parameter]
     public ChangeActionButton ActionButton { get; set; } = new();
@@ -206,13 +264,15 @@
         StateContainer.OnChange += StateHasChanged;
     }
 
+    private void ShowTooltip(ElementReference elementReference, string text, TooltipOptions? options = null) => TooltipService.Open(elementReference, $"{text}", new TooltipOptions { Style = "font-size: 16px" });
+
     private string StyleHeaderButton(bool chk)
     {
         string style = string.Empty;
 
         if (chk)
         {
-            style = "width: 100%;";
+            style = "width: 97.5%;";
         }
         else
         {
@@ -223,24 +283,24 @@
             switch (con)
             {
                 case 1:
-                    style = $"width: {13.6 * con}%;";
+                    style = $"width: {13 * con}%;";
                     break;
                 case 2:
-                    style = $"width: {14 * con}%;";
+                    style = $"width: {13 * con}%;";
                     break;
                 case 3:
-                    style = $"width: {14.2 * con + 1}%;";
+                    style = $"width: {13.5 * con + 1}%;";
                     break;
                 case 4:
-                    style = $"width: {14.3 * con + 1}%;";
+                    style = $"width: {13.5 * con + 1}%;";
                     break;
                 case 5:
-                    style = $"width: {14.3 * con + 1}%;";
+                    style = $"width: {13.5 * con + 1}%;";
                     break;
                 case 6:
-                    style = $"width: {14.3 * con }%;";
+                    style = $"width: {14 * con}%;";
                     break;
-                default :
+                default:
                     style = $"width: 0%;display:none;";
                     break;
             }
@@ -249,14 +309,14 @@
         return style;
     }
 
-    private async Task CalPlaaning(bool chk , string date, string action = "create")
+    private async Task CalPlaaning(bool chk, string date, string action = "create")
     {
-        if (action == "save")
-        {
-            await OnClickSavePlanCallback.InvokeAsync();
-        }
-        else 
-        {
+        // if (action == "save")
+        // {
+        //     await OnClickSavePlanCallback.InvokeAsync();
+        // }
+        // else
+        // {
             DateTime start;
             DateTime end;
             if (!chk)
@@ -270,7 +330,7 @@
                 end = start.AddDays(6);
             }
             await OnCalPlanningCallback.InvokeAsync((start.ToStringDate(), end.ToStringDate(), action));
-        }
+        // }
     }
 
     public string ClassHeader(int f, DateTime date, KeyValuePair<string, ColumnProperty> obj)
@@ -284,4 +344,3 @@
         StateContainer.OnChange -= StateHasChanged;
     }
 }
- 

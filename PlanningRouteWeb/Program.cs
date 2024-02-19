@@ -14,7 +14,7 @@ builder.Services.AddLocalization();
 builder.Services.AddScoped(
    sp => new HttpClient(new CustomHeaderHandler(builder.Configuration)) { BaseAddress = new Uri(builder.Configuration.GetValue<string>("Configs:UrlApi")!) });
 
-builder.Services.AddScoped<IPlanningService , PlanningService>();
+builder.Services.AddScoped<IPlanningService, PlanningService>();
 builder.Services.AddScoped<IChangeProductService, ChangeProductService>();
 builder.Services.AddScoped<IDialogService, DialogServices>();
 builder.Services.AddScoped<IBestProduct, BestProductService>();

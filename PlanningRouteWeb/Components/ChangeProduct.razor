@@ -444,9 +444,15 @@
                 }
                 else
                 {
-                    change.SLOT_REALPRICE = productChang.SLOT_REALPRICE;
-                    change.SLOT_INSTALLPRICE = productChang.SLOT_INSTALLPRICE;
-                    change.SLOT_CONTRACT_PRICE = productChang.SLOT_CONTRACT_PRICE;
+                    var proInSlot = Data.Count(x => x.SLOT_NO == change.SLOT_NO);
+
+                    if (proInSlot == 1)
+                    {
+                        change.SLOT_REALPRICE = productChang.SLOT_REALPRICE;
+                        change.SLOT_INSTALLPRICE = productChang.SLOT_INSTALLPRICE;
+                        change.SLOT_CONTRACT_PRICE = productChang.SLOT_CONTRACT_PRICE;
+                    }
+                   
                 }
 
                 // var idx = detail.FindIndex(x => x.SLOT_NO == i.SLOT_NO);
