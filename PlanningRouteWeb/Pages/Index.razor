@@ -1,4 +1,5 @@
 ﻿@page "/"
+@layout PlanningLayout
 @using Microsoft.AspNetCore.WebUtilities;
 
 @inject IPlanningService PlanningService
@@ -414,6 +415,13 @@
     [SupplyParameterFromQuery]
     public string? ROUTE { get; set; }
 
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string? MONTH { get; set; }
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string? YEAR { get; set; }
 
     Variant variant = Variant.Outlined;
     public bool hideMaster = false;
@@ -448,7 +456,7 @@
     {
         selectOrg = ORG!;
         selectRoute = ROUTE!;
-        year = StateContainer.DateCurrent.Year;
+        year = YEAR != null ? int.Parse(YEAR) : StateContainer.DateCurrent.Year;
         var y = year - StateContainer.defultYear;
 
         if(y > 0)
@@ -471,7 +479,7 @@
         await LoadRoute();
 
         if(ROUTE == null) selectRoute = optionsRoute.First().ROUTE_CODE;
-        // await ShowBusyDialog();
+        await ShowBusyDialog();
     }
 
     public async Task LoadExcel()

@@ -1,8 +1,36 @@
 ﻿@inherits LayoutComponentBase
+@inject IJSRuntime JSRuntime
+<Loading/>
 
-<main> @Body </main>
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
 
-<RadzenDialog />
-<RadzenTooltip/>
-<RadzenContextMenu/>
-<RadzenNotification/>
+    <main>
+        <div class="top-row px-4">
+            <div id="routeName"></div>
+            <div class="d-flex align-items-center ms-auto gap-1">
+                <i class="fa-solid fa-circle-user fa-xl"></i>
+                <span id="profile" class="navbar-text ">@(permission != null ? permission.emp_detail!.EMPLOYEE_NAME : "")</span>
+            </div>
+           
+        </div>
+
+        <article class="content px-1 pt-3">
+            @Body
+        </article>
+    </main>
+</div>
+
+
+@code {
+
+    public Permission? permission { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        permission = JsonSerializer.Deserialize<Permission>(await JSRuntime.InvokeAsync<string>("sessionStorage.getItem", "permission"))!;
+    }
+}
+

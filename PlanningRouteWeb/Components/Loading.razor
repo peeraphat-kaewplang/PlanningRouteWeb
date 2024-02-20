@@ -1,47 +1,22 @@
-﻿@* <h5>Loading...</h5> *@
+﻿@implements IDisposable
+@inject StateContainer  StateContainer
 
-<div class="rz-p-12 rz-text-align-center">
-    <RadzenButton Text="Busy Dialog with a string message" ButtonStyle="ButtonStyle.Secondary" Click=@(args => ShowBusyDialog()) />
-</div>
+@if (StateContainer.IsLoading)
+{
+    <div id="overlay">
+        <div class="loader"></div>
+        <h3>@StateContainer.TextLoading</h3>
+    </div>
+}
 
-
-@inject DialogService DialogService
 @code {
-    [Parameter]
-    public bool IsLoading { get; set; }
-
-    public async Task ShowBusyDialog()
+    protected override void OnInitialized()
     {
-         await InvokeAsync(async () =>
-        {
-            await Task.Delay(2000);
-
-            // Close the dialog
-            DialogService.Close();
-        });
-
-        await BusyDialog("Busy ...");
-        
+        StateContainer.OnChange += StateHasChanged;
     }
 
-    // Busy dialog from string
-    async Task BusyDialog(string message)
+    public void Dispose()
     {
-        await DialogService.OpenAsync("", ds =>
-        {
-            RenderFragment content = b =>
-            {
-                b.OpenElement(0, "RadzenRow");
-
-                b.OpenElement(1, "RadzenColumn");
-                b.AddAttribute(2, "Size", "12");
-
-                b.AddContent(3, message);
-
-                b.CloseElement();
-                b.CloseElement();
-            };
-            return content;
-        }, new DialogOptions() { ShowTitle = false, Style = "min-height:auto;min-width:auto;width:auto", CloseDialogOnEsc = false });
+        StateContainer.OnChange -= StateHasChanged;
     }
 }

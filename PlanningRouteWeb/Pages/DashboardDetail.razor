@@ -1,13 +1,263 @@
 ﻿@page "/dashboard/detail"
 
-<h3>DashboardDetail</h3>
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+@inject StateContainer StateContainer
+@inject IDashboardService DashboardService
+@inject ISetDatetimeService SetDatetimeService
+
+<div class="d-flex gap-2 pb-2 w-50">
+    <button @onclick="@(()=> Goback())" class="btn btn-primary btn-sm btn-icon" data-bs-toggle="tooltip"
+            data-bs-placement="right" title="ย้อนกลับ">
+        <i class="fa-solid fa-arrow-left fa-xs"></i>
+    </button>
+    <button @onclick="@(() => OnChangeBackwardForward("backwar"))" type="button" class="btn btn-primary btn-sm">
+        <i class="fa-solid fa-backward fa-xs"></i>
+    </button>
+    <select @bind="selectedMonth" class="w-25 form-select form-select-sm">
+        @foreach (var month in GetDatetimeClass.monthObjects)
+        {
+            <option value="@month.Number">@month.Name</option>
+        }
+    </select>
+    <button @onclick="@(() => OnChangeBackwardForward("forward"))" type="button" class="btn btn-primary btn-sm">
+        <i class="fa-solid fa-forward fa-xs"></i>
+    </button>
+    <select @bind="selectYear" class="w-25 form-select form-select-sm">
+        @foreach (var year in yearOptions)
+        {
+            <option value="@year">@year</option>
+        }
+    </select>
+    <button @onclick="@(()=> OnSearch())" class="btn btn-primary btn-sm" data-bs-toggle="tooltip"
+            data-bs-placement="right" title="ค้าหา">
+        <i class="fa-solid fa-magnifying-glass fa-xs"></i>
+    </button>
+</div>
+
+<div class="table-wraper">
+    <table class="table table-sm table-striped table-hover table-dashboard align-middle border-start border-end mb-0">
+        <thead>
+            @{
+                var previous = selectedMonth.Contains("01") ? "12" : (int.Parse(selectedMonth) - 1).ToString("D2");
+            }
+            <tr>
+                <th scope="col" rowspan="3" class="">Route</th>
+                <th scope="col" colspan="7" class="text-center">
+                    เดือน @(GetDatetimeClass.monthObjects.Find(x =>
+                    x.Number.Contains(previous))!.Name)
+                </th>
+                <th scope="col" colspan="7" class="text-center">
+                    เดือน @(GetDatetimeClass.monthObjects.Find(x =>
+                    x.Number.Contains(selectedMonth))!.Name) (ปัจจุบัน)
+                </th>
+                <th scope="col" rowspan="3" class=""></th>
+            </tr>
+            <tr class="th-border">
+                @* <th scope="col" class="">@ORGName</th> *@
+                <th scope="col" colspan="4" class="text-center">ยอดขาย</th>
+                <th scope="col" colspan="3" class="text-center">Drop</th>
+                <th scope="col" colspan="4" class="text-center">ยอดขาย</th>
+                <th scope="col" colspan="3" class="text-center">Drop</th>
+            </tr>
+            <tr class="th-border">
+                @* <th class="">Route</th> *@
+                <th class="text-end">เป้า</th>
+                <th class="text-end">ยอดประมาณการ</th>
+                <th class="text-end">ยอดขาย</th>
+                <th class="text-end">ขาย-เป้า</th>
+                <th class="text-end">เป้า</th>
+                <th class="text-end">service</th>
+                <th class="text-end">service-เป้า</th>
+                <th class="text-end">เป้า</th>
+                <th class="text-end">ยอดประมาณการ</th>
+                <th class="text-end">ยอดขาย</th>
+                <th class="text-end">ขาย-เป้า</th>
+                <th class="text-end">เป้า</th>
+                <th class="text-end">service</th>
+                <th class="text-end">service-เป้า</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var model in dashboards.Data)
+            {
+                <tr>
+                    <td class="fw-bold">@model.RouteCode</td>
+                    <td class="fw-bold">@model.BeforeTarget.ToStringNumberFormat()</td>
+                    <td class="fw-bold">@model.BeforeEstimate.ToStringNumberFormat()</td>
+                    <td class="fw-bold">@model.BeforeSales.ToStringNumberFormat()</td>
+                    <td class="@(model.BeforeSumSales <= 0 ? "fw-bold value-error" : "fw-bold value-success")">
+                        @model.BeforeSumSales.ToStringNumberFormat()
+                    </td>
+                    <td class="fw-bold">@model.BeforeTargetDrop.ToStringNumberFormat()</td>
+                    <td class="fw-bold">@model.BeforeService.ToStringNumberFormat()</td>
+                    <td class="@(model.BeforeSumDropService <= 0 ? "fw-bold value-error" : "fw-bold value-success")">
+                        @model.BeforeSumDropService.ToStringNumberFormat()
+                    </td>
+                    <td class="fw-bold">@model.Target.ToStringNumberFormat()</td>
+                    <td class="fw-bold">@model.Estimate.ToStringNumberFormat()</td>
+                    <td class="fw-bold">@model.Sales.ToStringNumberFormat()</td>
+                    <td class="@(model.SumSales <= 0 ? "fw-bold value-error" : "fw-bold value-success")">
+                        @model.SumSales.ToStringNumberFormat()
+                    </td>
+                    <td class="fw-bold">@model.TargetDrop.ToStringNumberFormat()</td>
+                    <td class="fw-bold">@model.Service.ToStringNumberFormat()</td>
+                    <td class="@(model.SumDropService <= 0 ? "fw-bold value-error" : "fw-bold value-success")">
+                        @model.SumDropService.ToStringNumberFormat()
+                    </td>
+                    <td class="text-center">
+                        <button @onclick="@(() => NavigationManager.NavigateTo($"https://localhost:44394/?ORG={ORG}&ROUTE={model.RouteCode}&MONTH={selectedMonth}&YEAR={selectYear}"))"
+                                type="button" class="btn btn-primary btn-sm">
+                            <i class="fa-solid fa-eye fa-xs"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            @{
+                var summery = dashboards.Summary.Summarys;
+                var average = dashboards.Summary.Averages;
+            }
+            <tr>
+                <td class="fw-bold">Summary</td>
+                <td class="fw-bold text-end">@summery.SumBeforeTarget.ToStringNumberFormat()</td>
+                <td class="fw-bold text-end">@summery.SumBeforeEstimate.ToStringNumberFormat()</td>
+                <td class="fw-bold text-end">@summery.SumBeforeSales.ToStringNumberFormat()</td>
+                <td class="@(summery.SumBeforeSumSales <= 0 ? "fw-bold value-error text-end" : "fw-bold value-success text-end")">
+                    @summery.SumBeforeSumSales.ToStringNumberFormat()
+                </td>
+                <td class="fw-bold text-end">@summery.SumBeforeTargetDrop.ToStringNumberFormat()</td>
+                <td class="fw-bold text-end">@summery.SumBeforeService.ToStringNumberFormat()</td>
+                <td class="@(summery.SumBeforeSumDropService <= 0 ? "fw-bold value-error text-end" : "fw-bold value-success text-end")">
+                    @summery.SumBeforeSumDropService.ToStringNumberFormat()
+                </td>
+                <td class="fw-bold text-end">@summery.SumTarget.ToStringNumberFormat()</td>
+                <td class="fw-bold text-end">@summery.SumEstimate.ToStringNumberFormat()</td>
+                <td class="fw-bold text-end">@summery.SumSales.ToStringNumberFormat()</td>
+                <td class="@(summery.SumSumSales <= 0 ? "fw-bold value-error text-end" : "fw-bold value-success text-end")">
+                    @summery.SumSumSales.ToStringNumberFormat()
+                </td>
+                <td class="fw-bold text-end">@summery.SumTargetDrop.ToStringNumberFormat()</td>
+                <td class="fw-bold text-end">@summery.SumService.ToStringNumberFormat()</td>
+                <td class="@(summery.SumSumDropService <= 0 ? "fw-bold value-error text-end" : "fw-bold value-success text-end")">
+                    @summery.SumSumDropService.ToStringNumberFormat()
+                </td>
+                <td rowspan="2" class="text-end"></td>
+            </tr>
+            <tr>
+                <td class="fw-bold">Average</td>
+                <td class="fw-bold text-end">@average.SumBeforeTarget.ToStringNumberFormat()</td>
+                <td class="fw-bold text-end">@average.SumBeforeEstimate.ToStringNumberFormat()</td>
+                <td class="fw-bold text-end">@average.SumBeforeSales.ToStringNumberFormat()</td>
+                <td class="@(average.SumBeforeSumSales <= 0 ? "fw-bold value-error text-end" : "fw-bold value-success text-end")">
+                    @average.SumBeforeSumSales.ToStringNumberFormat()
+                </td>
+                <td class="fw-bold text-end">@average.SumBeforeTargetDrop.ToStringNumberFormat()</td>
+                <td class="fw-bold text-end">@average.SumBeforeService.ToStringNumberFormat()</td>
+                <td class="@(average.SumBeforeSumDropService <= 0 ? "fw-bold value-error text-end" : "fw-bold value-success text-end")">
+                    @average.SumBeforeSumDropService.ToStringNumberFormat()
+                </td>
+                <td class="fw-bold text-end">@average.SumTarget.ToStringNumberFormat()</td>
+                <td class="fw-bold text-end">@average.SumEstimate.ToStringNumberFormat()</td>
+                <td class="fw-bold text-end">@average.SumSales.ToStringNumberFormat()</td>
+                <td class="@(average.SumSumSales <= 0 ? "fw-bold value-error text-end" : "fw-bold value-success text-end")">
+                    @average.SumSumSales.ToStringNumberFormat()
+                </td>
+                <td class="fw-bold text-end">@average.SumTargetDrop.ToStringNumberFormat()</td>
+                <td class="fw-bold text-end">@average.SumService.ToStringNumberFormat()</td>
+                <td class="@(average.SumSumDropService <= 0 ? "fw-bold value-error text-end" : "fw-bold value-success text-end")">
+                    @average.SumSumDropService.ToStringNumberFormat()
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<script>
+    (function () {
+        let params = (new URL(document.location)).searchParams;
+        let name = params.get("ORGName");
+
+        document.getElementById("routeName").innerHTML = "สาขา : " + name;
+    })();
+</script>
 
 @code {
     [Parameter]
-    [SupplyParameterFromQuery(Name = "org")]
+    [SupplyParameterFromQuery(Name = "ORG")]
     public string? ORG { get; set; }
     [Parameter]
-    [SupplyParameterFromQuery(Name = "month")]
+    [SupplyParameterFromQuery(Name = "ORGName")]
+    public string? ORGName { get; set; }
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "Month")]
     public string? Month { get; set; }
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "Year")]
+    public string? Year { get; set; }
 
+    public string? selectedMonth { get; set; }
+    public int selectYear { get; set; }
+    public DashboardDetailViewModel dashboards { get; set; } = new();
+    public List<int> yearOptions = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        selectedMonth = Month;
+        selectYear = int.Parse(Year!);
+        yearOptions = SetDatetimeService.SetYear();
+        StateContainer.IsLoading = true;
+        await LoadData();
+        StateContainer.IsLoading = false;
+    }
+
+    public async Task OnChangeBackwardForward(string action)
+    {
+        StateContainer.IsLoading = true;
+        if (action.Contains("forward"))
+        {
+            selectedMonth = (int.Parse(selectedMonth!) + 1).ToString("D2");
+        }
+        else
+        {
+            selectedMonth = (int.Parse(selectedMonth!) - 1).ToString("D2");
+        }
+        await LoadData();
+        StateContainer.IsLoading = false;
+    }
+
+    public async Task LoadData()
+    {
+
+        var model = new DashboardBody
+            {
+                ORG = ORG,
+                yearmonth = $"{selectYear}{selectedMonth}"
+            };
+        var (error, dashboardDetail) = await DashboardService.GetDashboardDetailList(model);
+        if (error.Error)
+        {
+
+        }
+        else
+        {
+            dashboards = dashboardDetail;
+        }
+
+        StateHasChanged();
+    }
+
+    public async Task OnSearch()
+    {
+        StateContainer.IsLoading = true;
+        await LoadData();
+        StateContainer.IsLoading = false;
+    }
+
+    public async Task Goback()
+    {
+        await JSRuntime.InvokeVoidAsync("history.back");
+    }
 }

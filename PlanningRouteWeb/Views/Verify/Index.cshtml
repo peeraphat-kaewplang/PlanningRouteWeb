@@ -1,0 +1,43 @@
+﻿@model Permission
+
+@using Microsoft.AspNetCore.Components.Web 
+@using PlanningRouteWeb.Components
+@using PlanningRouteWeb.Models;
+@using System.Text.Json;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <base href="~/" />
+    <link href="css/loading.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="overlay">
+        <div class="loader"></div>
+        <h3>กำลังตรวจสอบสิทธิ์การเข้าใช้งาน...</h3>
+    </div>
+    <script>
+        (function () {
+            var model = @Html.Raw(JsonSerializer.Serialize(Model));
+            sessionStorage.setItem("permission", JSON.stringify(model));
+            var month = new Date().getMonth().toString().padStart(2, '0');
+            var year = new Date().getFullYear();
+
+            setTimeout(function () {
+                if (model.system.OrganizationList.length > 1) {
+                    window.location.href = "Dashboard"
+                }
+                else {
+                    window.location.href = `Dashboard/Detail?ORG=${model.system.OrganizationList[0].ORGANIZATION_CODE}&ORGName=${model.system.OrganizationList[0].ORGANIZATION_NAME}&Month=${month}&Year=${year}`
+                }
+            }, 2000);
+        })();
+    </script>
+</body>
+</html>

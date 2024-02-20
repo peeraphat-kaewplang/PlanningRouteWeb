@@ -1,7 +1,9 @@
 using PlanningRouteWeb.Components;
 using PlanningRouteWeb.HttpHandlers;
 using PlanningRouteWeb.Interfaces;
+using PlanningRouteWeb.Interfaces.V2;
 using PlanningRouteWeb.Services;
+using PlanningRouteWeb.Services.V2;
 using Radzen;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +20,8 @@ builder.Services.AddScoped<IPlanningService, PlanningService>();
 builder.Services.AddScoped<IChangeProductService, ChangeProductService>();
 builder.Services.AddScoped<IDialogService, DialogServices>();
 builder.Services.AddScoped<IBestProduct, BestProductService>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
+builder.Services.AddScoped<ISetDatetimeService, SetDatetimeService>();
 builder.Services.AddScoped<StateContainer>();
 
 var app = builder.Build();
@@ -36,7 +40,7 @@ app.UseRouting();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Verify}/{action=Index}/{id?}");
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");

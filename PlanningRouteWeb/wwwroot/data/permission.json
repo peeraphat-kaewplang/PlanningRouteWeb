@@ -1,0 +1,346 @@
+{
+  "ENABLED": "1",
+  "EXPIRED_DAYS": "40",
+  "FAIL_COUNT": "0",
+  "HoldInfos": null,
+  "LOCKED": "0",
+  "LoginDate": "2024-01-10T10:00:14.4699403+07:00",
+  "SELF_RENEW": "1",
+  "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjM2MDkiLCJuYmYiOjE3MDQ4NTU2MTQsImV4cCI6MTcwNDk0MjAxNCwiaWF0IjoxNzA0ODU1NjE0LCJFeHRlbmREYXRhIjoiIn0.EHeYWQN9CMfR6pkxpIAuYz_HXD0IAODs0vUsly92A7g",
+  "emp_detail": {
+    "EMPLOYEE_ID": "3609",
+    "EMPLOYEE_MAIL": "-",
+    "EMPLOYEE_NAME": "พิศณุ โชควัฒนา ",
+    "EMPLOYEE_PHONE": "-",
+    "POSITION_CODE": "VD-F02-20101",
+    "POSITION_DEPARTMENT": "0",
+    "POSITION_DEPARTMENT_NAME": "ไม่มีแผนก",
+    "POSITION_FIELD": "2",
+    "POSITION_FIELD_NAME": "สายงานการผลิต",
+    "POSITION_ID": "020101",
+    "POSITION_LEVEL": "0",
+    "POSITION_NAME": "กรรมการผู้อำนวยการ Managing Director",
+    "POSITION_SECTOR": "0",
+    "POSITION_SECTOR_NAME": "ไม่มีหน่วยงาน"
+  },
+  "firstname": null,
+  "id": "3609",
+  "permissions": [
+    {
+      "permissionList": [
+        {
+          "form_code": "SP_MENU",
+          "form_name": "MENU",
+          "function_allow": "yes",
+          "function_code": "1583",
+          "function_name": "Report",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_MENU",
+          "form_name": "MENU",
+          "function_allow": "yes",
+          "function_code": "1568",
+          "function_name": "Stock Po",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_MENU",
+          "form_name": "MENU",
+          "function_allow": "yes",
+          "function_code": "1567",
+          "function_name": "Stock",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_MENU",
+          "form_name": "MENU",
+          "function_allow": "yes",
+          "function_code": "1559",
+          "function_name": "info",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_ORDERPO",
+          "form_name": "ORDERPO",
+          "function_allow": "yes",
+          "function_code": "1418",
+          "function_name": "views",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_ORDERPO",
+          "form_name": "ORDERPO",
+          "function_allow": "yes",
+          "function_code": "1417",
+          "function_name": "edit",
+          "function_value": "15",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_ORDERPO",
+          "form_name": "ORDERPO",
+          "function_allow": "yes",
+          "function_code": "1419",
+          "function_name": "search",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_ORDERPO",
+          "form_name": "ORDERPO",
+          "function_allow": "yes",
+          "function_code": "1425",
+          "function_name": "approve",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_ORDERPO",
+          "form_name": "ORDERPO",
+          "function_allow": "yes",
+          "function_code": "1426",
+          "function_name": "cancel",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_REPORT",
+          "form_name": "REPORT",
+          "function_allow": "yes",
+          "function_code": "1599",
+          "function_name": "MovementProduct",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_REPORT",
+          "form_name": "REPORT",
+          "function_allow": "yes",
+          "function_code": "1604",
+          "function_name": "ReportDistribution",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_REPORT",
+          "form_name": "REPORT",
+          "function_allow": "yes",
+          "function_code": "1597",
+          "function_name": "Transfer",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_REPORT",
+          "form_name": "REPORT",
+          "function_allow": "yes",
+          "function_code": "1596",
+          "function_name": "Sell",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_REPORT",
+          "form_name": "REPORT",
+          "function_allow": "yes",
+          "function_code": "1595",
+          "function_name": "Adjust",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_REPORT",
+          "form_name": "REPORT",
+          "function_allow": "yes",
+          "function_code": "1594",
+          "function_name": "ReturnAble",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_REPORT",
+          "form_name": "REPORT",
+          "function_allow": "yes",
+          "function_code": "1593",
+          "function_name": "RequisitionASSM",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_REPORT",
+          "form_name": "REPORT",
+          "function_allow": "yes",
+          "function_code": "1592",
+          "function_name": "RequisitionMac",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_REPORT",
+          "form_name": "REPORT",
+          "function_allow": "yes",
+          "function_code": "1591",
+          "function_name": "Requisition",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_REPORT",
+          "form_name": "REPORT",
+          "function_allow": "yes",
+          "function_code": "1590",
+          "function_name": "CutProduct",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_REPORT",
+          "form_name": "REPORT",
+          "function_allow": "yes",
+          "function_code": "1589",
+          "function_name": "ReturnOrder",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_REPORT",
+          "form_name": "REPORT",
+          "function_allow": "yes",
+          "function_code": "1588",
+          "function_name": "Invoice",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_REPORT",
+          "form_name": "REPORT",
+          "function_allow": "yes",
+          "function_code": "1587",
+          "function_name": "OrderPO",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_REPORT",
+          "form_name": "REPORT",
+          "function_allow": "yes",
+          "function_code": "1586",
+          "function_name": "search",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_REPORT",
+          "form_name": "REPORT",
+          "function_allow": "yes",
+          "function_code": "2646",
+          "function_name": "Sticker",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_REPORT",
+          "form_name": "REPORT",
+          "function_allow": "yes",
+          "function_code": "2706",
+          "function_name": "PurchaseAdmit",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_REPORT",
+          "form_name": "REPORT",
+          "function_allow": "yes",
+          "function_code": "2486",
+          "function_name": "ProductAging",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_REPORT",
+          "form_name": "REPORT",
+          "function_allow": "yes",
+          "function_code": "1600",
+          "function_name": "SummaryStatusProduct",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_REPORT",
+          "form_name": "REPORT",
+          "function_allow": "yes",
+          "function_code": "1601",
+          "function_name": "ProductInventoryBalance",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_REPORT",
+          "form_name": "REPORT",
+          "function_allow": "yes",
+          "function_code": "1602",
+          "function_name": "ProductList",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_REPORT",
+          "form_name": "REPORT",
+          "function_allow": "yes",
+          "function_code": "1603",
+          "function_name": "RequisitionAsset",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        },
+        {
+          "form_code": "SP_REPORT",
+          "form_name": "REPORT",
+          "function_allow": "yes",
+          "function_code": "1598",
+          "function_name": "ProductLost",
+          "function_value": "",
+          "name": "STOCK PARTS-กรรมการผู้อำนวยการ Managing Director"
+        }
+      ]
+    }
+  ],
+  "system": {
+    "OrganizationList": [
+      {
+        "ORGANIZATION_CODE": "SAT",
+        "ORGANIZATION_NAME": "สาธุประดิษฐ์"
+      },
+      {
+        "ORGANIZATION_CODE": "SUW",
+        "ORGANIZATION_NAME": "สุวินทวงศ์"
+      },
+      {
+        "ORGANIZATION_CODE": "SLG",
+        "ORGANIZATION_NAME": "สุวินทวงศ์"
+      },
+      {
+        "ORGANIZATION_CODE": "RCB",
+        "ORGANIZATION_NAME": "สุวินทวงศ์"
+      },
+      {
+        "ORGANIZATION_CODE": "LMP",
+        "ORGANIZATION_NAME": "สุวินทวงศ์"
+      },
+      {
+        "ORGANIZATION_CODE": "WAN",
+        "ORGANIZATION_NAME": "สุวินทวงศ์"
+      }
+    ],
+    "SystemID": "6",
+    "SystemNAME": "STOCK PARTS"
+  },
+  "username": "3609",
+  "ErrorMessage": "SUCCESSED",
+  "Errorcode": "0"
+}

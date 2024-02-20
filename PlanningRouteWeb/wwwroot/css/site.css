@@ -7,6 +7,10 @@
   --colot-success: green;
 }
 
+body {
+    background-color: #dee2e6 !important;
+}
+
 #blazor-error-ui {
   background: lightyellow;
   bottom: 0;
@@ -72,19 +76,19 @@
 }
 
 /*fix column header*/
-table thead tr th.sticky-col.first-col,
-table thead tr th.sticky-col.second-col,
-table thead tr th.sticky-col.thired-col,
-table thead tr th.sticky-col.last-col {
-  z-index: 20;
+table.width-screen thead tr th.sticky-col.first-col,
+table.width-screen thead tr th.sticky-col.second-col,
+table.width-screen thead tr th.sticky-col.thired-col,
+table.width-screen thead tr th.sticky-col.last-col {
+    z-index: 20;
 }
 
 /*fix column body*/
-table tbody tr td.sticky-col.first-col,
-table tbody tr td.sticky-col.second-col,
-table tbody tr td.sticky-col.thired-col,
-table tbody tr td.sticky-col.last-col {
-  z-index: 1;
+table.width-screen tbody tr td.sticky-col.first-col,
+table.width-screen tbody tr td.sticky-col.second-col,
+table.width-screen tbody tr td.sticky-col.thired-col,
+table.width-screen tbody tr td.sticky-col.last-col {
+    z-index: 1;
 }
 
 /*tfoot th.sticky-col.first-col {
@@ -93,13 +97,13 @@ table tbody tr td.sticky-col.last-col {
 /*div.container {
     width: 600px;
 } */
-table {
-  /*width: 100%;*/
-  border-collapse: collapse;
+table.width-screen {
+    /*width: 100%;*/
+    border-collapse: collapse;
 }
 
-table tr th,
-table tr td {
+table.width-screen tr th,
+table.width-screen tr td {
   border: 1px solid;
 }
 
@@ -115,8 +119,8 @@ table.width-screen thead {
   top: 60px;
 }
 
-table thead,
-table thead {
+table.width-screen thead,
+table.width-screen thead {
   position: -webkit-sticky;
   position: sticky;
   z-index: 10;
@@ -154,63 +158,63 @@ table.width-screen thead th {
   padding: 10px;
 }
 
-table > tbody > tr > td {
-  vertical-align: middle;
+table.width-screen > tbody > tr > td {
+    vertical-align: middle;
 }
 
 table thead th {
   background-clip: padding-box;
 }
 
-tfoot tr {
-  height: 30px;
+.width-screen tfoot tr {
+    height: 30px;
 }
 
-tfoot,
-tfoot th,
-tfoot td {
-  position: -webkit-sticky;
-  position: sticky;
-  bottom: 0;
-  z-index: 10;
-  /*background: #d9d9d9 !important;*/
+.width-screen tfoot,
+.width-screen tfoot th,
+.width-screen tfoot td {
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    /*background: #d9d9d9 !important;*/
 }
 
-tfoot td.sum-before-mtd {
+.width-screen tfoot td.sum-before-mtd {
   background: #75c596 !important;
 }
 
-tfoot td.sum-current-mtd {
-  background: #75c596 !important;
+.width-screen tfoot td.sum-current-mtd {
+    background: #75c596 !important;
 }
 
-tfoot td.sum-error-mtd {
-  background-color: #ffccc7 !important;
+.width-screen tfoot td.sum-error-mtd {
+    background-color: #ffccc7 !important;
 }
 
-tfoot td.error div,
-tfoot td.success div {
-  color: white;
+.width-screen tfoot td.error div,
+.width-screen tfoot td.success div {
+    color: white;
 }
 
-tfoot td {
-  border-top: none !important;
-  border-bottom: none !important;
-  border-right: none !important;
-  border-left: none !important;
-  box-shadow: inset 0.5px 0 0 #000000, inset 0 -0.5px 0 #000000 !important;
+.width-screen tfoot td {
+    border-top: none !important;
+    border-bottom: none !important;
+    border-right: none !important;
+    border-left: none !important;
+    box-shadow: inset 0.5px 0 0 #000000, inset 0 -0.5px 0 #000000 !important;
 }
 
-tfoot td.error {
-  background: red;
+.width-screen tfoot td.error {
+    background: red;
 }
 
-tfoot td.over {
-  background: orange;
+.width-screen tfoot td.over {
+    background: orange;
 }
 
-tfoot td.success {
-  background: green !important;
+.width-screen tfoot td.success {
+    background: green !important;
 }
 
 /*table change product*/
@@ -243,9 +247,9 @@ tfoot td.success {
   position: relative;
 }
 
-thead,
-tr {
-  border-style: none !important;
+.table-scroll thead,
+.table-scroll tr {
+    border-style: none !important;
 }
 
 .table-scroll tbody tr {

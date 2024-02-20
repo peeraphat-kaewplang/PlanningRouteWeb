@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace PlanningRouteWeb.HttpHandlers
 {
     public class CustomHeaderHandler : DelegatingHandler
@@ -7,11 +9,17 @@ namespace PlanningRouteWeb.HttpHandlers
             Configuration = configuration;
          }
 
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        async protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            request.Headers.Add("Authorization" , Configuration.GetValue<string>("Configs:AuthToken"));
-            request.Headers.Add("X-SUN-API-KEY" , Configuration.GetValue<string>("Configs:ApiKey"));
-            return base.SendAsync(request, cancellationToken);
+            var watch = new Stopwatch();
+            watch.Start();
+            request.Headers.Add("Authorization", Configuration.GetValue<string>("Configs:AuthToken"));
+            request.Headers.Add("X-SUN-API-KEY", Configuration.GetValue<string>("Configs:ApiKey"));
+            HttpResponseMessage response = await base.SendAsync(request, cancellationToken);
+            watch.Stop();
+            var responseTimeForCompleteRequest = watch.Elapsed;
+            response.Headers.Add("X-Response-Time", responseTimeForCompleteRequest.ToString());
+            return response;
         }
     }
 }
