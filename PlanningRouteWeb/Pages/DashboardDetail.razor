@@ -106,7 +106,7 @@
                         @model.SumDropService.ToStringNumberFormat()
                     </td>
                     <td class="text-center">
-                        <button @onclick="@(() => NavigationManager.NavigateTo($"https://localhost:44394/?ORG={ORG}&ROUTE={model.RouteCode}&MONTH={selectedMonth}&YEAR={selectYear}"))"
+                        <button @onclick="@(() => NavigationManager.NavigateTo($"Planning?ORG={ORG}&ROUTE={model.RouteCode}&MONTH={selectedMonth}&YEAR={selectYear}"))"
                                 type="button" class="btn btn-primary btn-sm">
                             <i class="fa-solid fa-eye fa-xs"></i>
                         </button>
