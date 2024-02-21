@@ -15,7 +15,11 @@
 }
 
 <div class=@($"width-screen {styleWidth} command-wrapper")>
-        <RadzenDropDown TValue="string"  Style="width: 100%; max-width: 200px; position: sticky;left: 0px;" TextProperty="ORGANIZATION_NAME"
+         <button @onclick="@(()=> Goback())" class="btn btn-primary btn-sm btn-icon" style="position: sticky;left: 0px;" data-bs-toggle="tooltip"
+                data-bs-placement="right" title="ย้อนกลับ">
+            <i class="fa-solid fa-arrow-left fa-xs"></i>
+        </button>
+        <RadzenDropDown TValue="string"  Style="width: 100%; max-width: 200px; position: sticky;left: 27px;" TextProperty="ORGANIZATION_NAME"
             ValueProperty="ORGANIZATION_CODE" @bind-Value=@selectOrg Data=@optionsOrg Change="@(args => ChangeOrg(args))" />
         <RadzenDropDown TValue="string" TextProperty="ROUTE_NAME" ValueProperty="ROUTE_CODE"
             Style="width: 100%; max-width: 270px;position: sticky;left: 200px;" @bind-Value=@selectRoute Data=@optionsRoute />
@@ -454,6 +458,7 @@
 
     protected override async Task OnInitializedAsync() 
     {
+        StateContainer.IsLoading = true;
         selectOrg = ORG!;
         selectRoute = ROUTE!;
         year = YEAR != null ? int.Parse(YEAR) : StateContainer.DateCurrent.Year;
@@ -479,7 +484,9 @@
         await LoadRoute();
 
         if(ROUTE == null) selectRoute = optionsRoute.First().ROUTE_CODE;
-        await ShowBusyDialog();
+        await LoadMaster();
+
+        StateContainer.IsLoading = false;
     }
 
     public async Task LoadExcel()
@@ -628,11 +635,15 @@
 
     public async void OnClickSearch() 
     {
+        StateContainer.IsLoading = true;
+
         StateContainer._dateTime = DateTime.Now;
 
         actionButton = new();
-        await ShowBusyDialog();
+        await LoadMaster();
         StateHasChanged();
+
+        StateContainer.IsLoading = false;
     }
 
     private void OnChangeMater(PlanningMasterData2 item)
@@ -656,15 +667,14 @@
 
     private async Task OnClickSavePlan(DialogService ds , string start , string end)
     {
-        var Task = InvokeAsync(async () => {
-            var dataSave = new List<PlanningMasterData2>();
-            foreach( var (item,index) in data.WithIndex())
+        StateContainer.IsLoading = true;
+        var dataSave = new List<PlanningMasterData2>();
+        foreach( var (item,index) in data.WithIndex())
         {
             foreach(var (row,idx) in item.GroupData.WithIndex()){
 
                 var save = ConvertModel.PlanningMasterData2ViewModel(item.GroupData[idx]);
                 var record = ConvertModel.Group2ModelToPlanningMasterData2(row);
-
                 record.REMARK = item.GroupData[idx].REMARK;
                 record.GETPLAN_DETAIL = item.GroupData[idx].GETPLAN_DETAIL;
                 record.YEARMONTH = save.YEARMONTH;
@@ -693,37 +703,35 @@
                 record.SUNDAY = item.SUNDAY;
                 record.IS_DUPLICATE = save.IS_DUPLICATE;
                 record.SALE_LAST_WEEK = save.SALE_LAST_WEEK;
-
                 dataSave.Add(record);
             }
-
         }
        
-            var recordData = dataSave.Select(x => ConvertModel.PlanningMasterData2ModeltoSave(x)).ToList();
-            if(!target.SYSTEMCART)
-            {
-               recordData = PlanningService.PlanningSetModelCartSystem(start,end, recordData);
-            } 
+        var recordData = dataSave.Select(x => ConvertModel.PlanningMasterData2ModeltoSave(x)).ToList();
+        if(!target.SYSTEMCART)
+        {
+            recordData = PlanningService.PlanningSetModelCartSystem(start,end, recordData);
+        } 
 
-            var response = await PlanningService.PlanningSavePlan(recordData);
+        var response = await PlanningService.PlanningSavePlan(recordData);
 
-            if(response.ErrorMessage == "success")
-            {
-                 actionButton = new();
-                 await LoadMaster();
-                 DialogServiceCustom.DialogClose();
-                 ds.Close(false);
-            }
-            else
-            {
+        if(response.ErrorMessage == "success")
+        {
+                actionButton = new();
+                await LoadMaster();
                 DialogServiceCustom.DialogClose();
                 ds.Close(false);
-                await DialogService.Alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล!", "เเจ้งเตือน", new AlertOptions() { OkButtonText = "ปิด" });
-            }
-        });
-        await DialogServiceCustom.BusyDialog("กำลังโหลดข้อมูล...");
+        }
+        else
+        {
+            DialogServiceCustom.DialogClose();
+            ds.Close(false);
+            await DialogService.Alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล!", "เเจ้งเตือน", new AlertOptions() { OkButtonText = "ปิด" });
+        }
 
         StateHasChanged();
+
+        StateContainer.IsLoading = false;
     }
     
     public void OnChangDetail(int index ,PlanningDetail2 current , List<PlanningDetail2> records)
@@ -883,33 +891,30 @@
 
     private async Task OnCalPlanning(string start , string end ,DialogService? ds = null)
     {
-         var Task = InvokeAsync(async () => {
-           var body = new CalPlanning
-            {
-                YEARMONTH = $"{StateContainer.DateCurrent.ToStringDate("yyyy")}{selectMonth.Number}",
-                ORG = $"{selectOrg}", 
-                Route = $"{selectRoute}",
-                StartDate = start ,
-                EndDate = end
-            };
+        StateContainer.IsLoading = true;
+        var body = new CalPlanning
+        {
+            YEARMONTH = $"{StateContainer.DateCurrent.ToStringDate("yyyy")}{selectMonth.Number}",
+            ORG = $"{selectOrg}", 
+            Route = $"{selectRoute}",
+            StartDate = start ,
+            EndDate = end
+        };
 
-            var response = await PlanningService.PlanningCalPlan(body);
-            if(response.ErrorMessage == "success")
-            {
+        var response = await PlanningService.PlanningCalPlan(body);
+        if(response.ErrorMessage == "success")
+        {
           
-                await LoadMaster();
-                actionButton = new();
-                DialogServiceCustom.DialogClose();
-            }
-            else
-            {
-                await DialogService.Alert($"Error : {response.ErrorMessage}", $"เเจ้งเตือน { response.Status }", new AlertOptions() { OkButtonText = "ปิด" ,ShowClose = false });
-            }
+            await LoadMaster();
+            actionButton = new();
+        }
+        else
+        {
+            await DialogService.Alert($"Error : {response.ErrorMessage}", $"เเจ้งเตือน { response.Status }", new AlertOptions() { OkButtonText = "ปิด" ,ShowClose = false });
+        }
             
-            if(ds!= null) ds.Close(true);
-        });
-        await DialogServiceCustom.BusyDialog("กำลังโหลดข้อมูล...");
-       
+        if(ds!= null) ds.Close(true);
+        StateContainer.IsLoading = false;
     }
 
     public class ChkRank
@@ -945,6 +950,11 @@
         {
             OnChageRank(x);
         }
+    }
+
+    public async Task Goback()
+    {
+        await JSRuntime.InvokeVoidAsync("history.back");
     }
 
     private void OnChageRank(string date)
@@ -1046,12 +1056,10 @@
 
     public async Task ShowBusyDialog()
     {
-        var Task = InvokeAsync(async () => {
-            actionButton = new();
-            await LoadMaster();
-            DialogServiceCustom.DialogClose();
-        });
-        await DialogServiceCustom.BusyDialog("กำลังโหลดข้อมูล...");
+        StateContainer.IsLoading = true;
+        actionButton = new();
+        await LoadMaster();
+        StateContainer.IsLoading = false;
     }
 
     private double CalSaleWeek(List<PlanningDetail2> row, int index, PlanningMasterData2? plan = null)

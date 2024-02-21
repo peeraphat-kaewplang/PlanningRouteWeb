@@ -25,6 +25,20 @@
     transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
 }
+
+.loader-index {
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 90px;
+    height: 90px;
+    -webkit-animation: rotation 2s linear infinite;
+    /* Safari */
+    animation: rotation 2s linear infinite;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+}
+
 #overlay h3 {
     color: white;
 }
