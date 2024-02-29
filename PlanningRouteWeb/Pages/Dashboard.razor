@@ -181,23 +181,38 @@
     public DashboardViewModel dashboards { get; set; } = new();
     protected override async Task OnInitializedAsync()
     {
-        selectedMonth = DateTime.Now.Month.ToString("D2");
-        selectYear = DateTime.Now.Year;
-        yearOptions = SetDatetimeService.SetYear();
-        StateContainer.IsLoading = true;
+        try
+        {
+            selectedMonth = DateTime.Now.Month.ToString("D2");
+            selectYear = DateTime.Now.Year;
+            yearOptions = SetDatetimeService.SetYear();
+            StateContainer.IsLoading = true;
 
-        var permission = JsonSerializer.Deserialize<Permission>(await JSRuntime.InvokeAsync<string>("sessionStorage.getItem", "permission"));
-        string[] cc = permission!.system!.OrganizationList.Select(x => x.ORGANIZATION_CODE).ToArray()!;
-        systems = string.Join(",", cc);
+            // var permission = JsonSerializer.Deserialize<Permission>(await JSRuntime.InvokeAsync<string>("sessionStorage.getItem", "permission"));
+            string[] s = await JSRuntime.InvokeAsync<string[]>("getSystems");
+            systems = string.Join(",", s);
 
-        await LoadData();
-        StateContainer.IsLoading = false;
-
+            await LoadData();
+            StateContainer.IsLoading = false;
+        }
+        catch (Exception ex)
+        {
+        }
     }
 
     public async Task LoadData()
     {
-        var model = new DashboardBody
+        var date = SetDateRequest();
+
+        // var model = new DashboardBody
+        //     {
+        //         ORG = systems,
+        //         DATE_CUR_START = date.DATE_CUR_START,
+        //         DATE_CUR_END = date.DATE_CUR_END,
+        //         DATE_BEF_START = date.DATE_BEF_START,
+        //         DATE_BEF_END = date.DATE_BEF_END
+        //     };
+            var model = new DashboardBody
             {
                 ORG = systems,
                 yearmonth = $"{selectYear}{selectedMonth}"
@@ -205,6 +220,7 @@
         var (error, dashboard) = await DashboardService.GetDashboardList(model);
         if (error.Error)
         {
+            
             // await CommonService.ShowAlert(new ToastModel
             //     {
             //         action = "error",
@@ -239,4 +255,25 @@
         await LoadData();
         StateContainer.IsLoading = false;
     }
+
+    public DateRequest SetDateRequest()
+    {
+        CultureInfo provider = CultureInfo.InvariantCulture;
+        var dateCur = $"{selectYear}-{selectedMonth}-01";
+        DateTime dateTimeCur = DateTime.ParseExact(dateCur, "yyyy-MM-dd", provider);
+        DateTime lastDateCur = new DateTime(dateTimeCur.Year, dateTimeCur.Month, DateTime.DaysInMonth(dateTimeCur.Year, dateTimeCur.Month));
+
+        var dateBef = $"{(selectedMonth == "01" ? selectYear - 1 : selectYear)}-{(selectedMonth != "01" ? (int.Parse(selectedMonth!) - 1).ToString("D2") : "12")}-01";
+        DateTime dateTimeBef = DateTime.ParseExact(dateBef, "yyyy-MM-dd", provider);
+        DateTime lastDateBef = new DateTime(dateTimeBef.Year, dateTimeBef.Month, DateTime.DaysInMonth(dateTimeBef.Year, dateTimeBef.Month));
+
+        return new DateRequest { 
+            DATE_CUR_START = dateCur, 
+            DATE_CUR_END = lastDateCur.ToString("yyyy-MM-dd"),
+            DATE_BEF_START = dateBef,
+            DATE_BEF_END = lastDateBef.ToString("yyyy-MM-dd")
+        };
+    }
+
+   
 }

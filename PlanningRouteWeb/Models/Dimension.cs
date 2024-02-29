@@ -83,18 +83,18 @@ namespace PlanningRouteWeb.Models
         public string? EXPIRED_DAYS { get; set; }
         public string? FAIL_COUNT { get; set; }
         public string? HoldInfos { get; set; }
-        public string? LOCKED { get; set; }
-        public string? LoginDate { get; set; }
-        public string? SELF_RENEW { get; set; }
-        public string? Token { get; set; }
-        public Employee? emp_detail { get; set; }
-        public string? firstname { get; set; }
-        public string? id { get; set; }
-        public List<Permissions> permissions { get; set; } = new();
-        public SystemUser? system { get; set; }
-        public string? username { get; set; }
-        public string? ErrorMessage { get; set; }
-        public string? Errorcode { get; set; }
+        //public string? LOCKED { get; set; }
+        //public string? LoginDate { get; set; }
+        //public string? SELF_RENEW { get; set; }
+        //public string? Token { get; set; }
+        //public Employee? emp_detail { get; set; }
+        //public string? firstname { get; set; }
+        //public string? id { get; set; }
+        //public List<Permissions> permissions { get; set; } = new();
+        //public SystemUser? system { get; set; }
+        //public string? username { get; set; }
+        //public string? ErrorMessage { get; set; }
+        //public string? Errorcode { get; set; }
     }
 
     public class Employee
@@ -142,5 +142,54 @@ namespace PlanningRouteWeb.Models
     {
         public string? ORGANIZATION_CODE { get; set; }
         public string? ORGANIZATION_NAME { get; set; }
+    }
+
+    public class Path
+    {
+        public string? Url { get; set; }
+        public string? Name { get; set; }
+    }
+
+
+
+    public class RoutePath : Path
+    {
+        public string? Icon { get; set; }
+        public List<Path> Child { get; set; } = new();
+
+        public static List<RoutePath> SetPath()
+        {
+            return new List<RoutePath>
+            {
+                new RoutePath 
+                {
+                    Name ="Dashboard" , 
+                    Url = "Dashboard" , 
+                    Icon = "fa-house",
+                    Child = new List<Path> 
+                    {
+                        new Path 
+                        {  
+                            Name = "Detail",
+                            Url = "Dashboard/Detail" 
+                        } 
+                    } 
+                },
+                new RoutePath
+                {
+                    Name = "Timeline",
+                    Url = "Timeline-ORG",
+                    Icon = "fa-timeline",
+                    Child = new List<Path>
+                    {
+                        new Path
+                        {
+                            Name = "TimelineRoute",
+                            Url = "Timeline-Route"
+                        }
+                    }
+                }
+            };
+        }
     }
 }

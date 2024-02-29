@@ -205,12 +205,18 @@
 
     protected override async Task OnInitializedAsync()
     {
-        selectedMonth = Month;
-        selectYear = int.Parse(Year!);
-        yearOptions = SetDatetimeService.SetYear();
-        StateContainer.IsLoading = true;
-        await LoadData();
-        StateContainer.IsLoading = false;
+        try
+        {
+            selectedMonth = Month;
+            selectYear = int.Parse(Year!);
+            yearOptions = SetDatetimeService.SetYear();
+            StateContainer.IsLoading = true;
+            await LoadData();
+            StateContainer.IsLoading = false;
+        }
+        catch(Exception ex)
+        {
+        }
     }
 
     public async Task OnChangeBackwardForward(string action)

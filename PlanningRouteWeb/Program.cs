@@ -21,8 +21,13 @@ builder.Services.AddScoped<IChangeProductService, ChangeProductService>();
 builder.Services.AddScoped<IDialogService, DialogServices>();
 builder.Services.AddScoped<IBestProduct, BestProductService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
+builder.Services.AddScoped<ITimelineService, TimelineService>();
 builder.Services.AddScoped<ISetDatetimeService, SetDatetimeService>();
 builder.Services.AddScoped<StateContainer>();
+
+builder.Services.AddMvc().AddJsonOptions(options => {
+    options.JsonSerializerOptions.MaxDepth = 10000;  // or however deep you need
+});
 
 var app = builder.Build();
 

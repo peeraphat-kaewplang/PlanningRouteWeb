@@ -16,9 +16,8 @@
     <link href="css/PlanningLayout.css" rel="stylesheet" />
     <component type="typeof(HeadOutlet)" render-mode="Server" />
     <link rel="stylesheet" href="lib/font-awesome/css/all.css" />
+    <link rel="stylesheet" href="lib/bootstrap-datepicker/css/bootstrap-datepicker.css" />
     <link rel="stylesheet" href="_content/Radzen.Blazor/css/material-base.css">
-    @* <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css"
-    rel="stylesheet" /> *@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
@@ -41,23 +40,21 @@
     <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
     <script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/jquery/jquery.min.js"></script>
+    <script src="lib/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script src="lib/bootstrap-datepicker/locales/bootstrap-datepicker.th.min.js" charset="UTF-8"></script>
     <script>
-        // window.getWindowDimensions = function () {
-        //     return {
-        //         width: window.innerWidth,
-        //         height: window.innerHeight
-        //     };
-        // };
-
         window.exportExcel = function () {
             const timeElapsed = Date.now();
             const today = new Date(timeElapsed);
-
             const table = document.getElementById('table-export-excel');
             const wb = XLSX.utils.table_to_book(table, { sheet: 'sheet-1' });
             XLSX.writeFile(wb, `Planning-${today.toISOString()}.xlsx`, { cellStyles: true });
-
         };
+        window.getSystems = function () {
+            var sec = JSON.parse(sessionStorage.getItem("permission"))
+            return sec.system.OrganizationList.map(x => x.ORGANIZATION_CODE)
+        }
     </script>
 
 

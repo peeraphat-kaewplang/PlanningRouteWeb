@@ -23,11 +23,21 @@
         public string? COUNT_SERVICE_BEF { get; set; }
         public string? SUM_DROP_SERVICE_BEF { get; set; }
     }
-    public class DashboardBody
+    public class DashboardBody : DateRequest
     {
         public string? ORG { get; set; }
         public string? yearmonth { get; set; }
     }
+
+    public class DateRequest
+    {
+        public string? DATE_CUR_START { get; set; }
+        public string? DATE_CUR_END { get; set; }
+        public string? DATE_BEF_START { get; set; }
+        public string? DATE_BEF_END { get; set; }
+
+    }
+
     public class DashboardViewModel
     {
         public List<DashboardList> Data { get; set; } = new();

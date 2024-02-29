@@ -1,5 +1,4 @@
-﻿@model Permission
-
+﻿
 @using Microsoft.AspNetCore.Components.Web 
 @using PlanningRouteWeb.Components
 @using PlanningRouteWeb.Models;
@@ -24,19 +23,20 @@
     </div>
     <script>
         (function () {
-            var model = @Html.Raw(JsonSerializer.Serialize(Model));
-            sessionStorage.setItem("permission", JSON.stringify(model));
+            var model = @Html.Raw(JsonSerializer.Serialize(Model.text));
+            var permis = JSON.parse(model)
+            sessionStorage.setItem("permission", JSON.stringify(permis));
             var month = new Date().getMonth().toString().padStart(2, '0');
             var year = new Date().getFullYear();
 
             setTimeout(function () {
-                if (model.system.OrganizationList.length > 1) {
+                if (permis.system.OrganizationList.length > 1) {
                     window.location.href = "Dashboard"
                 }
                 else {
-                    window.location.href = `Dashboard/Detail?ORG=${model.system.OrganizationList[0].ORGANIZATION_CODE}&ORGName=${model.system.OrganizationList[0].ORGANIZATION_NAME}&Month=${month}&Year=${year}`
+                    window.location.href = `Dashboard/Detail?ORG=${permis.system.OrganizationList[0].ORGANIZATION_CODE}&ORGName=${permis.system.OrganizationList[0].ORGANIZATION_NAME}&Month=${month}&Year=${year}`
                 }
-            }, 2000);
+            }, 100);
         })();
     </script>
 </body>

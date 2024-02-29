@@ -16,9 +16,7 @@ namespace PlanningRouteWeb.Controllers
         [HttpPost]
         public IActionResult Index(string permission)
         {
-            return View(
-                JsonSerializer.Deserialize<Permission>(permission)!
-            );
+            return View(new { text = permission } );
         }
     }
 }
