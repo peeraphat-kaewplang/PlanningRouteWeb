@@ -23,6 +23,7 @@ builder.Services.AddScoped<IBestProduct, BestProductService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<ITimelineService, TimelineService>();
 builder.Services.AddScoped<ISetDatetimeService, SetDatetimeService>();
+builder.Services.AddScoped<ICommonService, CommonService>();
 builder.Services.AddScoped<StateContainer>();
 
 builder.Services.AddMvc().AddJsonOptions(options => {

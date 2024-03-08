@@ -1,11 +1,14 @@
+using System;
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.Json;
+using Microsoft.Extensions.Options;
 using PlanningRouteWeb.Helpers;
 using PlanningRouteWeb.Interfaces;
 using PlanningRouteWeb.Models;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using PlanningRouteWeb.Models.V2;
+using PlanningRouteWeb.Services.V2;
 
 namespace PlanningRouteWeb.Services
 {
@@ -15,15 +18,16 @@ namespace PlanningRouteWeb.Services
         private readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;
         private readonly StateContainer _stateContainer;
-
+        private readonly ICommonService _commonService;
         public IDictionary<string, ColumnProperty> columns { get; set; } = new Dictionary<string, ColumnProperty>();
         public IEnumerable<IDictionary<string, object>> data { get; set; } = new List<Dictionary<string, object>>() { };
-        public PlanningService(IConfiguration configuration, HttpClient httpClient, StateContainer stateContainer)
+        public PlanningService(IConfiguration configuration, HttpClient httpClient, StateContainer stateContainer, ICommonService commonService)
         {
             _httpClient = httpClient;
             _stateContainer = stateContainer;
             _configuration = configuration;
             _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            _commonService = commonService;
         }
         public async Task<OrganizationResponse?> PlanningGetORG(OrganizationRequest org)
         {
@@ -49,6 +53,14 @@ namespace PlanningRouteWeb.Services
             }
             catch (Exception ex)
             {
+               
+                _stateContainer.IsLoading = false;
+                await _commonService.ShowAlert(new ToastModel
+                {
+                    action = "error",
+                    messang = ex.Message.ToString()
+                });
+
                 throw new ApplicationException($"Error exception : {ex.Message.ToString()}");
             }
         }
@@ -600,6 +612,26 @@ namespace PlanningRouteWeb.Services
             return res;
         }
 
-       
+        public async Task<Target2> PlanningGetTarget(PanningMasterRequest body)
+        {
+            var requestMessage = new HttpRequestMessage()
+            {
+                Method = new HttpMethod("POST"),
+                RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}API_PLANNING/V1/GETPLAN"),
+                Content = JsonContent.Create(body)
+            };
+            var response = await _httpClient.SendAsync(requestMessage);
+            var content = await response.Content.ReadAsStringAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new ApplicationException($"Http error : {content}");
+            }
+
+            //_stateContainer.BeforeConfig = 1;
+
+            var plannings = JsonSerializer.Deserialize<PanningMasterResponse>(content, _options);
+
+            return ConvertModel.TargetModelToTarget2Model(plannings!.Data.Target);
+        }
     }
 }

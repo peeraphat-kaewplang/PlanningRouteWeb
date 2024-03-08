@@ -102,6 +102,7 @@
             {
                 <th colspan="21" class="p-0">
                     <div class="p-2 text-end">
+                        
                         @if (week == currentWeek)
                         {
                             if ((WeekValue.Week1 || !WeekValue.Week1) && WeekValue.Week1Value)
@@ -111,7 +112,7 @@
                                               Style="@($"{StyleHeaderButton(chk2)}text-transform: none;")"
                                               Size="Radzen.ButtonSize.Small"
                                               Click="@(() =>  OnClickSavePlanCallback.InvokeAsync((start.ToStringDate(), end.ToStringDate())))"
-                                />
+                                              Disabled="@(Target.SYSTEMCART && disable > 0 ? true : false)" />
                             }
                             else
                             {
@@ -131,7 +132,8 @@
                                               ButtonStyle="ButtonStyle.Secondary"
                                               Style="@($"{StyleHeaderButton(chk2)}text-transform: none;")"
                                               Size="Radzen.ButtonSize.Small"
-                                              Click="@(() =>  OnClickSavePlanCallback.InvokeAsync((start.ToStringDate(), end.ToStringDate())))" />
+                                              Click="@(() =>  OnClickSavePlanCallback.InvokeAsync((start.ToStringDate(), end.ToStringDate())))"
+                                              Disabled="@(Target.SYSTEMCART && disable > 0 ? true : false)" />
                             }
                             else
                             {

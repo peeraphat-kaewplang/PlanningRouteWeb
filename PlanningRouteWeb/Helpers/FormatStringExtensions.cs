@@ -4,13 +4,16 @@ namespace PlanningRouteWeb.Helpers
 {
     public static class FormatStringExtensions
     {
-        public static string ToStringNumberFormat<T>(this T value)
+        public static string ToStringNumberFormat<T>(this T value , bool isDigit = true)
         {
-            if (typeof(T) == typeof(double) && double.TryParse(value!.ToString()!, out var valueAsDouble))
+            if (typeof(T) == typeof(double) || typeof(T) == typeof(string) || typeof(T) == typeof(int) )
             {
-                if (valueAsDouble == 0) return valueAsDouble.ToString();
-                return valueAsDouble.ToString("0,0.00", CultureInfo.InvariantCulture);
+                double.TryParse(value!.ToString()!, out var valueAsDouble);
+                if (valueAsDouble == 0 || (valueAsDouble < 10 && valueAsDouble > 0)) return valueAsDouble.ToString();
+
+                return valueAsDouble.ToString(isDigit ? "0,0.00" : "0,0", CultureInfo.InvariantCulture);
             }
+           
             return "0";
         }
     }

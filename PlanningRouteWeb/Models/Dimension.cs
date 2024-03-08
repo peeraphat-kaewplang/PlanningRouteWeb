@@ -178,14 +178,14 @@ namespace PlanningRouteWeb.Models
                 new RoutePath
                 {
                     Name = "Timeline",
-                    Url = "Timeline-ORG",
+                    Url = "Timeline",
                     Icon = "fa-timeline",
                     Child = new List<Path>
                     {
                         new Path
                         {
                             Name = "TimelineRoute",
-                            Url = "Timeline-Route"
+                            Url = "Timeline/Detail"
                         }
                     }
                 }

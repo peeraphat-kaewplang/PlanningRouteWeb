@@ -9,8 +9,9 @@
 
 .table-wraper {
     overflow: auto;
-    height: 31rem;
+    height: auto;
     width: 100%;
+    max-height: 31rem;
 }
 
 .table tbody {

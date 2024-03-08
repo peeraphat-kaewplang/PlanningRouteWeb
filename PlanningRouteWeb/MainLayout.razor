@@ -1,27 +1,29 @@
 ﻿@inherits LayoutComponentBase
 @inject IJSRuntime JSRuntime
 <Loading/>
-
-<div class="page">
+<Toast/>
+ <div class="page">
     <div class="sidebar">
         <NavMenu />
     </div>
+        <main class="">
+            <div class="top-row px-4">
+                <div id="routeName"></div>
+                <div class="d-flex align-items-center ms-auto gap-1">
+                    <i class="fa-solid fa-circle-user fa-xl"></i>
+                    <span id="profile" class="navbar-text "></span>
+                </div>
 
-    <main>
-        <div class="top-row px-4">
-            <div id="routeName"></div>
-            <div class="d-flex align-items-center ms-auto gap-1">
-                <i class="fa-solid fa-circle-user fa-xl"></i>
-                <span id="profile" class="navbar-text "></span>
             </div>
-           
-        </div>
 
-        <article class="content px-1 pt-2">
-            @Body
-        </article>
-    </main>
-</div>
+            <article class=" px-1 pt-2" style="width: 85rem">
+                @Body
+            </article>
+
+            <div style="margin-left: 3.5rem;">
+            </div>
+        </main>
+</div> 
 <script>
     (function () {
         var sec = JSON.parse(sessionStorage.getItem("permission"))
@@ -30,31 +32,7 @@
 </script>
 
 
-@code {
-    // protected override async Task OnAfterRenderAsync(bool firstRender)
-    // {
-    //     if (firstRender)
-    //     {
-    //         var systems = await JSRuntime.InvokeAsync<List<string>>("getSystems");
-    //         selectOrg = systems[0];
-    //         await LoadOrg();
-    //         await LoadRoute();
-    //         var (error, timeline) = await TimelineService.GetTimeLine();
-    //         if (error.Error)
-    //         {
-    //             // await CommonService.ShowAlert(new ToastModel
-    //             //     {
-    //             //         action = "error",
-    //             //         messang = error.ErrorMessage
-    //             //     });
-    //         }
-    //         else
-    //         {
-    //             timelineData = timeline;
-    //         }
-    //         StateHasChanged();
-    //     }
-    // }
-}
+<RadzenDialog />
+<RadzenTooltip />
 
 

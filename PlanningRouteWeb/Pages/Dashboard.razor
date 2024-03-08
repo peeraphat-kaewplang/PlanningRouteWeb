@@ -5,6 +5,8 @@
 @inject NavigationManager NavigationManager
 @inject IDashboardService DashboardService
 @inject ISetDatetimeService SetDatetimeService
+@inject ICommonService CommonService
+@implements IAsyncDisposable
 
 <div class="d-flex gap-2 pb-2 w-50">
     <button @onclick="@(() => OnChangeBackwardForward("backwar"))" type="button" class="btn btn-primary btn-sm">
@@ -32,7 +34,7 @@
 </div>
 
 <div class="table-wraper">
-    <table class="table table-sm table-striped table-hover table-dashboard align-middle border-start border-end mb-0">
+    <table class="table table-bordered table-sm table-striped table-hover  table-dashboard align-middle border-start border-end mb-0">
         <thead>
             @{
                 var previous = selectedMonth.Contains("01") ? "12" : (int.Parse(selectedMonth) - 1).ToString("D2");
@@ -83,10 +85,10 @@
                     <td class="@(model.BeforeSumSales <= 0 ? "fw-bold value-error" : "fw-bold value-success")">
                         @model.BeforeSumSales.ToStringNumberFormat()
                     </td>
-                    <td class="fw-bold">@model.BeforeTargetDrop.ToStringNumberFormat()</td>
-                    <td class="fw-bold">@model.BeforeService.ToStringNumberFormat()</td>
+                    <td class="fw-bold">@model.BeforeTargetDrop.ToStringNumberFormat(false)</td>
+                    <td class="fw-bold">@model.BeforeService.ToStringNumberFormat(false)</td>
                     <td class="@(model.BeforeSumDropService <= 0 ? "fw-bold value-error" : "fw-bold value-success")">
-                        @model.BeforeSumDropService.ToStringNumberFormat()
+                        @model.BeforeSumDropService.ToStringNumberFormat(false)
                     </td>
                     <td class="fw-bold">@model.Target.ToStringNumberFormat()</td>
                     <td class="fw-bold">@model.Estimate.ToStringNumberFormat()</td>
@@ -94,10 +96,10 @@
                     <td class="@(model.SumSales <= 0 ? "fw-bold value-error" : "fw-bold value-success")">
                         @model.SumSales.ToStringNumberFormat()
                     </td>
-                    <td class="fw-bold">@model.TargetDrop.ToStringNumberFormat()</td>
-                    <td class="fw-bold">@model.Service.ToStringNumberFormat()</td>
+                    <td class="fw-bold">@model.TargetDrop.ToStringNumberFormat(false)</td>
+                    <td class="fw-bold">@model.Service.ToStringNumberFormat(false)</td>
                     <td class="@(model.SumDropService <= 0 ? "fw-bold value-error" : "fw-bold value-success")">
-                        @model.SumDropService.ToStringNumberFormat()
+                        @model.SumDropService.ToStringNumberFormat(false)
                     </td>
                     <td class="text-center">
                         <button @onclick="@(() => NavigationManager.NavigateTo($"Dashboard/Detail?ORG={model.OrganizationCode}&ORGName={model.Organization}&Month={selectedMonth}&Year={selectYear}"))"
@@ -121,10 +123,10 @@
                 <td class="@(summery.SumBeforeSumSales < 0 ? "fw-bold text-end value-error" : "fw-bold text-end value-success")">
                     @summery.SumBeforeSumSales.ToStringNumberFormat()
                 </td>
-                <td class="fw-bold text-end">@summery.SumBeforeTargetDrop.ToStringNumberFormat()</td>
-                <td class="fw-bold text-end">@summery.SumBeforeService.ToStringNumberFormat()</td>
+                <td class="fw-bold text-end">@summery.SumBeforeTargetDrop.ToStringNumberFormat(false)</td>
+                <td class="fw-bold text-end">@summery.SumBeforeService.ToStringNumberFormat(false)</td>
                 <td class="@(summery.SumBeforeSumDropService < 0 ? "fw-bold text-end value-error" : "fw-bold text-end value-success")">
-                    @summery.SumBeforeSumDropService.ToStringNumberFormat()
+                    @summery.SumBeforeSumDropService.ToStringNumberFormat(false)
                 </td>
                 <td class="fw-bold text-end">@summery.SumTarget.ToStringNumberFormat()</td>
                 <td class="fw-bold text-end">@summery.SumEstimate.ToStringNumberFormat()</td>
@@ -132,10 +134,10 @@
                 <td class="@(summery.SumSumSales < 0 ? "fw-bold text-end value-error" : "fw-bold text-end value-success")">
                     @summery.SumSumSales.ToStringNumberFormat()
                 </td>
-                <td class="fw-bold text-end">@summery.SumTargetDrop.ToStringNumberFormat()</td>
-                <td class="fw-bold text-end">@summery.SumService.ToStringNumberFormat()</td>
+                <td class="fw-bold text-end">@summery.SumTargetDrop.ToStringNumberFormat(false)</td>
+                <td class="fw-bold text-end">@summery.SumService.ToStringNumberFormat(false)</td>
                 <td class="@(summery.SumSumDropService < 0 ? "fw-bold text-end value-error" : "fw-bold text-end value-success")">
-                    @summery.SumSumDropService.ToStringNumberFormat()
+                    @summery.SumSumDropService.ToStringNumberFormat(false)
                 </td>
                 <td rowspan="2" class="fw-bold text-end"></td>
             </tr>
@@ -147,10 +149,10 @@
                 <td class="@(average.SumBeforeSumSales < 0 ? "fw-bold text-end value-error" : "fw-bold text-end value-success")">
                     @average.SumBeforeSumSales.ToStringNumberFormat()
                 </td>
-                <td class="fw-bold text-end">@average.SumBeforeTargetDrop.ToStringNumberFormat()</td>
-                <td class="fw-bold text-end">@average.SumBeforeService.ToStringNumberFormat()</td>
+                <td class="fw-bold text-end">@average.SumBeforeTargetDrop.ToStringNumberFormat(false)</td>
+                <td class="fw-bold text-end">@average.SumBeforeService.ToStringNumberFormat(false)</td>
                 <td class="@(average.SumBeforeSumDropService < 0 ? "fw-bold text-end value-error" : "fw-bold text-end value-success")">
-                    @average.SumBeforeSumDropService.ToStringNumberFormat()
+                    @average.SumBeforeSumDropService.ToStringNumberFormat(false)
                 </td>
                 <td class="fw-bold text-end">@average.SumTarget.ToStringNumberFormat()</td>
                 <td class="fw-bold text-end">@average.SumEstimate.ToStringNumberFormat()</td>
@@ -158,10 +160,10 @@
                 <td class="@(average.SumSumSales < 0 ? "fw-bold text-end value-error" : "fw-bold text-end value-success")">
                     @average.SumSumSales.ToStringNumberFormat()
                 </td>
-                <td class="fw-bold text-end">@average.SumTargetDrop.ToStringNumberFormat()</td>
-                <td class="fw-bold text-end">@average.SumService.ToStringNumberFormat()</td>
+                <td class="fw-bold text-end">@average.SumTargetDrop.ToStringNumberFormat(false)</td>
+                <td class="fw-bold text-end">@average.SumService.ToStringNumberFormat(false)</td>
                 <td class="@(average.SumSumDropService < 0 ? "fw-bold text-end value-error" : "fw-bold text-end value-success")">
-                    @average.SumSumDropService.ToStringNumberFormat()
+                    @average.SumSumDropService.ToStringNumberFormat(false)
                 </td>
             </tr>
         </tfoot>
@@ -174,58 +176,68 @@
 </script>
 
 @code {
+    private IJSObjectReference? JSModule;
     public int selectYear { get; set; }
     public string? selectedMonth { get; set; }
     public List<int> yearOptions = new();
     public string? systems { get; set; }
     public DashboardViewModel dashboards { get; set; } = new();
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        try
-        {
-            selectedMonth = DateTime.Now.Month.ToString("D2");
-            selectYear = DateTime.Now.Year;
-            yearOptions = SetDatetimeService.SetYear();
-            StateContainer.IsLoading = true;
+        selectedMonth = DateTime.Now.Month.ToString("D2");
+        selectYear = DateTime.Now.Year;
+        yearOptions = SetDatetimeService.SetYear();
+    }
 
-            // var permission = JsonSerializer.Deserialize<Permission>(await JSRuntime.InvokeAsync<string>("sessionStorage.getItem", "permission"));
-            string[] s = await JSRuntime.InvokeAsync<string[]>("getSystems");
-            systems = string.Join(",", s);
-
-            await LoadData();
-            StateContainer.IsLoading = false;
-        }
-        catch (Exception ex)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
         {
+            try
+            {
+                StateContainer.IsLoading = true;
+
+                JSModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/site.js");
+
+                await JSModule.InvokeVoidAsync("InitailJS.tooltipTrigger");
+                string[] s = await JSModule.InvokeAsync<string[]>("JsFunction.getSystems");
+                systems = string.Join(",", s);
+                
+                await LoadData();
+                StateContainer.IsLoading = false;
+            }
+            catch (Exception ex)
+            {
+                StateContainer.IsLoading = false;
+                await JSModule!.InvokeVoidAsync("JsFunction.toastTrigger", new ToastModel
+                    {
+                        action = "error",
+                        messang = ex.Message.ToString()
+                    });
+            }
         }
     }
 
     public async Task LoadData()
     {
-        var date = SetDateRequest();
-
-        // var model = new DashboardBody
-        //     {
-        //         ORG = systems,
-        //         DATE_CUR_START = date.DATE_CUR_START,
-        //         DATE_CUR_END = date.DATE_CUR_END,
-        //         DATE_BEF_START = date.DATE_BEF_START,
-        //         DATE_BEF_END = date.DATE_BEF_END
-        //     };
-            var model = new DashboardBody
+        var date = await SetDateRequest();
+        var model = new DashboardBody
             {
                 ORG = systems,
-                yearmonth = $"{selectYear}{selectedMonth}"
+                yearmonth = $"{selectYear}{selectedMonth}",
+                DATE_CUR_START = date.DATE_CUR_START,
+                DATE_CUR_END = date.DATE_CUR_END,
+                DATE_BEF_START = date.DATE_BEF_START,
+                DATE_BEF_END = date.DATE_BEF_END
             };
         var (error, dashboard) = await DashboardService.GetDashboardList(model);
         if (error.Error)
         {
-            
-            // await CommonService.ShowAlert(new ToastModel
-            //     {
-            //         action = "error",
-            //         messang = error.ErrorMessage
-            //     });
+            await JSModule!.InvokeVoidAsync("JsFunction.toastTrigger", new ToastModel
+                {
+                    action = "error",
+                    messang = error.ErrorMessage
+                });
         }
         else
         {
@@ -249,31 +261,51 @@
         StateContainer.IsLoading = false;
     }
 
-    public async Task OnSearch() 
+    public async Task OnSearch()
     {
         StateContainer.IsLoading = true;
         await LoadData();
         StateContainer.IsLoading = false;
     }
 
-    public DateRequest SetDateRequest()
+    public async Task<DateRequest> SetDateRequest()
     {
-        CultureInfo provider = CultureInfo.InvariantCulture;
-        var dateCur = $"{selectYear}-{selectedMonth}-01";
-        DateTime dateTimeCur = DateTime.ParseExact(dateCur, "yyyy-MM-dd", provider);
-        DateTime lastDateCur = new DateTime(dateTimeCur.Year, dateTimeCur.Month, DateTime.DaysInMonth(dateTimeCur.Year, dateTimeCur.Month));
+        try
+        {
+            CultureInfo provider = CultureInfo.InvariantCulture;
+            var dateCur = $"{selectYear}-{selectedMonth}-01";
+            DateTime dateTimeCur = DateTime.ParseExact(dateCur, "yyyy-MM-dd", provider);
+            DateTime lastDateCur = new DateTime(dateTimeCur.Year, dateTimeCur.Month, DateTime.DaysInMonth(dateTimeCur.Year, dateTimeCur.Month));
 
-        var dateBef = $"{(selectedMonth == "01" ? selectYear - 1 : selectYear)}-{(selectedMonth != "01" ? (int.Parse(selectedMonth!) - 1).ToString("D2") : "12")}-01";
-        DateTime dateTimeBef = DateTime.ParseExact(dateBef, "yyyy-MM-dd", provider);
-        DateTime lastDateBef = new DateTime(dateTimeBef.Year, dateTimeBef.Month, DateTime.DaysInMonth(dateTimeBef.Year, dateTimeBef.Month));
+            var dateBef = $"{(selectedMonth == "01" ? selectYear - 1 : selectYear)}-{(selectedMonth != "01" ? (int.Parse(selectedMonth!) - 1).ToString("D2") : "12")}-01";
+            DateTime dateTimeBef = DateTime.ParseExact(dateBef, "yyyy-MM-dd", provider);
+            DateTime lastDateBef = new DateTime(dateTimeBef.Year, dateTimeBef.Month, DateTime.DaysInMonth(dateTimeBef.Year, dateTimeBef.Month));
 
-        return new DateRequest { 
-            DATE_CUR_START = dateCur, 
-            DATE_CUR_END = lastDateCur.ToString("yyyy-MM-dd"),
-            DATE_BEF_START = dateBef,
-            DATE_BEF_END = lastDateBef.ToString("yyyy-MM-dd")
-        };
+            return new DateRequest
+                {
+                    DATE_CUR_START = dateCur,
+                    DATE_CUR_END = lastDateCur.ToString("yyyy-MM-dd"),
+                    DATE_BEF_START = dateBef,
+                    DATE_BEF_END = lastDateBef.ToString("yyyy-MM-dd")
+                };
+        } 
+        catch(Exception ex)
+        {
+            await JSModule!.InvokeVoidAsync("JsFunction.toastTrigger", new ToastModel
+                {
+                    action = "error",
+                    messang = ex.Message.ToString()
+                });
+            return new DateRequest { };
+        }
     }
 
-   
+    public async ValueTask DisposeAsync()
+    {
+        if (JSModule is not null )
+        {
+            await JSModule.DisposeAsync();
+        }
+    }
+
 }

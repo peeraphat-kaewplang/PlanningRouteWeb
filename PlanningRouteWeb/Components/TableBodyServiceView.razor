@@ -294,7 +294,7 @@
                                     var borderGrp = seq == item.GroupData.Count() - 1 ? null : "border-bottom border-dark";
                                     <div class=@($"{borderGrp}")>
                                         <div class="d-flex align-items-center justify-content-center w-100" style="height: 2rem;">
-                                            @val.RANK
+                                            @val!.RANK
                                         </div>
                                     </div>
                                 }

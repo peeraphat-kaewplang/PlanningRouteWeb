@@ -9,6 +9,7 @@
 @inject NavigationManager NavManager
 @inject StateContainer StateContainer
 @inject IJSRuntime JSRuntime
+@implements IAsyncDisposable
 
 @{  
     var styleWidth = !hideMaster ? "widht-show-master" : "widht-hide-master";
@@ -427,6 +428,7 @@
     [SupplyParameterFromQuery]
     public string? YEAR { get; set; }
 
+    private IJSObjectReference? JSModule;
     Variant variant = Variant.Outlined;
     public bool hideMaster = false;
     public string selectOrg = "";
@@ -489,9 +491,13 @@
         StateContainer.IsLoading = false;
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        JSModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/site.js");
+    }
     public async Task LoadExcel()
     {
-        await JSRuntime.InvokeVoidAsync("exportExcel");
+        await JSModule!.InvokeVoidAsync("JsFunction.exportExcel");
     }
 
     public async Task LoadOrg(string org ="")
@@ -549,6 +555,8 @@
 
         CalDropMonth();
         FindRankEmpty(record);
+
+        if (!target.SYSTEMCART) actionButton = new();
 
         StateHasChanged();
     }
@@ -881,6 +889,14 @@
 
         if(response.ErrorMessage == "success")
         {
+            if (!target.SYSTEMCART)
+            {
+                actionButton = new();
+            }
+            else
+            {
+                await LoadMaster();
+            }
             ds.Close(true);
         }
         else
@@ -1147,6 +1163,14 @@
             var lastWeek = row.Skip(skip - task).Take(task).Sum(s => s.SUM_SALETOTAL);
             sum = lastWeek - totalWeek;
             return sum;
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (JSModule is not null )
+        {
+            await JSModule.DisposeAsync();
         }
     }
 }

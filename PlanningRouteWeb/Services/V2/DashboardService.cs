@@ -52,7 +52,7 @@ namespace PlanningRouteWeb.Services.V2
                     var dashboard = JsonSerializer.Deserialize<DashboardModel>(content, _options);
                     if (dashboard!.ErrorMessage == "success")
                     {
-                        var d = dashboard.Data.Select(x => DashboardList.ConverModel(x, org.Data)).ToList();
+                        var d = dashboard.Data.Select(x => DashboardList.ConverModel(x, org!.Data)).ToList();
 
                         data.Data = d;
                         data.Summary = new DashboardSummary

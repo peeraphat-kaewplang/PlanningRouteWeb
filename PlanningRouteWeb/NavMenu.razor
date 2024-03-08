@@ -9,7 +9,7 @@
         @foreach (var path in RoutePath.SetPath())
         {
             <div class="nav-item px-3">
-                <NavLink class="nav-link " href=@path.Url>
+                <NavLink class=@($"nav-link") href=@path.Url>
                     <i class=@($"fa-solid {path.Icon}")></i>
                 </NavLink>
             </div>
@@ -20,22 +20,54 @@
 
 @code {
     public List<RoutePath> routePaths { get; set; } = new();
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            routePaths = RoutePath.SetPath();
 
-            var systems = await JSRuntime.InvokeAsync<List<string>>("getSystems");
-            if (systems.Count() == 1)
-            {
-                routePaths = routePaths.Select(x => new RoutePath
-                {
-                    Icon = x.Icon ,
-                    Name = x.Name ,
-                    Url = x.Child.First().Url
-                }).ToList();
-            }
-        }
+    public string? activeClass { get; set; }
+    public bool isMainPage { get; set; } = true;
+
+    public class ObjSystem
+    {
+        public string? Code { get; set; }
+        public string? Name { get; set; }
     }
+    // protected override async Task OnAfterRenderAsync(bool firstRender)
+    // {
+    //     if (firstRender)
+    //     {
+    //         routePaths = RoutePath.SetPath();
+    //         var date = DateTime.Now;
+    //         var month = date.Month.ToString("D2");
+    //         var year = date.Year;
+
+    //         var systems = await JSRuntime.InvokeAsync<List<string>>("getSystems");
+    //         isMainPage = systems.Count() == 1 ? false : true;
+    //         if (systems.Count() == 1)
+    //         {
+    //             activeClass = "active";
+    //             var s = await JSRuntime.InvokeAsync<ObjSystem>("getSystems2");
+    //             routePaths = routePaths.Select(x =>
+    //             {
+    //                 if (x.Name == "Dashboard")
+    //                 {
+    //                     x.Url = $"{x.Child.First().Url}?ORG={s.Code}&ORGName={s.Name}&Month={month}&Year={year}";
+    //                 }
+    //                 else if (x.Name == "Timeline")
+    //                 {
+    //                     x.Url = $"{x.Child.First().Url}?ORG={s.Code}";
+    //                 }
+    //                 return x;
+    //             }).ToList();
+    //         }
+
+    //         StateHasChanged();
+
+    //     }
+    // }
+
+    // public void OnClick(string n)
+    // {
+    //     if (n != "Dashboard")
+    //     {
+    //         activeClass = null;
+    //     }
+    // }
 }

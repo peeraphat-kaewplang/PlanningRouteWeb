@@ -1,7 +1,503 @@
-﻿@page "/Timeline-Route"
+﻿@page "/Timeline/Detail"
+@inject IJSRuntime JSRuntime
+@inject ITimelineService TimelineService
+@inject IPlanningService PlanningService
+@inject IPlanningService PlanningService
+@inject ICommonService CommonService
+@inject StateContainer StateContainer
+@inject NavigationManager NavigationManager
+@inject DialogService DialogService
+@inject TooltipService TooltipService
+@implements IAsyncDisposable
+<div class="d-flex align-items-center gap-2 pb-2 w-100">
+    <div class="col-auto">
+        <input @bind="isView" @oninput="OnChangeView" class="form-check-input" type="checkbox">
+        <label class="form-check-label" for="checkView">
+            มุมมองจำนวนเงิน
+        </label>
+    </div>
+    <div class="col-auto">
+        <label for="organize" class="col-form-label">สาขา</label>
+    </div>
+    <div class="col-auto">
+        <select @bind="selectOrg" class=" form-select form-select-sm">
+            @foreach (var org in optionsOrg)
+            {
+                <option value="@org.ORGANIZATION_CODE">@org.ORGANIZATION_NAME</option>
+            }
+        </select>
+    </div>
+    <div class="col-auto">
+        <label for="dateStart" class="col-form-label">From</label>
+    </div>
+    <div class="col-auto">
+        <input id="dateStart" class="form-control form-control-sm" />
+    </div>
 
-<h3>TimelineRoute</h3>
+    <div class="col-auto">
+        <label for="dateEnd" class="col-form-label">To</label>
+    </div>
+    <div class="col-auto">
+        <input id="dateEnd" class="form-control form-control-sm" />
+    </div>
+    <button @onclick="@(()=> OnSearch())" class="btn btn-primary btn-sm" data-bs-toggle="tooltip"
+            data-bs-placement="right" title="ค้าหา">
+        <i class="fa-solid fa-magnifying-glass fa-xs"></i>
+    </button>
+</div>
+
+<div class="table-wraper">
+    <table id="tbl-line" class="table table-bordered table-sm table-striped table-hover table-dashboard table-timeline table-timeline-detail align-middle border-start border-end mb-0">
+        <thead>
+            <tr>
+                <th class="d-flex align-items-center gap-2" style="width:20rem">
+                    <div class=" w-50">Route</div>
+                    <div class=" w-50">ยอดขาย</div>
+                </th>
+                @foreach (var model in column)
+                {
+                    <th class="text-center">@model</th>
+                }
+                <th style="width:3rem"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (isView)
+            {
+                @foreach (var model in timelineSaleData.TimelineListRouteSale)
+                {
+                    <tr>
+                        <td class="d-flex align-items-center gap-2">
+                            <div class="d-inline-block text-truncate w-50"> @model.ROUTE_CODE</div>
+                            <div class="progress w-50" role="progressbar" aria-label="Success example">
+                                <div class=@($"progress-bar overflow-visible text-dark {StyleProgress(model.Progress! , model.SUM_AMOUT!)}") style=@($"width: {calValueProgress(model.Progress! , model.SUM_AMOUT!)}%")>@($"{model.Progress}/{model.SUM_AMOUT}")</div>
+                            </div>
+                        </td>
+                        <td class="text-center @(model.T00 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T00</td>
+                        <td class="text-center @(model.T01 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T01</td>
+                        <td class="text-center @(model.T02 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T02</td>
+                        <td class="text-center @(model.T03 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T03</td>
+                        <td class="text-center @(model.T04 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T04</td>
+                        <td class="text-center @(model.T05 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T05</td>
+                        <td class="text-center @(model.T06 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T06</td>
+                        <td class="text-center @(model.T07 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T07</td>
+                        <td class="text-center @(model.T08 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T08</td>
+                        <td class="text-center @(model.T09 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T09</td>
+                        <td class="text-center @(model.T10 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T10</td>
+                        <td class="text-center @(model.T11 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T11</td>
+                        <td class="text-center @(model.T12 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T12</td>
+                        <td class="text-center @(model.T13 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T13</td>
+                        <td class="text-center @(model.T14 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T14</td>
+                        <td class="text-center @(model.T15 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T15</td>
+                        <td class="text-center @(model.T16 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T16</td>
+                        <td class="text-center @(model.T17 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T17</td>
+                        <td class="text-center @(model.T18 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T18</td>
+                        <td class="text-center @(model.T19 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T19</td>
+                        <td class="text-center @(model.T20 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T20</td>
+                        <td class="text-center @(model.T21 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T21</td>
+                        <td class="text-center @(model.T22 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T22</td>
+                        <td class="text-center @(model.T23 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T23</td>
+                        <td class="d-flex justify-content-around">
+                            <RadzenText MouseEnter="@(args => ShowTooltip(args , "แก้ไขค่าเริ่มต้น") )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
+                                <i class="fa-solid fa-pen-to-square text-warning" style="cursor:pointer" @onclick="@(()=> ShowInlineDialog(model.ROUTE_CODE!))"></i>
+                            </RadzenText>
+                            <RadzenText MouseEnter="@(args => ShowTooltip(args , "ไปหน้า Planning") )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
+                                <i class="fa-solid fa-eye text-primary" style="cursor:pointer" @onclick="@(() => GoToPlanning(model.ROUTE_CODE!))"></i>
+                            </RadzenText>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                @foreach (var model in timelineData.TimelineListRoute)
+                {
+                    <tr>
+                        <td class="d-flex align-items-center gap-2">
+                            <div class="d-inline-block text-truncate w-50"> @model.ROUTE_CODE</div>
+                            <div class="progress w-50" role="progressbar" aria-label="Success example">
+                                <div class=@($"progress-bar overflow-visible text-dark {StyleProgress(model.Progress! , model.MAX_DROP!)}") style=@($"width: {calValueProgress(model.Progress! , model.MAX_DROP!)}%")>@($"{model.Progress}/{model.MAX_DROP}")</div>
+                            </div>
+                        </td>
+                        <td class="text-center @(model.T00 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T00</td>
+                        <td class="text-center @(model.T01 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T01</td>
+                        <td class="text-center @(model.T02 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T02</td>
+                        <td class="text-center @(model.T03 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T03</td>
+                        <td class="text-center @(model.T04 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T04</td>
+                        <td class="text-center @(model.T05 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T05</td>
+                        <td class="text-center @(model.T06 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T06</td>
+                        <td class="text-center @(model.T07 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T07</td>
+                        <td class="text-center @(model.T08 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T08</td>
+                        <td class="text-center @(model.T09 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T09</td>
+                        <td class="text-center @(model.T10 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T10</td>
+                        <td class="text-center @(model.T11 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T11</td>
+                        <td class="text-center @(model.T12 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T12</td>
+                        <td class="text-center @(model.T13 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T13</td>
+                        <td class="text-center @(model.T14 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T14</td>
+                        <td class="text-center @(model.T15 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T15</td>
+                        <td class="text-center @(model.T16 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T16</td>
+                        <td class="text-center @(model.T17 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T17</td>
+                        <td class="text-center @(model.T18 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T18</td>
+                        <td class="text-center @(model.T19 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T19</td>
+                        <td class="text-center @(model.T20 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T20</td>
+                        <td class="text-center @(model.T21 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T21</td>
+                        <td class="text-center @(model.T22 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T22</td>
+                        <td class="text-center @(model.T23 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T23</td>
+                        <td class="d-flex justify-content-around">
+                            <RadzenText MouseEnter="@(args => ShowTooltip(args , "แก้ไขค่าเริ่มต้น") )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
+                                <i class="fa-solid fa-pen-to-square text-warning" style="cursor:pointer" @onclick="@(()=> ShowInlineDialog(model.ROUTE_CODE!))"></i>
+                            </RadzenText>
+                            <i class="fa-solid fa-eye text-primary" style="cursor:pointer" @onclick="@(() => GoToPlanning(model.ROUTE_CODE!))"></i>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                
+                <td class="d-flex align-items-center gap-2">
+                    <div class="w-25 text-center">รวม</div>
+                    @if (isView)
+                    {
+                        <div class="w-75 progress" role="progressbar" aria-label="Example with label" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
+                            <div class=@($"progress-bar overflow-visible text-dark {StyleProgress(timelineSaleData.TimeLineSum.Progress!, timelineSaleData.TimeLineSum.SUM_DROP!)}") style=@($"width: {calValueProgress(timelineSaleData.TimeLineSum.Progress!, timelineSaleData.TimeLineSum.SUM_DROP!)}%")>
+                                @($"{timelineSaleData.TimeLineSum.Progress}/{timelineSaleData.TimeLineSum.SUM_DROP}")
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="w-75 progress" role="progressbar" aria-label="Example with label" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
+                            <div class=@($"progress-bar overflow-visible text-dark {StyleProgress(timelineData.TimeLineSum.Progress!, timelineData.TimeLineSum.SUM_DROP!)}") style=@($"width: {calValueProgress(timelineData.TimeLineSum.Progress!, timelineData.TimeLineSum.SUM_DROP!)}%")>@($"{timelineData.TimeLineSum.Progress}/{timelineData.TimeLineSum.SUM_DROP}")</div>
+                        </div>
+                    }
+                </td>
+                @if (isView)
+                {
+                    <td class="text-center">@timelineSaleData.TimeLineSum.T00</td>
+                    <td class="text-center">@timelineSaleData.TimeLineSum.T01</td>
+                    <td class="text-center">@timelineSaleData.TimeLineSum.T02</td>
+                    <td class="text-center">@timelineSaleData.TimeLineSum.T03</td>
+                    <td class="text-center">@timelineSaleData.TimeLineSum.T04</td>
+                    <td class="text-center">@timelineSaleData.TimeLineSum.T05</td>
+                    <td class="text-center">@timelineSaleData.TimeLineSum.T06</td>
+                    <td class="text-center">@timelineSaleData.TimeLineSum.T07</td>
+                    <td class="text-center">@timelineSaleData.TimeLineSum.T08</td>
+                    <td class="text-center">@timelineSaleData.TimeLineSum.T09</td>
+                    <td class="text-center">@timelineSaleData.TimeLineSum.T10</td>
+                    <td class="text-center">@timelineSaleData.TimeLineSum.T11</td>
+                    <td class="text-center">@timelineSaleData.TimeLineSum.T12</td>
+                    <td class="text-center">@timelineSaleData.TimeLineSum.T13</td>
+                    <td class="text-center">@timelineSaleData.TimeLineSum.T14</td>
+                    <td class="text-center">@timelineSaleData.TimeLineSum.T15</td>
+                    <td class="text-center">@timelineSaleData.TimeLineSum.T16</td>
+                    <td class="text-center">@timelineSaleData.TimeLineSum.T17</td>
+                    <td class="text-center">@timelineSaleData.TimeLineSum.T18</td>
+                    <td class="text-center">@timelineSaleData.TimeLineSum.T19</td>
+                    <td class="text-center">@timelineSaleData.TimeLineSum.T20</td>
+                    <td class="text-center">@timelineSaleData.TimeLineSum.T21</td>
+                    <td class="text-center">@timelineSaleData.TimeLineSum.T22</td>
+                    <td class="text-center">@timelineSaleData.TimeLineSum.T23</td>
+                }
+                else
+                {
+                    <td class="text-center">@timelineData.TimeLineSum.T00</td>
+                    <td class="text-center">@timelineData.TimeLineSum.T01</td>
+                    <td class="text-center">@timelineData.TimeLineSum.T02</td>
+                    <td class="text-center">@timelineData.TimeLineSum.T03</td>
+                    <td class="text-center">@timelineData.TimeLineSum.T04</td>
+                    <td class="text-center">@timelineData.TimeLineSum.T05</td>
+                    <td class="text-center">@timelineData.TimeLineSum.T06</td>
+                    <td class="text-center">@timelineData.TimeLineSum.T07</td>
+                    <td class="text-center">@timelineData.TimeLineSum.T08</td>
+                    <td class="text-center">@timelineData.TimeLineSum.T09</td>
+                    <td class="text-center">@timelineData.TimeLineSum.T10</td>
+                    <td class="text-center">@timelineData.TimeLineSum.T11</td>
+                    <td class="text-center">@timelineData.TimeLineSum.T12</td>
+                    <td class="text-center">@timelineData.TimeLineSum.T13</td>
+                    <td class="text-center">@timelineData.TimeLineSum.T14</td>
+                    <td class="text-center">@timelineData.TimeLineSum.T15</td>
+                    <td class="text-center">@timelineData.TimeLineSum.T16</td>
+                    <td class="text-center">@timelineData.TimeLineSum.T17</td>
+                    <td class="text-center">@timelineData.TimeLineSum.T18</td>
+                    <td class="text-center">@timelineData.TimeLineSum.T19</td>
+                    <td class="text-center">@timelineData.TimeLineSum.T20</td>
+                    <td class="text-center">@timelineData.TimeLineSum.T21</td>
+                    <td class="text-center">@timelineData.TimeLineSum.T22</td>
+                    <td class="text-center">@timelineData.TimeLineSum.T23</td>
+                }
+                <td class="text-center"></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
 
 @code {
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "ORG")]
+    public string? ORG { get; set; }
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "Start")]
+    public string? Start { get; set; }
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "End")]
+    public string? End { get; set; }
+    private IJSObjectReference? JSModule;
+    public ResultTimelineRoute timelineData { get; set; } = new();
+    public ResultTimelineRouteSale timelineSaleData { get; set; } = new();
+    public Target2 target = new();
+    public IEnumerable<OrganizationData> optionsOrg = new List<OrganizationData>();
+    public IEnumerable<PlanningRouteWeb.Models.RouteData> optionsRoute = new List<PlanningRouteWeb.Models.RouteData>();
+    public List<string> column = new List<string> { "00" ,"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" };
+    public string? systems { get; set; }
+    public string? selectOrg { get; set; }
+    public string? selectRoute { get; set; }
+    public bool isView { get; set; } = true;
+
+    Variant variant = Variant.Outlined;
+
+    public DateTime dateStart { get; set; } = DateTime.Now;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        AutoLoadData();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            StateContainer.IsLoading = true;
+            JSModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/site.js");
+            await JSModule.InvokeVoidAsync("InitailJS.tooltipTrigger");
+            await JSModule.InvokeVoidAsync("InitailJS.initailDatepicker", Start, End);
+            selectOrg = ORG;
+
+            await LoadOrg();
+            await LoadRoute();
+            await LoadDataTimeline(isView);
+
+
+            StateContainer.IsLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private void ShowTooltip(ElementReference elementReference, string text, TooltipOptions? options = null) => TooltipService.Open(elementReference, $"{text}", new TooltipOptions { Duration =1000, Style = "font-size: 14px", Position = TooltipPosition.Left });
+
+    public void AutoLoadData()
+    {
+        var timer = new System.Threading.Timer((_) =>
+       {
+
+           InvokeAsync(async () =>
+           {
+               await LoadDataTimeline(isView);
+               StateHasChanged();
+           });
+       }, null, 0, 300000);
+    }
+
+    public async Task LoadOrg(string org = "")
+    {
+        var systems = await JSModule!.InvokeAsync<List<string>>("JsFunction.getSystems");
+        var req = new OrganizationRequest { ORG = org };
+        var res = await PlanningService.PlanningGetORG(req);
+        optionsOrg = res!.Data.Where(x => systems.Contains(x.ORGANIZATION_CODE));
+    }
+
+    public async Task LoadRoute()
+    {
+        var req = new OrganizationRequest { ORG = $"{selectOrg}" };
+        var res = await PlanningService.PlanningGetRoute(req);
+        optionsRoute = res!.Data;
+    }
+
+    public async Task LoadDataTimeline(bool view)
+    {
+        await LoadRoute();
+        var date = await JSModule!.InvokeAsync<List<string>>("JsFunction.getDatepicker");
+
+        var route = string.Join(",", optionsRoute.Select(x => x.ROUTE_CODE).ToList());
+        var req = new TimelineReq
+            {
+                ORG = selectOrg,
+                StartDate = date[0],
+                EndDate = date[1],
+                ROUTE = route,
+                ReportShow = "ROUTE"
+            };
+        if (view)
+        {
+            var s = Start!.StringToDateTime("yyyy-MM-dd");
+            var e = End!.StringToDateTime("yyyy-MM-dd");
+            var t = (e - s).TotalDays;
+
+            var (error, timeline) = await TimelineService.GetTimeLineRouteSale(Convert.ToInt32(t) + 1, req);
+            if (error.Error)
+            {
+                await JSModule!.InvokeVoidAsync("JsFunction.toastTrigger", new ToastModel
+                        {
+                            action = "error",
+                            messang = error.ErrorMessage
+                        });
+            }
+            else
+            {
+                timelineSaleData = timeline.Data;
+            }
+        }
+        else
+        {
+            var (error, timeline) = await TimelineService.GetTimeLineRoute(req);
+            if (error.Error)
+            {
+                await JSModule!.InvokeVoidAsync("JsFunction.toastTrigger", new ToastModel
+                        {
+                            action = "error",
+                            messang = error.ErrorMessage
+                        });
+            }
+            else
+            {
+                timelineData = timeline.Data;
+            }
+        }
+
+    }
+
+    public string calValueProgress(string val1, string val2)
+    {
+        var param1 = string.IsNullOrEmpty(val1) ? 0 : double.Parse(val1);
+        var param2 = string.IsNullOrEmpty(val2) ? 0 : double.Parse(val2);
+        var per = (param1 * 100) / param2;
+        return per.ToString();
+    }
+
+    public string StyleProgress(string val1, string val2)
+    {
+        var param1 = string.IsNullOrEmpty(val1) ? 0 : double.Parse(val1);
+        var param2 = string.IsNullOrEmpty(val2) ? 0 : double.Parse(val2);
+        var per = (param1 * 100) / param2;
+        if (per <= 33.33)
+        {
+            return "bg-danger";
+        }
+        else if (per > 33.33 && per < 100)
+        {
+            return "bg-warning";
+        }
+        else if (per > 100)
+        {
+            return "bg-over";
+        }
+        else
+        {
+            return "bg-success";
+        }
+    }
+
+    public async Task OnChangeView(ChangeEventArgs e)
+    {
+        StateContainer.IsLoading = true;
+        var val = Convert.ToBoolean($"{e.Value}");
+
+        await LoadDataTimeline(val);
+        StateContainer.IsLoading = false;
+    }
+
+    public async Task OnSearch()
+    {
+        StateContainer.IsLoading = true;
+        await LoadDataTimeline(isView);
+        StateContainer.IsLoading = false;
+    }
+
+    public async Task GoToPlanning(string route)
+    {
+        var date = await JSModule!.InvokeAsync<ResulteDatepicker>("JsFunction.getValueDatepicker");
+
+        NavigationManager.NavigateTo($"Planning?ORG={ORG}&ROUTE={route}&MONTH={date.month}&YEAR={date.year}");
+    }
+
+    public class ResulteDatepicker
+    {
+        public string? month { get; set; }
+        public string? year { get; set; }
+    }
+
+    private async Task ShowInlineDialog(string route)
+    {
+        StateContainer.IsLoading = true;
+
+        var date = await JSModule!.InvokeAsync<List<string>>("JsFunction.getDatepicker");
+        var d = date[0].StringToDateTime("yyyy-MM-dd");
+
+        var req = new PanningMasterRequest
+                {
+                YEARMONTH = $"{d.Year}{d.Month.ToString("D2")}",
+                    ORG = $"{ORG}",
+                    Route = $"{route}"
+                };
+        target = await PlanningService.PlanningGetTarget(req);
+        StateContainer.IsLoading = false;
+        var result = await DialogService.OpenAsync("ตั้งค่าเริ่มต้น", ds =>
+        @<RadzenStack Gap="1.5rem">
+            <RadzenFormField Text="จำนวนการเข้าเติมสินค้าต่อวัน" Variant="@variant">
+                <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value=@target.DROP_PER_DAY />
+            </RadzenFormField>
+            <RadzenFormField Text="เป้ายอดขายต่อวัน" Variant="@variant">
+                <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value=@target.VALUE_PER_DAY />
+            </RadzenFormField>
+            <RadzenFormField Text="เป้ายอดขายต่อเดือน" Variant="@variant">
+                <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value=@target.VALUE_PER_MONTH />
+            </RadzenFormField>
+            <RadzenStack Gap="0.5rem" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                <RadzenLabel Text="ระบบตระกร้า" />
+                <RadzenSwitch @bind-Value=@target.SYSTEMCART />
+            </RadzenStack>
+            <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+                <RadzenStack Orientation="Orientation.Horizontal">
+                    <RadzenButton Text="บันทึก" Click="() => SaveTarget(ds , route)" Style="width: 80px;" />
+                    <RadzenButton Text="ยกเลิก" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" />
+                </RadzenStack>
+            </RadzenStack>
+        </RadzenStack>
+    );
+    }
+
+    private async Task SaveTarget(DialogService ds ,string route ="")
+    {
+        StateContainer.IsLoading = true;
+        var req = new TargetSave
+            {
+                ORG = ORG!,
+                Route = route,
+                DROP_PER_DAY = target.DROP_PER_DAY.ToString(),
+                VALUE_PER_DAY = target.VALUE_PER_DAY.ToString(),
+                VALUE_PER_MONTH = target.VALUE_PER_MONTH.ToString(),
+                BASKET_SYSTEM = target.SYSTEMCART ? "1" : "0"
+            };
+        var response = await PlanningService.PlanningSaveTarget(req);
+
+        if (response.ErrorMessage == "success")
+        {
+            await LoadDataTimeline(isView);
+            ds.Close(true);
+            StateContainer.IsLoading = false;
+            StateHasChanged();
+        }
+    }
+    public async ValueTask DisposeAsync()
+    {
+        if (JSModule is not null)
+        {
+            await JSModule.DisposeAsync();
+        }
+    }
 
 }
