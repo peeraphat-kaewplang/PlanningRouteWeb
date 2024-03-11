@@ -38,9 +38,9 @@
     <table class="table table-bordered table-sm table-striped table-hover table-timeline table-dashboard align-middle border-start border-end mb-0">
         <thead>
             <tr>
-                <th class="d-flex align-items-center gap-2">
-                    <div class=" w-50">สาขา</div>
-                    <div class=" w-50">ยอดขาย</div>
+                <th class="d-flex align-items-center gap-2" style="width:20rem">
+                    <div class=" w-25">สาขา</div>
+                    <div class=" w-75">ยอดขาย / เป้ายอดขายต่อวัน</div>
                 </th>
                 @foreach (var model in column)
                 {
@@ -56,9 +56,9 @@
                 {
                     <tr>
                         <td class="d-flex align-items-center gap-2">
-                            <div class="d-inline-block text-truncate w-50"> @model.ORGANIZATION_NAME</div>
-                            <div class="progress w-50" role="progressbar" aria-label="Success example">
-                                <div class=@($"progress-bar {StyleProgress(model.Progress! , model.SUM_AMOUT!)}") style=@($"width: {calValueProgress(model.Progress! , model.SUM_AMOUT!)}%")>@($"{model.Progress}/{model.SUM_AMOUT}")</div>
+                            <div class="d-inline-block text-truncate w-25"> @model.ORGANIZATION_NAME</div>
+                            <div class="progress w-75" role="progressbar" aria-label="Success example">
+                                <div class=@($"progress-bar overflow-visible text-dark {StyleProgress(model.Progress! , model.SUM_AMOUT!)}") style=@($"width: {calValueProgress(model.Progress! , model.SUM_AMOUT!)}%")>@($"{model.Progress}/{model.SUM_AMOUT}")</div>
                             </div>
                         </td>
                         <td class="text-center @(model.T00 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T00</td>
@@ -98,9 +98,9 @@
                     <tr>
 
                         <td class="d-flex align-items-center gap-2">
-                            <div class="d-inline-block text-truncate w-50"> @model.ORGANIZATION_NAME</div>
-                            <div class="progress w-50" role="progressbar" aria-label="Success example">
-                                <div class=@($"progress-bar overflow-visible {StyleProgress(model.Progress! , model.MAX_DROP!)}") style=@($"width: {calValueProgress(model.Progress! , model.MAX_DROP!)}%")>@($"{model.Progress}/{model.MAX_DROP}")</div>
+                            <div class="d-inline-block text-truncate w-25"> @model.ORGANIZATION_NAME</div>
+                            <div class="progress w-75" role="progressbar" aria-label="Success example">
+                                <div class=@($"progress-bar overflow-visible text-dark {StyleProgress(model.Progress! , model.MAX_DROP!)}") style=@($"width: {calValueProgress(model.Progress! , model.MAX_DROP!)}%")>@($"{model.Progress}/{model.MAX_DROP}")</div>
                             </div>
                         </td>
                         <td class="text-center @(model.T00 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T00</td>
@@ -141,7 +141,7 @@
                     @if (isView)
                     {
                         <div class="w-75 progress" role="progressbar" aria-label="Example with label" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
-                            <div class=@($"progress-bar overflow-visible {StyleProgress(timelineSaleData.TimeLineSum.Progress!, timelineSaleData.TimeLineSum.SUM_DROP!)}") style=@($"width: {calValueProgress(timelineSaleData.TimeLineSum.Progress!, timelineSaleData.TimeLineSum.SUM_DROP!)}%")>
+                            <div class=@($"progress-bar overflow-visible text-dark {StyleProgress(timelineSaleData.TimeLineSum.Progress!, timelineSaleData.TimeLineSum.SUM_DROP!)}") style=@($"width: {calValueProgress(timelineSaleData.TimeLineSum.Progress!, timelineSaleData.TimeLineSum.SUM_DROP!)}%")>
                                 @($"{timelineSaleData.TimeLineSum.Progress}/{timelineSaleData.TimeLineSum.SUM_DROP}")
                             </div>
                         </div>
@@ -149,7 +149,7 @@
                     else
                     {
                         <div class="w-75 progress" role="progressbar" aria-label="Example with label" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
-                            <div class=@($"progress-bar overflow-visible {StyleProgress(timelineData.TimeLineSum.Progress!, timelineData.TimeLineSum.SUM_DROP!)}") style=@($"width: {calValueProgress(timelineData.TimeLineSum.Progress!, timelineData.TimeLineSum.SUM_DROP!)}%")>@($"{timelineData.TimeLineSum.Progress}/{timelineData.TimeLineSum.SUM_DROP}")</div>
+                            <div class=@($"progress-bar overflow-visible text-dark {StyleProgress(timelineData.TimeLineSum.Progress!, timelineData.TimeLineSum.SUM_DROP!)}") style=@($"width: {calValueProgress(timelineData.TimeLineSum.Progress!, timelineData.TimeLineSum.SUM_DROP!)}%")>@($"{timelineData.TimeLineSum.Progress}/{timelineData.TimeLineSum.SUM_DROP}")</div>
                         </div>
                     }
                 </td>
@@ -208,7 +208,7 @@
                     <td class="text-center">@timelineData.TimeLineSum.T23</td>
                 }
 
-                <td class="text-center"></td>
+                 <td class="text-center"></td> 
             </tr>
         </tfoot>
     </table>
@@ -240,9 +240,13 @@
         if (firstRender)
         {
             StateContainer.IsLoading = true;
+
+            var uriBuilder = new UriBuilder(NavigationManager.Uri);
+            var q = System.Web.HttpUtility.ParseQueryString(uriBuilder.Query);
+
             JSModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/site.js");
             await JSModule.InvokeVoidAsync("InitailJS.tooltipTrigger");
-            await JSModule.InvokeVoidAsync("InitailJS.initailDatepicker");
+            await JSModule.InvokeVoidAsync("InitailJS.initailDatepicker", q["Start"], q["End"]);
             await LoadOrg();
             await LoadDataTimeline(isView);
             StateContainer.IsLoading = false;
@@ -280,9 +284,15 @@
 
     public async Task LoadDataTimeline(bool view)
     {
-        
+
         var date = await JSModule!.InvokeAsync<List<string>>("JsFunction.getDatepicker");
         var systems = await JSModule!.InvokeAsync<List<string>>("JsFunction.getSystems");
+
+        if (systems.Count() == 1)
+        {
+            NavigationManager.NavigateTo($"/Timeline/Detail?ORG={systems[0]}&Start={date[0]}&End={date[1]}");
+        }
+
         selectOrg = systems[0];
         ORGReq = string.Join(",", systems);
 
@@ -294,9 +304,16 @@
                 ROUTE = "",
                 ReportShow = "ORG"
             };
+
+
+        var s = date[0].StringToDateTime("yyyy-MM-dd");
+        var e = date[1]!.StringToDateTime("yyyy-MM-dd");
+        var t = (e - s).TotalDays;
+        var time = Convert.ToInt32(t) + 1;
+
         if (view)
         {
-            var (error, timeline) = await TimelineService.GetTimeLineSale(req);
+            var (error, timeline) = await TimelineService.GetTimeLineSale(time , req);
             if (error.Error)
             {
                 await JSModule!.InvokeVoidAsync("JsFunction.toastTrigger", new ToastModel
@@ -309,7 +326,7 @@
             {
                 timeline.Data.TimelineSaleList = timeline.Data.TimelineSaleList.Select(x =>
                 {
-                    x.ORGANIZATION_NAME = optionsOrg.SingleOrDefault(o => o.ORGANIZATION_CODE == x.ORGANIZATION_CODE)!.ORGANIZATION_NAME;
+                    x.ORGANIZATION_NAME = optionsOrg.SingleOrDefault(o => o.ORGANIZATION_CODE == x.ORGANIZATION_CODE) == null ? x.ORGANIZATION_CODE : optionsOrg.SingleOrDefault(o => o.ORGANIZATION_CODE == x.ORGANIZATION_CODE)!.ORGANIZATION_NAME;
                     return x;
                 }).ToList();
                 timelineSaleData = timeline.Data;
@@ -330,7 +347,7 @@
             {
                 timeline.Data.TimelineList = timeline.Data.TimelineList.Select(x =>
                 {
-                    x.ORGANIZATION_NAME = optionsOrg.SingleOrDefault(o => o.ORGANIZATION_CODE == x.ORGANIZATION_CODE)!.ORGANIZATION_NAME;
+                    x.ORGANIZATION_NAME = optionsOrg.SingleOrDefault(o => o.ORGANIZATION_CODE == x.ORGANIZATION_CODE) == null ? x.ORGANIZATION_CODE : optionsOrg.SingleOrDefault(o => o.ORGANIZATION_CODE == x.ORGANIZATION_CODE)!.ORGANIZATION_NAME;
                     return x;
                 }).ToList();
                 timelineData = timeline.Data;
@@ -388,7 +405,7 @@
     {
         var date = await JSModule!.InvokeAsync<List<string>>("JsFunction.getDatepicker");
 
-        NavigationManager.NavigateTo($"/Timeline/Detail?ORG={org}&Start={date[0]}&End={date[1]}");
+        NavigationManager.NavigateTo($"Timeline/Detail?ORG={org}&Start={date[0]}&End={date[1]}");
     }
 
     public async ValueTask DisposeAsync()

@@ -26,7 +26,7 @@
             var model = @Html.Raw(JsonSerializer.Serialize(Model.text));
             var permis = JSON.parse(model)
             sessionStorage.setItem("permission", JSON.stringify(permis));
-            var month = new Date().getMonth().toString().padStart(2, '0');
+            var month = (new Date().getMonth() + 1).toString().padStart(2, '0');
             var year = new Date().getFullYear();
 
             setTimeout(function () {

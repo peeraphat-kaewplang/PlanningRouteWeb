@@ -12,16 +12,16 @@
     <button @onclick="@(() => OnChangeBackwardForward("backwar"))" type="button" class="btn btn-primary btn-sm">
         <i class="fa-solid fa-backward fa-xs"></i>
     </button>
-    <select @bind="selectedMonth" class="w-25 form-select form-select-sm">
+    <select value="@selectedMonth" @onchange="OnChangeMonth" class="w-25 form-select form-select-sm">
         @foreach (var month in GetDatetimeClass.monthObjects)
         {
-            <option value="@month.Number">@month.Name</option>
+            <option  value="@month.Number">@month.Name</option>
         }
     </select>
     <button @onclick="@(() => OnChangeBackwardForward("forward"))" type="button" class="btn btn-primary btn-sm">
         <i class="fa-solid fa-forward fa-xs"></i>
     </button>
-    <select @bind="selectYear" class="w-25 form-select form-select-sm">
+    <select value="@selectYear" @onchange="OnChangeYear" class="w-25 form-select form-select-sm">
         @foreach (var year in yearOptions)
         {
             <option value="@year">@year</option>
@@ -37,7 +37,7 @@
     <table class="table table-bordered table-sm table-striped table-hover  table-dashboard align-middle border-start border-end mb-0">
         <thead>
             @{
-                var previous = selectedMonth.Contains("01") ? "12" : (int.Parse(selectedMonth) - 1).ToString("D2");
+                var previous = selectedMonth!.Contains("01") ? "12" : (int.Parse(selectedMonth) - 1).ToString("D2");
             }
             <tr>
                 <th rowspan="3" class="">สาขา</th>
@@ -182,6 +182,9 @@
     public List<int> yearOptions = new();
     public string? systems { get; set; }
     public DashboardViewModel dashboards { get; set; } = new();
+
+
+
     protected override void OnInitialized()
     {
         selectedMonth = DateTime.Now.Month.ToString("D2");
@@ -200,9 +203,10 @@
                 JSModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/site.js");
 
                 await JSModule.InvokeVoidAsync("InitailJS.tooltipTrigger");
-                string[] s = await JSModule.InvokeAsync<string[]>("JsFunction.getSystems");
-                systems = string.Join(",", s);
-                
+                List<string> s = await JSModule.InvokeAsync<List<string>>("JsFunction.getSystems");
+                var ss = s.Where(x => x != "STF").ToList();
+                systems = string.Join(",", ss);
+
                 await LoadData();
                 StateContainer.IsLoading = false;
             }
@@ -298,6 +302,22 @@
                 });
             return new DateRequest { };
         }
+    }
+
+    public async Task OnChangeMonth(ChangeEventArgs e)
+    {
+        StateContainer.IsLoading = true;
+        selectedMonth = e.Value!.ToString();
+        await LoadData();
+        StateContainer.IsLoading = false;
+    }
+
+    public async Task OnChangeYear(ChangeEventArgs e)
+    {
+        StateContainer.IsLoading = true;
+        selectYear = int.Parse(e.Value!.ToString()!);
+        await LoadData();
+        StateContainer.IsLoading = false;
     }
 
     public async ValueTask DisposeAsync()

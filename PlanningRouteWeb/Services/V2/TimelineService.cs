@@ -53,8 +53,8 @@ namespace PlanningRouteWeb.Services.V2
 
                 data.Data.TimeLineSum = new TimeLineOrgSumData
                 {
-                    SUM_DROP = res!.Data.Sum(x => int.Parse(x.MAX_DROP!)).ToString(),
-                    SUM_SERVICE = res!.Data.Sum(x => int.Parse(x.NUM_SERVICE!)).ToString(),
+                    SUM_DROP = res!.Data.Sum(x => int.Parse(x.MAX_DROP!)).ToStringNumberFormat(false),
+                    //SUM_SERVICE = res!.Data.Sum(x => int.Parse(x.NUM_SERVICE!)).ToString(),
                     Progress = res.Data.Sum(x => string.IsNullOrWhiteSpace(x.Progress) ? 0 : int.Parse(x.Progress)).ToStringNumberFormat(false),
                     T01 = res.Data.Sum(x => string.IsNullOrWhiteSpace(x.T01) ? 0 : int.Parse(x.T01!)).ToString(),
                     T02 = res.Data.Sum(x => string.IsNullOrWhiteSpace(x.T02) ? 0 : int.Parse(x.T02!)).ToString(),
@@ -123,7 +123,7 @@ namespace PlanningRouteWeb.Services.V2
             return Tuple.Create(error, data);
         }
 
-        public async Task<Tuple<ErrorMessageRes, TimelineORGSaleModel>> GetTimeLineSale( TimelineReq req)
+        public async Task<Tuple<ErrorMessageRes, TimelineORGSaleModel>> GetTimeLineSale(int numDay, TimelineReq req)
         {
             var error = new ErrorMessageRes();
             var data = new TimelineORGSaleModel();
@@ -157,8 +157,8 @@ namespace PlanningRouteWeb.Services.V2
 
                 data.Data.TimeLineSum = new TimeLineOrgSumData
                 {
-                    SUM_DROP = res!.Data.Sum(x => string.IsNullOrWhiteSpace(x.SUM_AMOUT) ? double.Parse("0") : double.Parse(x.SUM_AMOUT)).ToStringNumberFormat(false),
-                    SUM_SERVICE = res!.Data.Sum(x => string.IsNullOrWhiteSpace(x.SUM_REALSALE) ? double.Parse("0") : double.Parse(x.SUM_REALSALE)).ToStringNumberFormat(false),
+                    SUM_DROP = res!.Data.Sum(x => string.IsNullOrWhiteSpace(x.SUM_AMOUT) ? int.Parse("0") : int.Parse(x.SUM_AMOUT) * numDay).ToStringNumberFormat(false),
+                    //SUM_SERVICE = res!.Data.Sum(x => string.IsNullOrWhiteSpace(x.SUM_REALSALE) ? double.Parse("0") : double.Parse(x.SUM_REALSALE)).ToStringNumberFormat(false),
                     Progress = res.Data.Sum(x => string.IsNullOrWhiteSpace(x.Progress) ? 0 : int.Parse(x.Progress)).ToStringNumberFormat(false),
                     T01 = res.Data.Sum(x => string.IsNullOrWhiteSpace(x.T01) ? 0 : int.Parse(x.T01)).ToStringNumberFormat(),
                     T02 = res.Data.Sum(x => string.IsNullOrWhiteSpace(x.T02) ? 0 : int.Parse(x.T02)).ToStringNumberFormat(),
@@ -188,7 +188,7 @@ namespace PlanningRouteWeb.Services.V2
 
                 data.Data.TimelineSaleList = res!.Data.Select(x =>
                 {
-                    //x.SUM_AMOUNT = string.IsNullOrWhiteSpace(x.SUM_AMOUT) ? "0" : double.Parse(x.SUM_AMOUT).ToStringNumberFormat(false);
+                    x.SUM_AMOUT = (int.Parse(x.SUM_AMOUT!) * numDay).ToStringNumberFormat(false);
                     //x.SUM_REALSALE = string.IsNullOrWhiteSpace(x.SUM_REALSALE) ? "0" : double.Parse(x.SUM_REALSALE).ToStringNumberFormat(false);
                     x.Progress = TimeLineOrgSaleData.ConverModel(x).ToStringNumberFormat(false);
                     x.T01 = string.IsNullOrWhiteSpace(x.T01) ? "0" : x.T01.ToStringNumberFormat();
@@ -261,8 +261,8 @@ namespace PlanningRouteWeb.Services.V2
 
                 data.Data.TimeLineSum = new TimeLineOrgSumData
                 {
-                    SUM_DROP = res.Data.Sum(x => int.Parse(x.MAX_DROP!)).ToString(),
-                    SUM_SERVICE = res.Data.Sum(x => int.Parse(x.NUM_SERVICE!)).ToString(),
+                    SUM_DROP = res.Data.Sum(x => int.Parse(x.MAX_DROP!)).ToStringNumberFormat(false),
+                    //SUM_SERVICE = res.Data.Sum(x => int.Parse(x.NUM_SERVICE!)).ToString(),
                     Progress = res.Data.Sum(x => string.IsNullOrWhiteSpace(x.Progress) ? 0 : int.Parse(x.Progress)).ToStringNumberFormat(false),
                     T01 = res.Data.Sum(x => string.IsNullOrWhiteSpace(x.T01) ? 0 : int.Parse(x.T01!)).ToString(),
                     T02 = res.Data.Sum(x => string.IsNullOrWhiteSpace(x.T02) ? 0 : int.Parse(x.T02!)).ToString(),
@@ -365,7 +365,7 @@ namespace PlanningRouteWeb.Services.V2
 
                 data.Data.TimeLineSum = new TimeLineOrgSumData
                 {
-                    SUM_DROP = res!.Data.Sum(x => string.IsNullOrWhiteSpace(x.SUM_AMOUT) ? double.Parse("0") : double.Parse(x.SUM_AMOUT)).ToStringNumberFormat(false),
+                    SUM_DROP = res!.Data.Sum(x => string.IsNullOrWhiteSpace(x.SUM_AMOUT) ? double.Parse("0") : int.Parse(x.SUM_AMOUT)* numDay).ToStringNumberFormat(false),
                     //SUM_SERVICE = res!.Data.Sum(x => string.IsNullOrWhiteSpace(x.SUM_REALSALE) ? double.Parse("0") : double.Parse(x.SUM_REALSALE)).ToStringNumberFormat(false),
                     Progress = res.Data.Sum(x => string.IsNullOrWhiteSpace(x.Progress) ? 0 : int.Parse(x.Progress)).ToStringNumberFormat(false),
                     T01 = res.Data.Sum(x => string.IsNullOrWhiteSpace(x.T01) ? 0 : int.Parse(x.T01!)).ToStringNumberFormat(),

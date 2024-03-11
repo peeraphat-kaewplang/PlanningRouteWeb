@@ -10,6 +10,14 @@
 @inject TooltipService TooltipService
 @implements IAsyncDisposable
 <div class="d-flex align-items-center gap-2 pb-2 w-100">
+    @if (!hideGoback)
+    {
+        <div class="col-auto">
+        <button @onclick="@(()=> Goback())" class="btn btn-primary btn-sm btn-icon" >
+            <i class="fa-solid fa-arrow-left fa-xs"></i>
+        </button>
+        </div>
+    }
     <div class="col-auto">
         <input @bind="isView" @oninput="OnChangeView" class="form-check-input" type="checkbox">
         <label class="form-check-label" for="checkView">
@@ -51,8 +59,8 @@
         <thead>
             <tr>
                 <th class="d-flex align-items-center gap-2" style="width:20rem">
-                    <div class=" w-50">Route</div>
-                    <div class=" w-50">ยอดขาย</div>
+                    <div class=" w-25">Route</div>
+                    <div class=" w-50">ยอดขาย / เป้ายอดขายต่อวัน</div>
                 </th>
                 @foreach (var model in column)
                 {
@@ -68,8 +76,8 @@
                 {
                     <tr>
                         <td class="d-flex align-items-center gap-2">
-                            <div class="d-inline-block text-truncate w-50"> @model.ROUTE_CODE</div>
-                            <div class="progress w-50" role="progressbar" aria-label="Success example">
+                            <div class="d-inline-block text-truncate w-25"> @model.ROUTE_CODE</div>
+                            <div class="progress w-75" role="progressbar" aria-label="Success example">
                                 <div class=@($"progress-bar overflow-visible text-dark {StyleProgress(model.Progress! , model.SUM_AMOUT!)}") style=@($"width: {calValueProgress(model.Progress! , model.SUM_AMOUT!)}%")>@($"{model.Progress}/{model.SUM_AMOUT}")</div>
                             </div>
                         </td>
@@ -114,8 +122,8 @@
                 {
                     <tr>
                         <td class="d-flex align-items-center gap-2">
-                            <div class="d-inline-block text-truncate w-50"> @model.ROUTE_CODE</div>
-                            <div class="progress w-50" role="progressbar" aria-label="Success example">
+                            <div class="d-inline-block text-truncate w-25"> @model.ROUTE_CODE</div>
+                            <div class="progress w-75" role="progressbar" aria-label="Success example">
                                 <div class=@($"progress-bar overflow-visible text-dark {StyleProgress(model.Progress! , model.MAX_DROP!)}") style=@($"width: {calValueProgress(model.Progress! , model.MAX_DROP!)}%")>@($"{model.Progress}/{model.MAX_DROP}")</div>
                             </div>
                         </td>
@@ -258,7 +266,7 @@
     public bool isView { get; set; } = true;
 
     Variant variant = Variant.Outlined;
-
+    public bool hideGoback { get; set; }
     public DateTime dateStart { get; set; } = DateTime.Now;
 
     protected override void OnInitialized()
@@ -271,10 +279,19 @@
     {
         if (firstRender)
         {
+         
+
             StateContainer.IsLoading = true;
             JSModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/site.js");
             await JSModule.InvokeVoidAsync("InitailJS.tooltipTrigger");
             await JSModule.InvokeVoidAsync("InitailJS.initailDatepicker", Start, End);
+
+            var systems = await JSModule!.InvokeAsync<List<string>>("JsFunction.getSystems");
+            if (systems.Count() == 1)
+            {
+                hideGoback = true;
+            }
+
             selectOrg = ORG;
 
             await LoadOrg();
@@ -331,13 +348,17 @@
                 ROUTE = route,
                 ReportShow = "ROUTE"
             };
+
+
+        var s = date[0].StringToDateTime("yyyy-MM-dd");
+        var e = date[1]!.StringToDateTime("yyyy-MM-dd");
+        var t = (e - s).TotalDays;
+        var time = Convert.ToInt32(t) + 1;
+
+
         if (view)
         {
-            var s = Start!.StringToDateTime("yyyy-MM-dd");
-            var e = End!.StringToDateTime("yyyy-MM-dd");
-            var t = (e - s).TotalDays;
-
-            var (error, timeline) = await TimelineService.GetTimeLineRouteSale(Convert.ToInt32(t) + 1, req);
+            var (error, timeline) = await TimelineService.GetTimeLineRouteSale(time, req);
             if (error.Error)
             {
                 await JSModule!.InvokeVoidAsync("JsFunction.toastTrigger", new ToastModel
@@ -492,6 +513,13 @@
             StateHasChanged();
         }
     }
+
+    public async Task Goback()
+    {
+        await JSRuntime.InvokeVoidAsync("history.back");
+    }
+
+
     public async ValueTask DisposeAsync()
     {
         if (JSModule is not null)

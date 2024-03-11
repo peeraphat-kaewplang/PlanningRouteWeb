@@ -1,4 +1,7 @@
-﻿@inject IJSRuntime JSRuntime
+﻿@*@inject IJSRuntime JSRuntime
+ @implements IAsyncDisposable
+@implements IDisposable
+@inject NavigationManager NavigationManager *@
 <div class="top-row navbar">
     <div class="container-fluid">
         <a class="navbar-brand" href=""></a>
@@ -9,7 +12,7 @@
         @foreach (var path in RoutePath.SetPath())
         {
             <div class="nav-item px-3">
-                <NavLink class=@($"nav-link") href=@path.Url>
+                <NavLink class="nav-link" href="@path.Url">
                     <i class=@($"fa-solid {path.Icon}")></i>
                 </NavLink>
             </div>
@@ -19,31 +22,39 @@
 
 
 @code {
-    public List<RoutePath> routePaths { get; set; } = new();
+    // private IJSObjectReference? JSModule;
+    // public List<RoutePath> routePaths { get; set; } = new();
 
-    public string? activeClass { get; set; }
-    public bool isMainPage { get; set; } = true;
+    // public string? active { get; set; }
 
-    public class ObjSystem
-    {
-        public string? Code { get; set; }
-        public string? Name { get; set; }
-    }
+    // public class ObjSystem
+    // {
+    //     public string? Code { get; set; }
+    //     public string? Name { get; set; }
+    // }
+
+    // private IDisposable? registration;
+
     // protected override async Task OnAfterRenderAsync(bool firstRender)
     // {
     //     if (firstRender)
     //     {
     //         routePaths = RoutePath.SetPath();
+
+    //         JSModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/site.js");
+
     //         var date = DateTime.Now;
     //         var month = date.Month.ToString("D2");
     //         var year = date.Year;
 
-    //         var systems = await JSRuntime.InvokeAsync<List<string>>("getSystems");
-    //         isMainPage = systems.Count() == 1 ? false : true;
+    //         var systems = await JSModule!.InvokeAsync<List<string>>("JsFunction.getSystems");
+    //         active = NavigationManager.Uri.Substring(NavigationManager.BaseUri.Length - 1); 
+    //         registration =
+    //            NavigationManager.RegisterLocationChangingHandler(OnLocationChanging);
     //         if (systems.Count() == 1)
     //         {
-    //             activeClass = "active";
-    //             var s = await JSRuntime.InvokeAsync<ObjSystem>("getSystems2");
+
+    //             var s = await JSModule!.InvokeAsync<ObjSystem>("JsFunction.getSystems2");
     //             routePaths = routePaths.Select(x =>
     //             {
     //                 if (x.Name == "Dashboard")
@@ -57,17 +68,29 @@
     //                 return x;
     //             }).ToList();
     //         }
-
     //         StateHasChanged();
-
     //     }
     // }
 
-    // public void OnClick(string n)
+    // public void OnClick(string url)
     // {
-    //     if (n != "Dashboard")
+    //     NavigationManager.NavigateTo($"/{url}");
+    // }
+
+    // private ValueTask OnLocationChanging(LocationChangingContext context)
+    // {
+
+    //     active = context.TargetLocation;
+    //     return ValueTask.CompletedTask;
+    // }
+
+    // public async ValueTask DisposeAsync()
+    // {
+    //     if (JSModule is not null)
     //     {
-    //         activeClass = null;
+    //         await JSModule.DisposeAsync();
     //     }
     // }
+
+    // public void Dispose() => registration?.Dispose();
 }

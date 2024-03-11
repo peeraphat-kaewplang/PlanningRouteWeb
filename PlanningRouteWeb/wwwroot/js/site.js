@@ -109,7 +109,7 @@ export class InitailJS {
 
         $('#dateStart')
             .datepicker(option)
-            .datepicker("setDate",  new Date())
+            .datepicker("setDate", new Date())
             .on('changeDate', function () {
                 var temp = $(this).datepicker('getDate');
                 var d = new Date(temp);
@@ -120,7 +120,7 @@ export class InitailJS {
 
         $('#dateEnd')
             .datepicker(option)
-            .datepicker("setDate",  new Date())
+            .datepicker("setDate", new Date())
             .on('changeDate', function () {
                 var temp = $(this).datepicker('getDate');
                 setQueryParams("End", temp);
@@ -143,20 +143,18 @@ export class JsFunction {
             delay: options.delay,
         };
 
-        opts.autohide = options.action === "error" ? false : true;
+        opts.delay = options.action === "error" && 10000;
 
         toastInit(opts);
 
-        let toastContainer = document.getElementById("toastContainer");
-        toastContainer.style.zIndex = 10;
-
         let toastEl = document.getElementById("toastAlert");
+
         if (options.action === "error") {
-            toastEl.classList.add("bg-danger");
+            toastEl.classList.add("text-bg-danger");
         } else if (options.action === "info") {
-            toastEl.classList.add("bg-primary");
+            toastEl.classList.add("text-bg-primary");
         } else if (options.action === "success") {
-            toastEl.classList.add("bg-success");
+            toastEl.classList.add("text-bg-success");
         }
 
         let toastMsg = document.getElementById("toastMsg");
@@ -182,7 +180,10 @@ export class JsFunction {
 
         return { month: date.format('MM'), year: date.format('YYYY') }
     }
- 
+    static getSystems2() {
+        var sec = JSON.parse(sessionStorage.getItem("permission"))
+        return { code: sec.system.OrganizationList[0].ORGANIZATION_CODE, name: sec.system.OrganizationList[0].ORGANIZATION_NAME }
+    }
 }
 window.JsFunction = JsFunction;
 window.InitailJS = InitailJS;

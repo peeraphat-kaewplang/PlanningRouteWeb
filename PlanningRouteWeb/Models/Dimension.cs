@@ -170,7 +170,7 @@ namespace PlanningRouteWeb.Models
                     {
                         new Path 
                         {  
-                            Name = "Detail",
+                            Name = "Dashboard",
                             Url = "Dashboard/Detail" 
                         } 
                     } 
