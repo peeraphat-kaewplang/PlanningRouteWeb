@@ -60,15 +60,15 @@
 }
 
 .second-col {
-  left: 7.5rem;
+    left: 17.5rem;
 }
 
 .thired-col {
-  left: 13rem;
+    left: 28rem;
 }
 
 .last-col {
-  left: 16.5rem;
+    left: 31.55rem;
 }
 
 /*fix column header*/

@@ -211,7 +211,7 @@ namespace PlanningRouteWeb.Helpers
                 LOCATION_NAME = model.LOCATION_NAME,
                 MACHINE_CODE = model.MACHINE_CODE,
                 MACHINE_MODEL = model.MACHINE_MODEL,
-                CHANGE_ACTION = model.CHANGE_ACTION,
+                CHANGE_ACTION = model.MACHINE_CODE,
                 TOTAL_FEE = model.TOTAL_FEE,
                 BEFORE_SALE = model.BEFORE_SALE,
                 BEFORE_MTD = model.BEFORE_MTD,

@@ -29,11 +29,6 @@
         <th colspan="10" class="text-center" style="font-size: 12px;">
             ค่ามาตรฐาน
         </th>
-        <th rowspan="4" class="text-center" style="width:2rem;font-size: 12px;">
-            สินค้าขายดี
-        </th>
-    }
-
     }
     <th rowspan="4" class="text-center" style="width: 5.5rem;font-size: 12px;">
         สินค้าขายดี
@@ -273,7 +268,6 @@
     public EventCallback SortRankCallback { get; set; }
 
     [Parameter]
-    public EventCallback<(string, string, string)> OnCalPlanningCallback { get; set; }
     public EventCallback<(string , string)> OnCalPlanningCallback { get; set; }
 
     [Parameter]
@@ -350,8 +344,6 @@
                 start = StateContainer.DateCurrent.LastDayOfWeek().AddDays(1);
                 end = start.AddDays(6);
             }
-            await OnCalPlanningCallback.InvokeAsync((start.ToStringDate(), end.ToStringDate(), action));
-        // }
             await OnCalPlanningCallback.InvokeAsync((start.ToStringDate(), end.ToStringDate()));
         }
     }
