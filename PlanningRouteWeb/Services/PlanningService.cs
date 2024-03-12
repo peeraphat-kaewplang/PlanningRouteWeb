@@ -609,7 +609,7 @@ namespace PlanningRouteWeb.Services
                        return x;
                    })
                    .ToList();
-            return res;
+            return model;
         }
 
         public async Task<Target2> PlanningGetTarget(PanningMasterRequest body)

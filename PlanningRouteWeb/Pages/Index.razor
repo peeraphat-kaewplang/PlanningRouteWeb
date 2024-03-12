@@ -673,7 +673,7 @@
         return value;
     }
 
-    private async Task OnClickSavePlan(DialogService ds , string start , string end)
+    private async Task OnClickSavePlan(DialogService ds, string start , string end)
     {
         StateContainer.IsLoading = true;
         var dataSave = new List<PlanningMasterData2>();
@@ -714,9 +714,10 @@
                 dataSave.Add(record);
             }
         }
-       
+
         var recordData = dataSave.Select(x => ConvertModel.PlanningMasterData2ModeltoSave(x)).ToList();
-        if(!target.SYSTEMCART)
+
+        if(!target.SYSTEMCART && !string.IsNullOrEmpty(start) && !string.IsNullOrEmpty(end))
         {
             recordData = PlanningService.PlanningSetModelCartSystem(start,end, recordData);
         } 
@@ -727,12 +728,10 @@
         {
                 actionButton = new();
                 await LoadMaster();
-                DialogServiceCustom.DialogClose();
                 ds.Close(false);
         }
         else
         {
-            DialogServiceCustom.DialogClose();
             ds.Close(false);
             await DialogService.Alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล!", "เเจ้งเตือน", new AlertOptions() { OkButtonText = "ปิด" });
         }
@@ -824,21 +823,23 @@
                     <RadzenButton Text="ยกเลิก" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" />
                 </RadzenStack>
             </RadzenStack>
-        </RadzenStack>);
+        </RadzenStack>
+    );
     }
 
     private async Task ShowDialogSave(string start , string end)
     {
+       
         var result = await DialogService.OpenAsync("ยืนยันการบันทึกข้อมูล", ds =>
-        @<RadzenStack Gap="1.5rem">
-            <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End">
-                <RadzenStack Orientation="Orientation.Horizontal">
-                    <RadzenButton Text="บันทึก" Click="() => OnClickSavePlan(ds , start , end)"  Style="width: 80px;" />
-                    <RadzenButton Text="ยกเลิก" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" />
+            @<RadzenStack Gap="1.5rem">
+                <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End">
+                    <RadzenStack Orientation="Orientation.Horizontal">
+                        <RadzenButton Text="บันทึก" Click="() => OnClickSavePlan(ds , start , end)"  Style="width: 80px;" />
+                        <RadzenButton Text="ยกเลิก" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" />
+                    </RadzenStack>
                 </RadzenStack>
             </RadzenStack>
-        </RadzenStack>
-    );
+        );
     }
 
     private async Task ShowDialogCalPlan(string start , string end , string action)
