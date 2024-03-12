@@ -4,16 +4,6 @@ namespace PlanningRouteWeb.Helpers
 {
     public static class ConvertModel
     {
-        public static Target2 TargetModelToTarget2Model(Target model)
-        {
-            return new Target2
-            {
-                VALUE_PER_DAY = !string.IsNullOrWhiteSpace(model.VALUE_PER_DAY) ? int.Parse(model.VALUE_PER_DAY) : 0,
-                VALUE_PER_MONTH = !string.IsNullOrWhiteSpace(model.VALUE_PER_MONTH) ? int.Parse(model.VALUE_PER_MONTH) : 0,
-                DROP_PER_DAY = !string.IsNullOrWhiteSpace(model.DROP_PER_DAY) ? int.Parse(model.DROP_PER_DAY) : 0,
-                SYSTEMCART = !string.IsNullOrWhiteSpace(model.BASKET_SYSTEM) ? model.BASKET_SYSTEM == "1" ? true : false : false
-            };
-        }
         public static PlanningDetail PlanningDetail2ModeltoModel(PlanningDetail2 model)
         {
             return new PlanningDetail
@@ -196,47 +186,6 @@ namespace PlanningRouteWeb.Helpers
                 GETPLAN_DETAIL = model.GETPLAN_DETAIL.Select(x => NewPlanningDetail2(x)).ToList()
             };
         }
-
-        public static PlanningMasterData2 PlanningMasterDataModeltoExcel(PlanningMasterData model, DateTime date , int addDay)
-        {
-            var data = new PlanningMasterData2
-            {
-                YEARMONTH = model.YEARMONTH,
-                ORGANIZATION_CODE = model.ORGANIZATION_CODE,
-                ROUTE_CODE = model.ROUTE_CODE,
-                ROUTE_NAME = model.ROUTE_NAME,
-                CUSTOMER_CODE = model.CUSTOMER_CODE,
-                CUSTOMER_NAME = model.CUSTOMER_NAME,
-                LOCATION_CODE = model.LOCATION_CODE,
-                LOCATION_NAME = model.LOCATION_NAME,
-                MACHINE_CODE = model.MACHINE_CODE,
-                MACHINE_MODEL = model.MACHINE_MODEL,
-                CHANGE_ACTION = model.MACHINE_CODE,
-                TOTAL_FEE = model.TOTAL_FEE,
-                BEFORE_SALE = model.BEFORE_SALE,
-                BEFORE_MTD = model.BEFORE_MTD,
-                CURRENT_MTD = model.CURRENT_MTD,
-                DROPWEEK = !string.IsNullOrWhiteSpace(model.DROPWEEK) ? int.Parse(model.DROPWEEK) : 0,
-                DROPDAY = !string.IsNullOrWhiteSpace(model.DROPDAY) ? int.Parse(model.DROPDAY) : 0,
-                REMARK = model.REMARK,
-                MSORT = model.MSORT,
-                IS_DUPLICATE = model.MSORT == "1" ? false : true,
-                MONDAY = !string.IsNullOrWhiteSpace(model.MONDAY) ? true : false,
-                TUESDAY = !string.IsNullOrWhiteSpace(model.TUESDAY) ? true : false,
-                WEDNESDAY = !string.IsNullOrWhiteSpace(model.WEDNESDAY) ? true : false,
-                THURSDAY = !string.IsNullOrWhiteSpace(model.THURSDAY) ? true : false,
-                FRIDAY = !string.IsNullOrWhiteSpace(model.FRIDAY) ? true : false,
-                SATURDAY = !string.IsNullOrWhiteSpace(model.SATURDAY) ? true : false,
-                SUNDAY = !string.IsNullOrWhiteSpace(model.SUNDAY) ? true : false,
-                SALE_LAST_WEEK = !string.IsNullOrWhiteSpace(model.SALE_LAST_WEEK) ? double.Parse(model.SALE_LAST_WEEK) : 0,
-                SALE_LAST_WEEK_END = !string.IsNullOrWhiteSpace(model.SALE_LAST_WEEK_END) ? double.Parse(model.SALE_LAST_WEEK_END) : 0,
-                GETPLAN_DETAIL = model.GETPLAN_DETAIL
-                                .Select(x => PlanningDetailModeltoModel(x, date, addDay))
-                                .ToList(),
-            };
-            return data;
-        }
-
         public static PlanningMasterData2 PlanningMasterDataModeltoModel(PlanningMasterData model, DateTime date, IEnumerable<PlanningMasterData> Grp , int addDay)
         {
             var data = new PlanningMasterData2
@@ -251,7 +200,7 @@ namespace PlanningRouteWeb.Helpers
                 LOCATION_NAME = model.LOCATION_NAME,
                 MACHINE_CODE = model.MACHINE_CODE,
                 MACHINE_MODEL = model.MACHINE_MODEL,
-                CHANGE_ACTION = model.MACHINE_CODE,
+                CHANGE_ACTION = model.CHANGE_ACTION,
                 TOTAL_FEE = model.TOTAL_FEE,
                 BEFORE_SALE = model.BEFORE_SALE,
                 BEFORE_MTD = model.BEFORE_MTD,
@@ -271,14 +220,12 @@ namespace PlanningRouteWeb.Helpers
                 SALE_LAST_WEEK = !string.IsNullOrWhiteSpace(model.SALE_LAST_WEEK) ? double.Parse(model.SALE_LAST_WEEK) : 0,
                 SALE_LAST_WEEK_END = !string.IsNullOrWhiteSpace(model.SALE_LAST_WEEK_END) ? double.Parse(model.SALE_LAST_WEEK_END) : 0,
                 GETPLAN_DETAIL = model.GETPLAN_DETAIL
-                                .Select(x => PlanningDetailModeltoModel(x, date, addDay))
+                                .Select(x => PlanningDetailModeltoModel(x, date , addDay))
                                 .ToList(),
                 GroupData = Grp
                             .Select(x => ConvertModel.PlanningMasterDataModeltoModel2(x, date, addDay))
                             .OrderBy(x => int.Parse(x.MSORT))
                             .ToList(),
-                Week1 = model.Week1,
-                Week2 = model.Week2,
             };
             return data;
         }

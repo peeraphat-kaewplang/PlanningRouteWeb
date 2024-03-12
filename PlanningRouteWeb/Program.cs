@@ -8,13 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor().AddCircuitOptions(x => x.DetailedErrors = true);
 builder.Services.AddRadzenComponents();
-builder.Services.AddControllers();
 builder.Services.AddLocalization();
 
 builder.Services.AddScoped(
    sp => new HttpClient(new CustomHeaderHandler(builder.Configuration)) { BaseAddress = new Uri(builder.Configuration.GetValue<string>("Configs:UrlApi")!) });
 
-builder.Services.AddScoped<IPlanningService, PlanningService>();
+builder.Services.AddScoped<IPlanningService , PlanningService>();
 builder.Services.AddScoped<IChangeProductService, ChangeProductService>();
 builder.Services.AddScoped<IDialogService, DialogServices>();
 builder.Services.AddScoped<IBestProduct, BestProductService>();
@@ -33,10 +32,6 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");

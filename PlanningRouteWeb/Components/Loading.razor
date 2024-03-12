@@ -12,8 +12,9 @@
 
     public async Task ShowBusyDialog()
     {
-         await InvokeAsync(async () =>
+         InvokeAsync(async () =>
         {
+            // Simulate background task
             await Task.Delay(2000);
 
             // Close the dialog
