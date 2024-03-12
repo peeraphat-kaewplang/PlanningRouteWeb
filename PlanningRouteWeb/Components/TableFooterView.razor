@@ -1,18 +1,20 @@
 ﻿
 @{
     var grpData = LoadFooter();
+
+    
 }
 <tr>
     <td rowspan="2" colspan="4" class="sticky-col first-col" style="z-index:20;"></td>
     <td></td>
     <td class="text-end fw-bold" style="font-size: 12px;">
-        @(beforeSale == 0 ? beforeSale : beforeSale.ToString("0,0", CultureInfo.InvariantCulture))
+        @beforeSale
     </td>
     <td class="text-end fw-bold" style="font-size: 12px;">
-        @(beforeMTD == 0 ? beforeMTD : beforeMTD.ToString("0,0", CultureInfo.InvariantCulture))
+        @beforeMTD
     </td>
     <td class="text-end fw-bold" style="font-size: 12px;">
-        @(currentMTD == 0 ? currentMTD : currentMTD.ToString("0,0", CultureInfo.InvariantCulture))
+        @currentMTD
     </td>
     @if (!HideMaster)
     {
@@ -27,7 +29,7 @@
     }
     
     <td rowspan="2" class="text-end fw-bold" style="font-size: 12px;">
-        @Data.Sum(x => x.SALE_LAST_WEEK).ToString("0,0", CultureInfo.InvariantCulture)
+        @Data.Sum(x => x.SALE_LAST_WEEK)
     </td>
     <td rowspan="2" class="text-end fw-bold" style="font-size: 12px;">
         @DropMonth.Sum(x =>x)
@@ -38,7 +40,14 @@
         <td class=@($"text-center fw-bold {error}") >
             <RadzenText  class="mb-0" Style="font-size: 12px; cursor : pointer;">
                 <div class="fw-bold">
-                    @obj.COUNT_STATUS_MANUAL
+                    @if (!obj.IsCurrent)
+                    {
+                        @obj.COUNT_STATUS_MANUAL
+                    }
+                    else
+                    {
+                        @obj.COUNT_STATUS_MANUAL2
+                    }
                 </div>
             </RadzenText>
            
@@ -49,42 +58,15 @@
         <td rowspan="1" class="text-end" style=" cursor : pointer;">
             <RadzenText MouseEnter="@(args => ShowTooltip(args , "ยอดขาย") )" class="mb-0" Style="font-size: 12px;">
                 <div class="fw-bold">
-                    @if(obj.SUM_SALETOTAL == 0)
-                    {
-                        @obj.SUM_SALETOTAL
-                    }
-                    else
-                    {
-                        @obj.SUM_SALETOTAL.ToString("0,0", CultureInfo.InvariantCulture)
-                    }
+                    @obj.SUM_SALETOTAL
                 </div>
             </RadzenText>
         </td>
         <td rowspan="2" style="font-size: 12px;"></td>
         if ((index + 1) % 7 == 0)
         {
-            var SaleWeek = CalSumSaleWeek(grpData, index);
-            var diff = CalSumSaleWeekDiff(grpData, index);
-
-            <td rowspan="2" class="text-end fw-bold" style="font-size: 12px;">
-                @if (SaleWeek == 0)
-                {
-                    @SaleWeek
-                }else
-                {
-                    @SaleWeek.ToString("0,0", CultureInfo.InvariantCulture)
-                }
-            </td>
-            <td rowspan="2" class="text-end fw-bold" style="font-size: 12px;">
-                @if (diff == 0)
-                {
-                    @diff
-                }
-                else
-                {
-                    @diff.ToString("0,0", CultureInfo.InvariantCulture)
-                }
-            </td>
+            <td rowspan="2" class="text-end fw-bold" style="font-size: 12px;">@CalSumSaleWeek(grpData , index )</td>
+            <td rowspan="2" class="text-end fw-bold" style="font-size: 12px;">@CalSumSaleWeekDiff(grpData , index )</td>
         }
     }
 </tr>
@@ -92,22 +74,14 @@
     <td></td>
     <td></td>
     @{
-        var before = beforeMTD -beforeSale;
-        var style1 = before > 1 ? "sum-current-mtd" : "sum-error-mtd";
-        var style2 = (currentMTD - beforeMTD) > 1 ? "sum-current-mtd" : "sum-error-mtd";
+        var style1 = (beforeSale - beforeMTD) > 1 ? "sum-current-mtd" : "sum-error-mtd";
+        var style2 = (beforeMTD - currentMTD) > 1 ? "sum-current-mtd" : "sum-error-mtd";
     }
     <td class=@($"text-end fw-bold {style1}") style="font-size: 12px;">
-        @if (before == 0)
-        {
-            @before
-        }
-        else
-        {
-            @(before.ToString("0,0", CultureInfo.InvariantCulture))
-        }
+        @(beforeSale - beforeMTD)
     </td>
     <td class=@($"text-end fw-bold {style2}") style="font-size: 12px;">
-        @((currentMTD - beforeMTD) == 0 ? (currentMTD - beforeMTD) : (currentMTD - beforeMTD).ToString("0,0", CultureInfo.InvariantCulture))
+        @(beforeMTD - currentMTD)
     </td>
     @if (!HideMaster)
     {
@@ -138,14 +112,7 @@
         <td class="text-end" style="cursor : pointer;">
             <RadzenText MouseEnter="@(args => ShowTooltip(args , "ยอดขายประมาณการณ์") )" class="mb-0" Style="font-size: 12px; ">
                 <div class="fw-bold">
-                    @if(obj.SUM_SALETOTAL_TOTAL == 0)
-                    {
-                        @obj.SUM_SALETOTAL_TOTAL
-                    }
-                    else
-                    {
-                        @obj.SUM_SALETOTAL_TOTAL.ToString("0,0", CultureInfo.InvariantCulture)
-                    }
+                    @obj.SUM_SALETOTAL_TOTAL
                 </div>
             </RadzenText>
         </td>
@@ -184,7 +151,6 @@
     {
         var planDetail = new List<PlanningDetail2>();
         var planDrop = new List<PlanningDetail2>();
-        var planDrop2 = new List<PlanningDetail2>();
         foreach (var x in Data)
         {
             if(x.GroupData.Count() > 1)
@@ -197,24 +163,24 @@
                         {
                             planDrop.Add(d);
                         }
-                        planDrop2.Add(d);
                     }
                 }
             }
             else
             {
                 planDrop.AddRange(x.GETPLAN_DETAIL);
-                planDrop2.AddRange(x.GETPLAN_DETAIL);
             }
 
             planDetail.AddRange(x.GETPLAN_DETAIL);
         }
 
+        var aa = planDrop.Where(x => x.CALENDAR_DATE == "11/12/2023").ToList();
+
         return planDetail.GroupBy(a => a.CALENDAR_DATE, (key, grp) => new ColumnFooter
         {
             FieldDate = key,
-            COUNT_STATUS_MANUAL = grp.FirstOrDefault()!.IsCurrent ? planDrop2.Where(x => x.CALENDAR_DATE == key && x.STATUS_MANUAL).Count() :  planDrop.Where(x => x.CALENDAR_DATE == key && x.DOC_TYPE == "1").Count(),
-            // COUNT_STATUS_MANUAL2 = planDrop2.Where(x => x.CALENDAR_DATE == key && x.STATUS_MANUAL ).Count(),
+            COUNT_STATUS_MANUAL = planDrop.Where(x => x.CALENDAR_DATE == key && x.DOC_TYPE == "1" ).Count(),
+            COUNT_STATUS_MANUAL2 = planDrop.Where(x => x.CALENDAR_DATE == key && x.STATUS_MANUAL ).Count(),
             MAX_DROP = !string.IsNullOrWhiteSpace(grp.FirstOrDefault()!.MAX_DROP) ? int.Parse(grp.FirstOrDefault()!.MAX_DROP) : 0,
             IsCurrent = grp.FirstOrDefault()!.IsCurrent,
             SUM_SALETOTAL = StateContainer.DateCurrent.ToContainsDate(key) ?

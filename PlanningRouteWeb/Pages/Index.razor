@@ -46,6 +46,8 @@
                     ActionButton="actionButton"
                     WeekValue="weekValue"
                     SortRankCallback="@SortRank"
+                    OnClickSavePlanCallback="@ShowDialogSave" 
+                    OnCalPlanningCallback="@((args) => OnCalPlanning(args.Item1 , args.Item2 ))"/>
                     OnClickSavePlanCallback="@((args) => ShowDialogSave(args.Item1 , args.Item2))" 
                     OnCalPlanningCallback="@((args) => ShowDialogCalPlan(args.Item1 , args.Item2 ,args.Item3))"/>
             </thead>
@@ -81,6 +83,22 @@
     {
         <p>Data is empty!</P>
     }
+
+   @*   <script>
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    </script> *@
+
+@inject IPlanningService PlanningService
+@inject DialogService DialogService
+@inject IDialogService DialogServiceCustom
+@inject TooltipService TooltipService
+@inject NavigationManager NavManager
+@inject StateContainer StateContainer
+
 
     <div style="display:none">
         @{
@@ -446,8 +464,12 @@
 
     protected override async Task OnInitializedAsync() 
     {
+
         selectOrg = ORG!;
         selectRoute = ROUTE!;
+        year = StateContainer.defultYear;
+        var y = StateContainer.DateCurrent.Year - StateContainer.defultYear;
+        
         year = StateContainer.DateCurrent.Year;
         var y = year - StateContainer.defultYear;
 
@@ -469,6 +491,11 @@
 
         await LoadOrg(ORG!);
         await LoadRoute();
+
+        // if(!string.IsNullOrEmpty(selectRoute))
+        // {
+
+        // }
 
         if(ROUTE == null) selectRoute = optionsRoute.First().ROUTE_CODE;
         // await ShowBusyDialog();
@@ -779,15 +806,15 @@
 
     private async Task ShowInlineDialog()
     {
-        var result = await DialogService.OpenAsync("ตั้งค่าเริ่มต้น", ds =>
+        var result = await DialogService.OpenAsync("Change Config", ds =>
         @<RadzenStack Gap="1.5rem">
-            <RadzenFormField Text="จำนวนการเข้าเติมสินค้าต่อวัน" Variant="@variant">
+            <RadzenFormField Text="จำนวนการเข้าเติมสิ้นต่อวัน" Variant="@variant">
                 <RadzenNumeric ShowUpDown="false" TValue="int"@bind-Value=@target.DROP_PER_DAY/>
             </RadzenFormField>
-            <RadzenFormField Text="เป้ายอดขายต่อวัน" Variant="@variant">
+            <RadzenFormField Text="VALUE PER DAY" Variant="@variant">
                 <RadzenNumeric ShowUpDown="false" TValue="int"@bind-Value=@target.VALUE_PER_DAY/>
             </RadzenFormField>
-            <RadzenFormField Text="เป้ายอดขายต่อเดือน" Variant="@variant">
+            <RadzenFormField Text="VALUE PER MONTH" Variant="@variant">
                 <RadzenNumeric ShowUpDown="false" TValue="int"@bind-Value=@target.VALUE_PER_MONTH/>
             </RadzenFormField>
             <RadzenStack Gap="0.5rem" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
@@ -813,28 +840,7 @@
                     <RadzenButton Text="ยกเลิก" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" />
                 </RadzenStack>
             </RadzenStack>
-        </RadzenStack>
-    );
-    }
-
-    private async Task ShowDialogCalPlan(string start , string end , string action)
-    {
-        if(action != "create")
-        {
-            var result = await DialogService.OpenAsync("ยืนยันล้างค่า สร้างเเพลนใหม่ใหม่", ds =>
-            @<RadzenStack Gap="1.5rem">
-                <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End">
-                    <RadzenStack Orientation="Orientation.Horizontal">
-                        <RadzenButton Text="ยืนยัน" Click="() => OnCalPlanning(start ,end, ds)"  Style="width: 80px;" />
-                        <RadzenButton Text="ยกเลิก" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" />
-                    </RadzenStack>
-                </RadzenStack>
         </RadzenStack>);
-        }
-        else
-        {
-           await OnCalPlanning(start, end);
-        }
     }
 
     private async Task ShowdialogChangeProduct(ChangeProductRequest item , bool isCurrent) {
@@ -873,8 +879,16 @@
         }
     }
 
-    private async Task OnCalPlanning(string start , string end ,DialogService? ds = null)
+    private async Task OnCalPlanning(string start , string end)
     {
+        var body = new CalPlanning
+        {
+            YEARMONTH = $"{StateContainer.DateCurrent.ToStringDate("yyyy")}{selectMonth.Number}",
+            ORG = $"{selectOrg}", 
+            Route = $"{selectRoute}",
+            StartDate = start ,
+            EndDate = end
+        };
          var Task = InvokeAsync(async () => {
            var body = new CalPlanning
             {
@@ -885,6 +899,15 @@
                 EndDate = end
             };
 
+        var response = await PlanningService.PlanningCalPlan(body);
+        if(response.ErrorMessage == "success")
+        {
+            await LoadMaster();
+        }
+        else
+        {
+            await DialogService.Alert($"Error : {response.ErrorMessage}", $"เเจ้งเตือน { response.Status }", new AlertOptions() { OkButtonText = "ปิด" ,ShowClose = false });
+        }
             var response = await PlanningService.PlanningCalPlan(body);
             if(response.ErrorMessage == "success")
             {
@@ -1010,10 +1033,11 @@
                     action.Error = (rankEmpty.Count() > 0 || rankDup.Count() > 0);
                 }
                actionChangeProduct = true;
-               actionButton.Action = "save";
+               actionButton.Action = "Save";
             }
             else
             {
+                
                 if(action != null)
                 {
                    actionButton.Date.Remove(action);

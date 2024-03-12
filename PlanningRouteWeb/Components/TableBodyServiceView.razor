@@ -25,23 +25,21 @@
             <RadzenText MouseEnter="@(args => ShowTooltip(args , item.CUSTOMER_NAME) )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
                 <div class="d-inline-block text-truncate" style="width:7rem">@item.CUSTOMER_NAME</div>
             </RadzenText>
+        <td class="sticky-col first-col">
+            <RadzenText MouseEnter="@(args => ShowTooltip(args , item.CUSTOMER_NAME) )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
+                <div class="d-inline-block text-truncate" style="width:17rem">@item.CUSTOMER_NAME</div>
+            </RadzenText>
         </td>
         <td class="sticky-col second-col">
             <RadzenText MouseEnter="@(args => ShowTooltip(args , item.LOCATION_NAME) )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
-                <div class="d-inline-block text-truncate" style="width: 5rem;">@item.LOCATION_NAME</div>
+                <div class="d-inline-block text-truncate" style="width: 10rem;">@item.LOCATION_NAME</div>
             </RadzenText>
         </td>
         <td class=@($"sticky-col thired-col {styleMachine}") style="font-size: 12px;">
-            <div class="d-inline-block text-truncate" style="width: 3rem;">
-                @item.MACHINE_CODE
-            </div>
+            <div class="d-inline-block text-truncate" style="width: 3rem;"> @item.MACHINE_CODE</div>
         </td>
         <td class="sticky-col last-col" style="font-size: 12px;">
-            <RadzenText MouseEnter="@(args => ShowTooltip(args , item.MACHINE_MODEL) )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
-                <div class="d-inline-block text-truncate" style="width: 3rem;">
-                    @item.MACHINE_MODEL
-                </div>
-            </RadzenText>
+            <div class="d-inline-block text-truncate" style="width: 7rem;"> @item.MACHINE_MODEL</div>
         </td>
         <td class="text-end" style="font-size: 12px;">
             <div class="d-inline-block" style="width:99%">
@@ -52,21 +50,19 @@
                     item.TOTAL_FEE
                     )
             </div>
+            <div class="d-inline-block" style="width:99%"> @item.TOTAL_FEE</div>
         </td>
         <td class="text-end" style="font-size: 12px;">
-            <div class="d-inline-block" style="width:99%">
-                @(!string.IsNullOrWhiteSpace(item.BEFORE_SALE) ? double.Parse(item.BEFORE_SALE).ToString("0,0", CultureInfo.InvariantCulture) : item.BEFORE_SALE)
-            </div>
+            <div class="d-inline-block" style="width:99%"> @item.BEFORE_SALE</div>
         </td>
         <td class="text-end" style="font-size: 12px;">
             <div class="d-inline-block" style="width:99%">
                 @(!string.IsNullOrWhiteSpace(item.BEFORE_MTD) ? double.Parse(item.BEFORE_MTD).ToString("0,0", CultureInfo.InvariantCulture) : item.BEFORE_MTD)
             </div>
+            <div class="d-inline-block" style="width:99%"> @item.BEFORE_MTD</div>
         </td>
         <td class="text-end" style="font-size: 12px;">
-            <div class="d-inline-block" style="width:99%">
-                @(!string.IsNullOrWhiteSpace(item.CURRENT_MTD) ? double.Parse(item.CURRENT_MTD).ToString("0,0", CultureInfo.InvariantCulture) : item.CURRENT_MTD)
-            </div>
+            <div class="d-inline-block" style="width:99%"> @item.CURRENT_MTD</div>
         </td>
 
         @* ค่ามาตรฐาน *@
@@ -165,12 +161,17 @@
                               ButtonStyle="ButtonStyle.Primary"
                               Size="ButtonSize.ExtraSmall"
                               Style="text-transform: none;" />
+                 }))
+                Text="สินค้าขายดี"
+                ButtonStyle="ButtonStyle.Primary"
+                Size="ButtonSize.ExtraSmall"
+                Style="text-transform: none;" />
             </td>
         }
 
         <td class="text-end">
             <div style="font-size: 12px;width: 100%">
-                @(item.SALE_LAST_WEEK.ToString("0,0", CultureInfo.InvariantCulture))
+                @item.SALE_LAST_WEEK
             </div>
         </td>
         <td class="text-end" style="font-size: 12px;">
@@ -219,6 +220,8 @@
                 </td>
                 <td class=@($"{today} {stylePlan} {isEmptyPlan!} text-end") style="width: 20px; ">
                     <RadzenText class=@($"mb-0 fw-bold") Style="font-size: 12px;">
+                <td class=@($"{today} {stylePlan} text-end fw-bold") style="width: 20px; font-size: 12px;">
+                    <p class=@($"mb-0 {color}")>
                         @if (i.STATUS_MANUAL)
                         {
                             var changePrd = i.CHANGEPRODUCT == "1" ? "change-pro" : "change-pro-chk";
@@ -236,7 +239,7 @@
                                                 style="font-weight: 700;font-size: 16px;" />
                                 }
                                 <p class="m-0">
-                                    @(i.SALETOTAL == 0 ? i.AMOUNT == 0 ? i.AMOUNT : i.AMOUNT.ToString("0,0", CultureInfo.InvariantCulture) : i.SALETOTAL.ToString("0,0", CultureInfo.InvariantCulture))
+                                    @(i.SALETOTAL == 0 ? i.AMOUNT : i.SALETOTAL)
                                 </p>
                             </div>
                         }
@@ -245,8 +248,11 @@
                             <p class="m-0 text-amount">
                                 @(i.SALETOTAL == 0 ? i.AMOUNT == 0 ? i.AMOUNT : i.AMOUNT.ToString("0,0", CultureInfo.InvariantCulture) : i.SALETOTAL.ToString("0,0", CultureInfo.InvariantCulture))
                             </p>
+                            <p class="m-0"> 
+                                @(i.SALETOTAL == 0 ? i.AMOUNT : i.SALETOTAL)
+                            </p>
                         }
-                    </RadzenText>
+                    </p>
                 </td>
                 <td class=@($"{today} {isEmptyPlan!} text-center p-0")>
                     @if (i.STATUS_MANUAL)
@@ -337,6 +343,12 @@
                         @*  <p class=@($"m-0 ps-2 {color}") style="font-size: 12px;">
             @i.AMOUNT
             </p> *@
+                            Icon="cached"
+                            style="font-weight: 700;font-size: 16px;cursor: pointer;" />
+                    }
+                        <p class=@($"m-0 {color}") style="font-size: 12px;">
+                            @i.SALETOTAL
+                        </p>
                     </div>
                 </td>
                 <td class=@($"{today} text-center fw-bold p-0") style="width: 20px; font-size: 12px;">
@@ -368,14 +380,12 @@
 
             if ((idx + 1) % 7 == 0)
             {
-                var saleWeek = CalSaleWeek(item.GETPLAN_DETAIL, idx + 1);
-                var diff = CalSaleWeek(item.GETPLAN_DETAIL, idx + 1, item);
                 var clsStyle = CalSaleWeek(item.GETPLAN_DETAIL, idx + 1, item) > 1 ? "success" : "danger";
                 <td class="text-end salweek fw-bold" style="width: 20px; font-size: 12px;">
-                    @(saleWeek == 0 ? saleWeek : saleWeek.ToString("0,0", CultureInfo.InvariantCulture))
+                    @CalSaleWeek(item.GETPLAN_DETAIL , idx + 1)
                 </td>
                 <td class=@($"text-end fw-bold {clsStyle}") style="width: 20px; font-size: 12px;">
-                    @(diff == 0 ? diff : diff.ToString("0,0", CultureInfo.InvariantCulture))
+                    @CalSaleWeek(item.GETPLAN_DETAIL , idx + 1 , item)
                 </td>
             }
         }
@@ -409,8 +419,7 @@
     [Parameter]
     public bool ActionChangeProduct { get; set; }
 
-    private void ShowTooltip(ElementReference elementReference, string text, TooltipOptions? options = null) => TooltipService.Open(elementReference, $"{text}", new TooltipOptions { Style = "font-size: 16px" });
-    private void ShowTooltipValue(ElementReference elementReference, string text) => TooltipService.Open(elementReference, $"ยอดขายประมาณการณ์ : {text}", new TooltipOptions { Style = "font-size: 16px" });
+    private void ShowTooltip(ElementReference elementReference, string text, TooltipOptions? options = null) => TooltipService.Open(elementReference, $"ตู้ปัจจุบัน : {text}", new TooltipOptions { Style = "font-size: 16px" });
 
     private async Task ChageRank(int? rank, string date, string location, int index = 0, int seq = 0, bool fbool = false)
     {
