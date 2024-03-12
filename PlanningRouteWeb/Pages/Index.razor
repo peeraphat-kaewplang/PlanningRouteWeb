@@ -86,7 +86,7 @@
     public string? ROUTE { get; set; }
 
 
-    Variant variant = Variant.Outlined;
+    Variant variant = Variant.Outlined;     
     public bool hideMaster = false;
     public string selectOrg = "";
     public string selectRoute = "";
@@ -614,10 +614,7 @@
             await DialogService.Alert($"Error : {response.ErrorMessage}", $"เเจ้งเตือน { response.Status }", new AlertOptions() { OkButtonText = "ปิด" ,ShowClose = false });
         }
 
-        if(ds!= null) ds.Close(true);
-    }
-
-    public class ChkRank
+        public class ChkRank
     {
         public string Location { get; set; } = string.Empty;
         public string Date { get; set; } = string.Empty;
@@ -757,5 +754,94 @@
             DialogServiceCustom.DialogClose();
         });
         await DialogServiceCustom.BusyDialog("กำลังโหลดข้อมูล...");
+    }
+
+    private double CalSaleWeek(List<PlanningDetail2> row, int index, PlanningMasterData2? plan = null)
+    {
+        var task = 7;
+        var skip = index - task;
+        if (plan == null)
+        {
+            var sum = row.Skip(skip).Take(task).Sum(s => !s.IsCurrent && string.IsNullOrWhiteSpace(s.DOC_TYPE) ? 0 : s.SALETOTAL);
+            return sum;
+        }
+        else
+        {
+            double sum = 0;
+            if (index == task)
+            {
+                var totalWeek = row.Skip(skip).Take(task).Sum(s => !s.IsCurrent && string.IsNullOrWhiteSpace(s.DOC_TYPE) ? 0 : s.SALETOTAL);
+                sum = totalWeek - plan.SALE_LAST_WEEK;
+                return sum;
+            }
+            else
+            {
+                var totalWeek = row.Skip(skip).Take(task).Sum(s => !s.IsCurrent && string.IsNullOrWhiteSpace(s.DOC_TYPE) ? 0 : s.SALETOTAL);
+                var lastWeek = row.Skip(skip - task).Take(task).Sum(s => !s.IsCurrent && string.IsNullOrWhiteSpace(s.DOC_TYPE) ? 0 : s.SALETOTAL);
+                sum = totalWeek - lastWeek;
+                return sum;
+            }
+        }
+    }
+
+    private List<ColumnFooter> LoadFooter()
+    {
+        var planDetail = new List<PlanningDetail2>();
+        var planDrop = new List<PlanningDetail2>();
+        var planDrop2 = new List<PlanningDetail2>();
+        foreach (var x in dataExel)
+        {
+            foreach (var d in x.GETPLAN_DETAIL)
+            {
+                if (d.RANK != null)
+                {
+                    planDrop.Add(d);
+                }
+                planDrop2.Add(d);
+            }
+            planDetail.AddRange(x.GETPLAN_DETAIL);
+        }
+
+        return planDetail.GroupBy(a => a.CALENDAR_DATE, (key, grp) => new ColumnFooter
+        {
+            FieldDate = key,
+            COUNT_STATUS_MANUAL = grp.FirstOrDefault()!.IsCurrent ? planDrop2.Where(x => x.CALENDAR_DATE == key && x.STATUS_MANUAL).Count() :  planDrop.Where(x => x.CALENDAR_DATE == key && x.DOC_TYPE == "1").Count(),
+            MAX_DROP = !string.IsNullOrWhiteSpace(grp.FirstOrDefault()!.MAX_DROP) ? int.Parse(grp.FirstOrDefault()!.MAX_DROP) : 0,
+            IsCurrent = grp.FirstOrDefault()!.IsCurrent,
+            SUM_SALETOTAL = StateContainer.DateCurrent.ToContainsDate(key) ?
+            grp.Sum(x => x.STATUS_MANUAL && !string.IsNullOrWhiteSpace(x.DOC_TYPE) || x.IsCurrent ? x.SALETOTAL : 0):
+            grp.Sum(x => !string.IsNullOrWhiteSpace(x.DOC_TYPE) ? x.SALETOTAL : 0),
+            SUM_SALETOTAL_TOTAL = grp.Where(x => x.STATUS_MANUAL).Sum(x => string.IsNullOrWhiteSpace(x.DOC_TYPE) ? x.SALETOTAL : x.AMOUNT),
+        }).ToList();
+    }
+
+    private double CalSumSaleWeek(List<ColumnFooter> row ,int index)
+    {
+        var task = 7;
+        var skip = index - task;
+        var sum = row.Skip(skip).Take(task).Sum(s => s.SUM_SALETOTAL);
+        return sum;
+    }
+
+    private double CalSumSaleWeekDiff(List<ColumnFooter> row, int index)
+    {
+        var task = 7;
+        var skip = index - task;
+        var last = dataExel.Sum(x => x.SALE_LAST_WEEK_END);
+
+        double sum = 0;
+        if (index == task)
+        {
+            var totalWeek = row.Skip(skip).Take(task).Sum(s => s.SUM_SALETOTAL);
+            sum = last - totalWeek;
+            return sum;
+        }
+        else
+        {
+            var totalWeek = row.Skip(skip).Take(task).Sum(s => s.SUM_SALETOTAL);
+            var lastWeek = row.Skip(skip - task).Take(task).Sum(s => s.SUM_SALETOTAL);
+            sum = lastWeek - totalWeek;
+            return sum;
+        }
     }
 }
