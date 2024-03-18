@@ -1,8 +1,8 @@
 ﻿namespace PlanningRouteWeb.Models.V2
 {
-    public class TimelineORGModelRes : HttpResponse
+    public class TimelineModelRes : HttpResponse
     {
-        public List<TimeLineOrgData> Data { get; set; } = new();
+        public List<TimeLineData> Data { get; set; } = new();
     }
 
     public class TimelineReq
@@ -14,253 +14,137 @@
         public string? ReportShow { get; set; }
     }
 
-    public class TimelineORGModel : HttpResponse
+    public class TimelineModel : HttpResponse
     {
-        public ResultTimelineOrg Data { get; set; } = new();
+        public ResultTimeline Data { get; set; } = new();
     }
 
-    public class TimelineORGSaleModelRes : HttpResponse
+    public class ResultTimeline
     {
-        public List<TimeLineOrgSaleData> Data {  get; set; } = new();
+        public List<TimeLineData> TimelineList { get; set; } = new();
+        public TimeLineData TimeLineSum { get; set; } = new();
     }
-
-    public class TimelineORGSaleModel : HttpResponse
-    {
-        public ResultTimelineSaleOrg Data { get; set; } = new();
-    }
-
-
-    public class TimelineRouteModelRes : HttpResponse
-    {
-        public List<TimelineData> Data { get; set;} = new();
-    }
-
-    public class TimelineRouteModel : HttpResponse
-    {
-        public ResultTimelineRoute Data { get; set; } = new();
-    }
-
-    public class TimelineRouteSaleModelRes : HttpResponse
-    {
-        public List<TimelineSaleData> Data { get; set; } = new();
-    }
-
-    public class TimelineRouteSaleModel : HttpResponse
-    {
-        public ResultTimelineRouteSale Data { get; set; } = new();
-    }
-
-    public class ResultTimelineOrg
-    {
-        public List<TimeLineOrgData> TimelineList { get; set; } = new();
-        public TimeLineOrgSumData TimeLineSum { get; set; } = new();
-    }
-
-    public class ResultTimelineSaleOrg
-    {
-        public List<TimeLineOrgSaleData> TimelineSaleList { get; set; } = new();
-        public TimeLineOrgSumData TimeLineSum { get; set; } = new();
-    }
-    public class ResultTimelineRoute
-    {
-        public List<TimelineData> TimelineListRoute { get; set; } = new();
-        public TimeLineOrgSumData TimeLineSum { get; set; } = new();
-    }
-
-    public class ResultTimelineRouteSale
-    {
-        public List<TimelineSaleData> TimelineListRouteSale { get; set; } = new();
-        public TimeLineOrgSumData TimeLineSum { get; set; } = new();
-    }
-
-    public class TimelineData : Time
-    {
-        public string? ROUTE_CODE { get; set; }
-        public string? ORGANIZATION_CODE { get; set; }
-        public string? NUM_SERVICE { get; set; }
-        public string? MAX_DROP { get; set; }
-        public string? Progress { get; set; }
-        public static string ConverModel(TimelineData model)
-        {
-            var val = (
-                 (string.IsNullOrWhiteSpace(model.T00) ? 0 : double.Parse(model.T00)) +
-                 (string.IsNullOrWhiteSpace(model.T01) ? 0 : double.Parse(model.T01)) +
-                 (string.IsNullOrWhiteSpace(model.T02) ? 0 : double.Parse(model.T02)) +
-                 (string.IsNullOrWhiteSpace(model.T03) ? 0 : double.Parse(model.T03)) +
-                 (string.IsNullOrWhiteSpace(model.T04) ? 0 : double.Parse(model.T04)) +
-                 (string.IsNullOrWhiteSpace(model.T05) ? 0 : double.Parse(model.T05)) +
-                 (string.IsNullOrWhiteSpace(model.T06) ? 0 : double.Parse(model.T06)) +
-                 (string.IsNullOrWhiteSpace(model.T07) ? 0 : double.Parse(model.T07)) +
-                 (string.IsNullOrWhiteSpace(model.T08) ? 0 : double.Parse(model.T08)) +
-                 (string.IsNullOrWhiteSpace(model.T09) ? 0 : double.Parse(model.T09)) +
-                 (string.IsNullOrWhiteSpace(model.T10) ? 0 : double.Parse(model.T10)) +
-                 (string.IsNullOrWhiteSpace(model.T11) ? 0 : double.Parse(model.T11)) +
-                 (string.IsNullOrWhiteSpace(model.T12) ? 0 : double.Parse(model.T12)) +
-                 (string.IsNullOrWhiteSpace(model.T13) ? 0 : double.Parse(model.T13)) +
-                 (string.IsNullOrWhiteSpace(model.T14) ? 0 : double.Parse(model.T14)) +
-                 (string.IsNullOrWhiteSpace(model.T15) ? 0 : double.Parse(model.T15)) +
-                 (string.IsNullOrWhiteSpace(model.T16) ? 0 : double.Parse(model.T16)) +
-                 (string.IsNullOrWhiteSpace(model.T17) ? 0 : double.Parse(model.T17)) +
-                 (string.IsNullOrWhiteSpace(model.T18) ? 0 : double.Parse(model.T18)) +
-                 (string.IsNullOrWhiteSpace(model.T19) ? 0 : double.Parse(model.T19)) +
-                 (string.IsNullOrWhiteSpace(model.T20) ? 0 : double.Parse(model.T20)) +
-                 (string.IsNullOrWhiteSpace(model.T21) ? 0 : double.Parse(model.T21)) +
-                 (string.IsNullOrWhiteSpace(model.T22) ? 0 : double.Parse(model.T22)) +
-                 (string.IsNullOrWhiteSpace(model.T23) ? 0 : double.Parse(model.T23))
-                 ).ToString();
-            return val;
-        }
-    }
-
-    public class TimelineSaleData : Time
-    {
-        public string? ROUTE_CODE { get; set; }
-        public string? ORGANIZATION_CODE { get; set; }
-        public string? SUM_REALSALE { get; set; }
-        public string? SUM_AMOUT { get; set; }
-        public string? Progress { get; set; }
-        public static string ConverModel(TimelineSaleData model)
-        {
-            var val = (
-                 (string.IsNullOrWhiteSpace(model.T00) ? 0 : double.Parse(model.T00)) +
-                 (string.IsNullOrWhiteSpace(model.T01) ? 0 : double.Parse(model.T01)) +
-                 (string.IsNullOrWhiteSpace(model.T02) ? 0 : double.Parse(model.T02)) +
-                 (string.IsNullOrWhiteSpace(model.T03) ? 0 : double.Parse(model.T03)) +
-                 (string.IsNullOrWhiteSpace(model.T04) ? 0 : double.Parse(model.T04)) +
-                 (string.IsNullOrWhiteSpace(model.T05) ? 0 : double.Parse(model.T05)) +
-                 (string.IsNullOrWhiteSpace(model.T06) ? 0 : double.Parse(model.T06)) +
-                 (string.IsNullOrWhiteSpace(model.T07) ? 0 : double.Parse(model.T07)) +
-                 (string.IsNullOrWhiteSpace(model.T08) ? 0 : double.Parse(model.T08)) +
-                 (string.IsNullOrWhiteSpace(model.T09) ? 0 : double.Parse(model.T09)) +
-                 (string.IsNullOrWhiteSpace(model.T10) ? 0 : double.Parse(model.T10)) +
-                 (string.IsNullOrWhiteSpace(model.T11) ? 0 : double.Parse(model.T11)) +
-                 (string.IsNullOrWhiteSpace(model.T12) ? 0 : double.Parse(model.T12)) +
-                 (string.IsNullOrWhiteSpace(model.T13) ? 0 : double.Parse(model.T13)) +
-                 (string.IsNullOrWhiteSpace(model.T14) ? 0 : double.Parse(model.T14)) +
-                 (string.IsNullOrWhiteSpace(model.T15) ? 0 : double.Parse(model.T15)) +
-                 (string.IsNullOrWhiteSpace(model.T16) ? 0 : double.Parse(model.T16)) +
-                 (string.IsNullOrWhiteSpace(model.T17) ? 0 : double.Parse(model.T17)) +
-                 (string.IsNullOrWhiteSpace(model.T18) ? 0 : double.Parse(model.T18)) +
-                 (string.IsNullOrWhiteSpace(model.T19) ? 0 : double.Parse(model.T19)) +
-                 (string.IsNullOrWhiteSpace(model.T20) ? 0 : double.Parse(model.T20)) +
-                 (string.IsNullOrWhiteSpace(model.T21) ? 0 : double.Parse(model.T21)) +
-                 (string.IsNullOrWhiteSpace(model.T22) ? 0 : double.Parse(model.T22)) +
-                 (string.IsNullOrWhiteSpace(model.T23) ? 0 : double.Parse(model.T23))
-                 ).ToString();
-            return val;
-        }
-    }
-
-    public class TimeLineOrgData : Time
+    public class TimeLineData : Time
     {
         public string? ORGANIZATION_CODE { get; set; }
         public string? ORGANIZATION_NAME { get; set; }
-        public string? NUM_SERVICE { get; set; }
-        public string? MAX_DROP { get; set; }
-        public string? Progress { get; set; }
-        public static string ConverModel(TimeLineOrgData model)
+        public string? ROUTE_CODE { get; set; }
+        public double MAX_DROP { get; set; }
+        public double SUM_AMOUT { get; set; }
+        public double SUM_REALSALE { get; set; }
+        public double ProgressDrop { get; set; }
+        public double ProgressSale { get; set; }
+        public static double ConverModelProgressDrop(TimeLineData model)
         {
             var val = (
-                 (string.IsNullOrWhiteSpace(model.T00) ? 0 : double.Parse(model.T00)) +
-                 (string.IsNullOrWhiteSpace(model.T01) ? 0 : double.Parse(model.T01)) +
-                 (string.IsNullOrWhiteSpace(model.T02) ? 0 : double.Parse(model.T02)) +
-                 (string.IsNullOrWhiteSpace(model.T03) ? 0 : double.Parse(model.T03)) +
-                 (string.IsNullOrWhiteSpace(model.T04) ? 0 : double.Parse(model.T04)) +
-                 (string.IsNullOrWhiteSpace(model.T05) ? 0 : double.Parse(model.T05)) +
-                 (string.IsNullOrWhiteSpace(model.T06) ? 0 : double.Parse(model.T06)) +
-                 (string.IsNullOrWhiteSpace(model.T07) ? 0 : double.Parse(model.T07)) +
-                 (string.IsNullOrWhiteSpace(model.T08) ? 0 : double.Parse(model.T08)) +
-                 (string.IsNullOrWhiteSpace(model.T09) ? 0 : double.Parse(model.T09)) +
-                 (string.IsNullOrWhiteSpace(model.T10) ? 0 : double.Parse(model.T10)) +
-                 (string.IsNullOrWhiteSpace(model.T11) ? 0 : double.Parse(model.T11)) +
-                 (string.IsNullOrWhiteSpace(model.T12) ? 0 : double.Parse(model.T12)) +
-                 (string.IsNullOrWhiteSpace(model.T13) ? 0 : double.Parse(model.T13)) +
-                 (string.IsNullOrWhiteSpace(model.T14) ? 0 : double.Parse(model.T14)) +
-                 (string.IsNullOrWhiteSpace(model.T15) ? 0 : double.Parse(model.T15)) +
-                 (string.IsNullOrWhiteSpace(model.T16) ? 0 : double.Parse(model.T16)) +
-                 (string.IsNullOrWhiteSpace(model.T17) ? 0 : double.Parse(model.T17)) +
-                 (string.IsNullOrWhiteSpace(model.T18) ? 0 : double.Parse(model.T18)) +
-                 (string.IsNullOrWhiteSpace(model.T19) ? 0 : double.Parse(model.T19)) +
-                 (string.IsNullOrWhiteSpace(model.T20) ? 0 : double.Parse(model.T20)) +
-                 (string.IsNullOrWhiteSpace(model.T21) ? 0 : double.Parse(model.T21)) +
-                 (string.IsNullOrWhiteSpace(model.T22) ? 0 : double.Parse(model.T22)) +
-                 (string.IsNullOrWhiteSpace(model.T23) ? 0 : double.Parse(model.T23))
-                 ).ToString();
+                 model.T00_DROP +
+                 model.T01_DROP +
+                 model.T02_DROP +
+                 model.T03_DROP +
+                 model.T04_DROP +
+                 model.T05_DROP +
+                 model.T06_DROP +
+                 model.T07_DROP +
+                 model.T08_DROP +
+                 model.T09_DROP +
+                 model.T10_DROP +
+                 model.T11_DROP +
+                 model.T12_DROP +
+                 model.T13_DROP +
+                 model.T14_DROP +
+                 model.T15_DROP +
+                 model.T16_DROP +
+                 model.T17_DROP +
+                 model.T18_DROP +
+                 model.T19_DROP +
+                 model.T20_DROP +
+                 model.T21_DROP +
+                 model.T22_DROP +
+                 model.T23_DROP
+                 );
             return val;
         }
-    }
-
-    public class TimeLineOrgSumData : Time
-    {
-        public string? SUM_SERVICE { get; set; }
-        public string? SUM_DROP { get; set; }
-        public string? Progress { get; set; }
-    }
-
-    public class TimeLineOrgSaleData : Time
-    {
-        public string? ORGANIZATION_CODE { get; set; }
-        public string? ORGANIZATION_NAME { get; set; }
-        public string? SUM_REALSALE { get; set; }
-        public string? SUM_AMOUT { get; set; }
-        public string? Progress { get; set; }
-        public static string ConverModel(TimeLineOrgSaleData model)
+        public static double ConverModelProgressSale(TimeLineData model)
         {
-           var val = (
-                (string.IsNullOrWhiteSpace(model.T00) ? 0 : double.Parse(model.T00)) + 
-                (string.IsNullOrWhiteSpace(model.T01) ? 0 : double.Parse(model.T01)) +
-                (string.IsNullOrWhiteSpace(model.T02) ? 0 : double.Parse(model.T02)) +
-                (string.IsNullOrWhiteSpace(model.T03) ? 0 : double.Parse(model.T03)) +
-                (string.IsNullOrWhiteSpace(model.T04) ? 0 : double.Parse(model.T04)) +
-                (string.IsNullOrWhiteSpace(model.T05) ? 0 : double.Parse(model.T05)) +
-                (string.IsNullOrWhiteSpace(model.T06) ? 0 : double.Parse(model.T06)) +
-                (string.IsNullOrWhiteSpace(model.T07) ? 0 : double.Parse(model.T07)) +
-                (string.IsNullOrWhiteSpace(model.T08) ? 0 : double.Parse(model.T08)) +
-                (string.IsNullOrWhiteSpace(model.T09) ? 0 : double.Parse(model.T09)) +
-                (string.IsNullOrWhiteSpace(model.T10) ? 0 : double.Parse(model.T10)) +
-                (string.IsNullOrWhiteSpace(model.T11) ? 0 : double.Parse(model.T11)) +
-                (string.IsNullOrWhiteSpace(model.T12) ? 0 : double.Parse(model.T12)) +
-                (string.IsNullOrWhiteSpace(model.T13) ? 0 : double.Parse(model.T13)) +
-                (string.IsNullOrWhiteSpace(model.T14) ? 0 : double.Parse(model.T14)) +
-                (string.IsNullOrWhiteSpace(model.T15) ? 0 : double.Parse(model.T15)) +
-                (string.IsNullOrWhiteSpace(model.T16) ? 0 : double.Parse(model.T16)) +
-                (string.IsNullOrWhiteSpace(model.T17) ? 0 : double.Parse(model.T17)) +
-                (string.IsNullOrWhiteSpace(model.T18) ? 0 : double.Parse(model.T18)) +
-                (string.IsNullOrWhiteSpace(model.T19) ? 0 : double.Parse(model.T19)) +
-                (string.IsNullOrWhiteSpace(model.T20) ? 0 : double.Parse(model.T20)) +
-                (string.IsNullOrWhiteSpace(model.T21) ? 0 : double.Parse(model.T21)) +
-                (string.IsNullOrWhiteSpace(model.T22) ? 0 : double.Parse(model.T22)) +
-                (string.IsNullOrWhiteSpace(model.T23) ? 0 : double.Parse(model.T23)) 
-                ).ToString();
+            var val = (
+                 model.T00_SALE +
+                 model.T01_SALE +
+                 model.T02_SALE +
+                 model.T03_SALE +
+                 model.T04_SALE +
+                 model.T05_SALE +
+                 model.T06_SALE +
+                 model.T07_SALE +
+                 model.T08_SALE +
+                 model.T09_SALE +
+                 model.T10_SALE +
+                 model.T11_SALE +
+                 model.T12_SALE +
+                 model.T13_SALE +
+                 model.T14_SALE +
+                 model.T15_SALE +
+                 model.T16_SALE +
+                 model.T17_SALE +
+                 model.T18_SALE +
+                 model.T19_SALE +
+                 model.T20_SALE +
+                 model.T21_SALE +
+                 model.T22_SALE +
+                 model.T23_SALE
+                 );
             return val;
         }
     }
-
     public class Time
     {
-        public string? T01 {get;set;}
-        public string? T02 {get;set;}
-        public string? T03 {get;set;}
-        public string? T04 {get;set;}
-        public string? T05 {get;set;}
-        public string? T06 {get;set;}
-        public string? T07 {get;set;}
-        public string? T08 {get;set;}
-        public string? T09 {get;set;}
-        public string? T10 {get;set;}
-        public string? T11 {get;set;}
-        public string? T12 {get;set;}
-        public string? T13 {get;set;}
-        public string? T14 {get;set;}
-        public string? T15 {get;set;}
-        public string? T16 {get;set;}
-        public string? T17 {get;set;}
-        public string? T18 {get;set;}
-        public string? T19 {get;set;}
-        public string? T20 {get;set;}
-        public string? T21 {get;set;}
-        public string? T22 {get;set;}
-        public string? T23 {get;set;}
-        public string? T00 {get;set;}
+        public double T00_DROP { get; set; }
+        public double T01_DROP { get; set; }
+        public double T02_DROP { get; set; }
+        public double T03_DROP { get; set; }
+        public double T04_DROP { get; set; }
+        public double T05_DROP { get; set; }
+        public double T06_DROP { get; set; }
+        public double T07_DROP { get; set; }
+        public double T08_DROP { get; set; }
+        public double T09_DROP { get; set; }
+        public double T10_DROP { get; set; }
+        public double T11_DROP { get; set; }
+        public double T12_DROP { get; set; }
+        public double T13_DROP { get; set; }
+        public double T14_DROP { get; set; }
+        public double T15_DROP { get; set; }
+        public double T16_DROP { get; set; }
+        public double T17_DROP { get; set; }
+        public double T18_DROP { get; set; }
+        public double T19_DROP { get; set; }
+        public double T20_DROP { get; set; }
+        public double T21_DROP { get; set; }
+        public double T22_DROP { get; set; }
+        public double T23_DROP { get; set; }
+        public double T00_SALE { get; set; }
+        public double T01_SALE { get; set; }
+        public double T02_SALE { get; set; }
+        public double T03_SALE { get; set; }
+        public double T04_SALE { get; set; }
+        public double T05_SALE { get; set; }
+        public double T06_SALE { get; set; }
+        public double T07_SALE { get; set; }
+        public double T08_SALE { get; set; }
+        public double T09_SALE { get; set; }
+        public double T10_SALE { get; set; }
+        public double T11_SALE { get; set; }
+        public double T12_SALE { get; set; }
+        public double T13_SALE { get; set; }
+        public double T14_SALE { get; set; }
+        public double T15_SALE { get; set; }
+        public double T16_SALE { get; set; }
+        public double T17_SALE { get; set; }
+        public double T18_SALE { get; set; }
+        public double T19_SALE { get; set; }
+        public double T20_SALE { get; set; }
+        public double T21_SALE { get; set; }
+        public double T22_SALE { get; set; }
+        public double T23_SALE { get; set; }
     }
+
 }

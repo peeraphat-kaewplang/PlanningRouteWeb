@@ -1,5 +1,5 @@
 ﻿@page "/Timeline/Detail"
-@inject IJSRuntime JSRuntime
+ @inject IJSRuntime JSRuntime
 @inject ITimelineService TimelineService
 @inject IPlanningService PlanningService
 @inject IPlanningService PlanningService
@@ -19,7 +19,7 @@
         </div>
     }
     <div class="col-auto">
-        <input @bind="isView" @oninput="OnChangeView" class="form-check-input" type="checkbox">
+        <input @bind="isView" class="form-check-input" type="checkbox">
         <label class="form-check-label" for="checkView">
             มุมมองจำนวนเงิน
         </label>
@@ -70,171 +70,92 @@
             </tr>
         </thead>
         <tbody>
-            @if (isView)
+        
+            @foreach (var model in timelineData.TimelineList)
             {
-                @foreach (var model in timelineSaleData.TimelineListRouteSale)
-                {
-                    <tr>
-                        <td class="d-flex align-items-center gap-2">
-                            <div class="d-inline-block text-truncate w-25"> @model.ROUTE_CODE</div>
-                            <div class="progress w-75" role="progressbar" aria-label="Success example">
-                                <div class=@($"progress-bar overflow-visible text-dark {StyleProgress(model.Progress! , model.SUM_AMOUT!)}") style=@($"width: {calValueProgress(model.Progress! , model.SUM_AMOUT!)}%")>@($"{model.Progress}/{model.SUM_AMOUT}")</div>
-                            </div>
-                        </td>
-                        <td class="text-center @(model.T00 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T00</td>
-                        <td class="text-center @(model.T01 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T01</td>
-                        <td class="text-center @(model.T02 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T02</td>
-                        <td class="text-center @(model.T03 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T03</td>
-                        <td class="text-center @(model.T04 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T04</td>
-                        <td class="text-center @(model.T05 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T05</td>
-                        <td class="text-center @(model.T06 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T06</td>
-                        <td class="text-center @(model.T07 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T07</td>
-                        <td class="text-center @(model.T08 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T08</td>
-                        <td class="text-center @(model.T09 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T09</td>
-                        <td class="text-center @(model.T10 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T10</td>
-                        <td class="text-center @(model.T11 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T11</td>
-                        <td class="text-center @(model.T12 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T12</td>
-                        <td class="text-center @(model.T13 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T13</td>
-                        <td class="text-center @(model.T14 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T14</td>
-                        <td class="text-center @(model.T15 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T15</td>
-                        <td class="text-center @(model.T16 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T16</td>
-                        <td class="text-center @(model.T17 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T17</td>
-                        <td class="text-center @(model.T18 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T18</td>
-                        <td class="text-center @(model.T19 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T19</td>
-                        <td class="text-center @(model.T20 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T20</td>
-                        <td class="text-center @(model.T21 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T21</td>
-                        <td class="text-center @(model.T22 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T22</td>
-                        <td class="text-center @(model.T23 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T23</td>
-                        <td class="d-flex justify-content-around">
-                            <RadzenText MouseEnter="@(args => ShowTooltip(args , "แก้ไขค่าเริ่มต้น") )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
-                                <i class="fa-solid fa-pen-to-square text-warning" style="cursor:pointer" @onclick="@(()=> ShowInlineDialog(model.ROUTE_CODE!))"></i>
-                            </RadzenText>
-                            <RadzenText MouseEnter="@(args => ShowTooltip(args , "ไปหน้า Planning") )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
-                                <i class="fa-solid fa-eye text-primary" style="cursor:pointer" @onclick="@(() => GoToPlanning(model.ROUTE_CODE!))"></i>
-                            </RadzenText>
-                        </td>
-                    </tr>
-                }
-            }
-            else
-            {
-                @foreach (var model in timelineData.TimelineListRoute)
-                {
-                    <tr>
-                        <td class="d-flex align-items-center gap-2">
-                            <div class="d-inline-block text-truncate w-25"> @model.ROUTE_CODE</div>
-                            <div class="progress w-75" role="progressbar" aria-label="Success example">
-                                <div class=@($"progress-bar overflow-visible text-dark {StyleProgress(model.Progress! , model.MAX_DROP!)}") style=@($"width: {calValueProgress(model.Progress! , model.MAX_DROP!)}%")>@($"{model.Progress}/{model.MAX_DROP}")</div>
-                            </div>
-                        </td>
-                        <td class="text-center @(model.T00 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T00</td>
-                        <td class="text-center @(model.T01 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T01</td>
-                        <td class="text-center @(model.T02 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T02</td>
-                        <td class="text-center @(model.T03 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T03</td>
-                        <td class="text-center @(model.T04 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T04</td>
-                        <td class="text-center @(model.T05 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T05</td>
-                        <td class="text-center @(model.T06 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T06</td>
-                        <td class="text-center @(model.T07 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T07</td>
-                        <td class="text-center @(model.T08 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T08</td>
-                        <td class="text-center @(model.T09 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T09</td>
-                        <td class="text-center @(model.T10 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T10</td>
-                        <td class="text-center @(model.T11 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T11</td>
-                        <td class="text-center @(model.T12 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T12</td>
-                        <td class="text-center @(model.T13 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T13</td>
-                        <td class="text-center @(model.T14 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T14</td>
-                        <td class="text-center @(model.T15 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T15</td>
-                        <td class="text-center @(model.T16 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T16</td>
-                        <td class="text-center @(model.T17 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T17</td>
-                        <td class="text-center @(model.T18 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T18</td>
-                        <td class="text-center @(model.T19 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T19</td>
-                        <td class="text-center @(model.T20 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T20</td>
-                        <td class="text-center @(model.T21 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T21</td>
-                        <td class="text-center @(model.T22 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T22</td>
-                        <td class="text-center @(model.T23 != "0" ? "bg-isValue" : null)" style="width:4rem">@model.T23</td>
-                        <td class="d-flex justify-content-around">
-                            <RadzenText MouseEnter="@(args => ShowTooltip(args , "แก้ไขค่าเริ่มต้น") )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
-                                <i class="fa-solid fa-pen-to-square text-warning" style="cursor:pointer" @onclick="@(()=> ShowInlineDialog(model.ROUTE_CODE!))"></i>
-                            </RadzenText>
+            <tr>
+                <td class="d-flex align-items-center gap-2">
+                    <div class="d-inline-block text-truncate w-25"> @model.ORGANIZATION_NAME</div>
+                    <div class="progress w-75" role="progressbar" aria-label="Success example">
+                        <div class=@($"progress-bar overflow-visible text-dark {StyleProgress(isView ? model.ProgressSale : model.ProgressDrop ,isView ? model.SUM_AMOUT : model.MAX_DROP)}") style=@($"width: {calValueProgress(isView ? model.ProgressSale : model.ProgressDrop ,isView ? model.SUM_AMOUT : model.MAX_DROP)}%")>
+                                @($"{(isView ? model.ProgressSale.ToStringNumberFormat(false) : model.ProgressDrop.ToStringNumberFormat(false))}/{(isView ? model.SUM_AMOUT.ToStringNumberFormat(false) : model.MAX_DROP.ToStringNumberFormat(false))}")
+                        </div>
+                    </div>
+                </td>
+                <td class="text-center @(isView ? model.T00_SALE != 0 ? "bg-isValue" : null :  model.T00_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T00_SALE.ToStringNumberFormat(false) : model.T00_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(isView ? model.T01_SALE != 0 ? "bg-isValue" : null :  model.T01_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T01_SALE.ToStringNumberFormat(false) : model.T01_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(isView ? model.T02_SALE != 0 ? "bg-isValue" : null :  model.T02_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T02_SALE.ToStringNumberFormat(false) : model.T02_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(isView ? model.T03_SALE != 0 ? "bg-isValue" : null :  model.T03_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T03_SALE.ToStringNumberFormat(false) : model.T03_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(isView ? model.T04_SALE != 0 ? "bg-isValue" : null :  model.T04_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T04_SALE.ToStringNumberFormat(false) : model.T04_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(isView ? model.T05_SALE != 0 ? "bg-isValue" : null :  model.T05_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T05_SALE.ToStringNumberFormat(false) : model.T05_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(isView ? model.T06_SALE != 0 ? "bg-isValue" : null :  model.T06_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T06_SALE.ToStringNumberFormat(false) : model.T06_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(isView ? model.T07_SALE != 0 ? "bg-isValue" : null :  model.T07_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T07_SALE.ToStringNumberFormat(false) : model.T07_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(isView ? model.T08_SALE != 0 ? "bg-isValue" : null :  model.T08_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T08_SALE.ToStringNumberFormat(false) : model.T08_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(isView ? model.T09_SALE != 0 ? "bg-isValue" : null :  model.T09_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T09_SALE.ToStringNumberFormat(false) : model.T09_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(isView ? model.T10_SALE != 0 ? "bg-isValue" : null :  model.T10_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T10_SALE.ToStringNumberFormat(false) : model.T10_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(isView ? model.T11_SALE != 0 ? "bg-isValue" : null :  model.T11_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T11_SALE.ToStringNumberFormat(false) : model.T11_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(isView ? model.T12_SALE != 0 ? "bg-isValue" : null :  model.T12_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T12_SALE.ToStringNumberFormat(false) : model.T12_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(isView ? model.T13_SALE != 0 ? "bg-isValue" : null :  model.T13_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T13_SALE.ToStringNumberFormat(false) : model.T13_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(isView ? model.T14_SALE != 0 ? "bg-isValue" : null :  model.T14_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T14_SALE.ToStringNumberFormat(false) : model.T14_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(isView ? model.T15_SALE != 0 ? "bg-isValue" : null :  model.T15_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T15_SALE.ToStringNumberFormat(false) : model.T15_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(isView ? model.T16_SALE != 0 ? "bg-isValue" : null :  model.T16_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T16_SALE.ToStringNumberFormat(false) : model.T16_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(isView ? model.T17_SALE != 0 ? "bg-isValue" : null :  model.T17_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T17_SALE.ToStringNumberFormat(false) : model.T17_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(isView ? model.T18_SALE != 0 ? "bg-isValue" : null :  model.T18_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T18_SALE.ToStringNumberFormat(false) : model.T18_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(isView ? model.T19_SALE != 0 ? "bg-isValue" : null :  model.T19_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T19_SALE.ToStringNumberFormat(false) : model.T19_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(isView ? model.T20_SALE != 0 ? "bg-isValue" : null :  model.T20_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T20_SALE.ToStringNumberFormat(false) : model.T20_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(isView ? model.T21_SALE != 0 ? "bg-isValue" : null :  model.T21_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T21_SALE.ToStringNumberFormat(false) : model.T21_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(isView ? model.T22_SALE != 0 ? "bg-isValue" : null :  model.T22_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T22_SALE.ToStringNumberFormat(false) : model.T22_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(isView ? model.T23_SALE != 0 ? "bg-isValue" : null :  model.T23_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T23_SALE.ToStringNumberFormat(false) : model.T23_DROP.ToStringNumberFormat(false))</td>
+                    <td class="d-flex justify-content-around">
+                        <RadzenText MouseEnter="@(args => ShowTooltip(args , "แก้ไขค่าเริ่มต้น") )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
+                            <i class="fa-solid fa-pen-to-square text-warning" style="cursor:pointer" @onclick="@(()=> ShowInlineDialog(model.ROUTE_CODE!))"></i>
+                        </RadzenText>
+                        <RadzenText MouseEnter="@(args => ShowTooltip(args , "ไปหน้า Planning") )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
                             <i class="fa-solid fa-eye text-primary" style="cursor:pointer" @onclick="@(() => GoToPlanning(model.ROUTE_CODE!))"></i>
-                        </td>
-                    </tr>
-                }
+                        </RadzenText>
+                    </td>
+            </tr>
             }
         </tbody>
         <tfoot>
             <tr>
-                
                 <td class="d-flex align-items-center gap-2">
                     <div class="w-25 text-center">รวม</div>
-                    @if (isView)
-                    {
-                        <div class="w-75 progress" role="progressbar" aria-label="Example with label" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
-                            <div class=@($"progress-bar overflow-visible text-dark {StyleProgress(timelineSaleData.TimeLineSum.Progress!, timelineSaleData.TimeLineSum.SUM_DROP!)}") style=@($"width: {calValueProgress(timelineSaleData.TimeLineSum.Progress!, timelineSaleData.TimeLineSum.SUM_DROP!)}%")>
-                                @($"{timelineSaleData.TimeLineSum.Progress}/{timelineSaleData.TimeLineSum.SUM_DROP}")
-                            </div>
-                        </div>
+                    @{
+                        var value = isView ? timelineData.TimeLineSum.ProgressSale : timelineData.TimeLineSum.ProgressDrop;
+                        var max = isView ? timelineData.TimeLineSum.SUM_AMOUT : timelineData.TimeLineSum.MAX_DROP;
                     }
-                    else
-                    {
-                        <div class="w-75 progress" role="progressbar" aria-label="Example with label" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
-                            <div class=@($"progress-bar overflow-visible text-dark {StyleProgress(timelineData.TimeLineSum.Progress!, timelineData.TimeLineSum.SUM_DROP!)}") style=@($"width: {calValueProgress(timelineData.TimeLineSum.Progress!, timelineData.TimeLineSum.SUM_DROP!)}%")>@($"{timelineData.TimeLineSum.Progress}/{timelineData.TimeLineSum.SUM_DROP}")</div>
+                    <div class="w-75 progress" role="progressbar" aria-label="Example with label" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
+                        <div class=@($"progress-bar overflow-visible text-dark {StyleProgress(value, max)}")
+                             style=@($"width: {calValueProgress(value, max)}%")>
+                            @($"{value.ToStringNumberFormat(false)}/{max.ToStringNumberFormat(false)}")
                         </div>
-                    }
+                    </div>
                 </td>
-                @if (isView)
-                {
-                    <td class="text-center">@timelineSaleData.TimeLineSum.T00</td>
-                    <td class="text-center">@timelineSaleData.TimeLineSum.T01</td>
-                    <td class="text-center">@timelineSaleData.TimeLineSum.T02</td>
-                    <td class="text-center">@timelineSaleData.TimeLineSum.T03</td>
-                    <td class="text-center">@timelineSaleData.TimeLineSum.T04</td>
-                    <td class="text-center">@timelineSaleData.TimeLineSum.T05</td>
-                    <td class="text-center">@timelineSaleData.TimeLineSum.T06</td>
-                    <td class="text-center">@timelineSaleData.TimeLineSum.T07</td>
-                    <td class="text-center">@timelineSaleData.TimeLineSum.T08</td>
-                    <td class="text-center">@timelineSaleData.TimeLineSum.T09</td>
-                    <td class="text-center">@timelineSaleData.TimeLineSum.T10</td>
-                    <td class="text-center">@timelineSaleData.TimeLineSum.T11</td>
-                    <td class="text-center">@timelineSaleData.TimeLineSum.T12</td>
-                    <td class="text-center">@timelineSaleData.TimeLineSum.T13</td>
-                    <td class="text-center">@timelineSaleData.TimeLineSum.T14</td>
-                    <td class="text-center">@timelineSaleData.TimeLineSum.T15</td>
-                    <td class="text-center">@timelineSaleData.TimeLineSum.T16</td>
-                    <td class="text-center">@timelineSaleData.TimeLineSum.T17</td>
-                    <td class="text-center">@timelineSaleData.TimeLineSum.T18</td>
-                    <td class="text-center">@timelineSaleData.TimeLineSum.T19</td>
-                    <td class="text-center">@timelineSaleData.TimeLineSum.T20</td>
-                    <td class="text-center">@timelineSaleData.TimeLineSum.T21</td>
-                    <td class="text-center">@timelineSaleData.TimeLineSum.T22</td>
-                    <td class="text-center">@timelineSaleData.TimeLineSum.T23</td>
-                }
-                else
-                {
-                    <td class="text-center">@timelineData.TimeLineSum.T00</td>
-                    <td class="text-center">@timelineData.TimeLineSum.T01</td>
-                    <td class="text-center">@timelineData.TimeLineSum.T02</td>
-                    <td class="text-center">@timelineData.TimeLineSum.T03</td>
-                    <td class="text-center">@timelineData.TimeLineSum.T04</td>
-                    <td class="text-center">@timelineData.TimeLineSum.T05</td>
-                    <td class="text-center">@timelineData.TimeLineSum.T06</td>
-                    <td class="text-center">@timelineData.TimeLineSum.T07</td>
-                    <td class="text-center">@timelineData.TimeLineSum.T08</td>
-                    <td class="text-center">@timelineData.TimeLineSum.T09</td>
-                    <td class="text-center">@timelineData.TimeLineSum.T10</td>
-                    <td class="text-center">@timelineData.TimeLineSum.T11</td>
-                    <td class="text-center">@timelineData.TimeLineSum.T12</td>
-                    <td class="text-center">@timelineData.TimeLineSum.T13</td>
-                    <td class="text-center">@timelineData.TimeLineSum.T14</td>
-                    <td class="text-center">@timelineData.TimeLineSum.T15</td>
-                    <td class="text-center">@timelineData.TimeLineSum.T16</td>
-                    <td class="text-center">@timelineData.TimeLineSum.T17</td>
-                    <td class="text-center">@timelineData.TimeLineSum.T18</td>
-                    <td class="text-center">@timelineData.TimeLineSum.T19</td>
-                    <td class="text-center">@timelineData.TimeLineSum.T20</td>
-                    <td class="text-center">@timelineData.TimeLineSum.T21</td>
-                    <td class="text-center">@timelineData.TimeLineSum.T22</td>
-                    <td class="text-center">@timelineData.TimeLineSum.T23</td>
-                }
+                <td class="text-center">@(isView ? timelineData.TimeLineSum.T00_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T00_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(isView ? timelineData.TimeLineSum.T01_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T01_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(isView ? timelineData.TimeLineSum.T02_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T02_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(isView ? timelineData.TimeLineSum.T03_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T03_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(isView ? timelineData.TimeLineSum.T04_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T04_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(isView ? timelineData.TimeLineSum.T05_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T05_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(isView ? timelineData.TimeLineSum.T06_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T06_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(isView ? timelineData.TimeLineSum.T07_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T07_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(isView ? timelineData.TimeLineSum.T08_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T08_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(isView ? timelineData.TimeLineSum.T09_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T09_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(isView ? timelineData.TimeLineSum.T10_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T10_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(isView ? timelineData.TimeLineSum.T11_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T11_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(isView ? timelineData.TimeLineSum.T12_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T12_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(isView ? timelineData.TimeLineSum.T13_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T13_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(isView ? timelineData.TimeLineSum.T14_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T14_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(isView ? timelineData.TimeLineSum.T15_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T15_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(isView ? timelineData.TimeLineSum.T16_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T16_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(isView ? timelineData.TimeLineSum.T17_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T17_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(isView ? timelineData.TimeLineSum.T18_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T18_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(isView ? timelineData.TimeLineSum.T19_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T19_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(isView ? timelineData.TimeLineSum.T20_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T20_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(isView ? timelineData.TimeLineSum.T21_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T21_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(isView ? timelineData.TimeLineSum.T22_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T22_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(isView ? timelineData.TimeLineSum.T23_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T23_DROP.ToStringNumberFormat(false))</td>
                 <td class="text-center"></td>
             </tr>
         </tfoot>
@@ -254,8 +175,7 @@
     [SupplyParameterFromQuery(Name = "End")]
     public string? End { get; set; }
     private IJSObjectReference? JSModule;
-    public ResultTimelineRoute timelineData { get; set; } = new();
-    public ResultTimelineRouteSale timelineSaleData { get; set; } = new();
+    public ResultTimeline timelineData { get; set; } = new();
     public Target2 target = new();
     public IEnumerable<OrganizationData> optionsOrg = new List<OrganizationData>();
     public IEnumerable<PlanningRouteWeb.Models.RouteData> optionsRoute = new List<PlanningRouteWeb.Models.RouteData>();
@@ -272,7 +192,7 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        AutoLoadData();
+        // AutoLoadData();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -280,7 +200,6 @@
         if (firstRender)
         {
          
-
             StateContainer.IsLoading = true;
             JSModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/site.js");
             await JSModule.InvokeVoidAsync("InitailJS.tooltipTrigger");
@@ -355,72 +274,39 @@
         var t = (e - s).TotalDays;
         var time = Convert.ToInt32(t) + 1;
 
-
-        if (view)
+        var (error, timeline) = await TimelineService.GetTimeLine(req);
+        if (error.Error)
         {
-            var (error, timeline) = await TimelineService.GetTimeLineRouteSale(time, req);
-            if (error.Error)
-            {
-                await JSModule!.InvokeVoidAsync("JsFunction.toastTrigger", new ToastModel
-                        {
-                            action = "error",
-                            messang = error.ErrorMessage
-                        });
-            }
-            else
-            {
-                timelineSaleData = timeline.Data;
-            }
+            await JSModule!.InvokeVoidAsync("JsFunction.toastTrigger", new ToastModel
+                    {
+                        action = "error",
+                        messang = error.ErrorMessage
+                    });
         }
         else
         {
-            var (error, timeline) = await TimelineService.GetTimeLineRoute(req);
-            if (error.Error)
-            {
-                await JSModule!.InvokeVoidAsync("JsFunction.toastTrigger", new ToastModel
-                        {
-                            action = "error",
-                            messang = error.ErrorMessage
-                        });
-            }
-            else
-            {
-                timelineData = timeline.Data;
-            }
+            timelineData = timeline.Data;
         }
-
     }
-
-    public string calValueProgress(string val1, string val2)
+    public string calValueProgress(double val1, double val2)
     {
-        var param1 = string.IsNullOrEmpty(val1) ? 0 : double.Parse(val1);
-        var param2 = string.IsNullOrEmpty(val2) ? 0 : double.Parse(val2);
-        var per = (param1 * 100) / param2;
+        var per = (val1 * 100) / val2;
         return per.ToString();
     }
-
-    public string StyleProgress(string val1, string val2)
+    public string StyleProgress(double val1, double val2)
     {
-        var param1 = string.IsNullOrEmpty(val1) ? 0 : double.Parse(val1);
-        var param2 = string.IsNullOrEmpty(val2) ? 0 : double.Parse(val2);
-        var per = (param1 * 100) / param2;
-        if (per <= 33.33)
-        {
-            return "bg-danger";
-        }
-        else if (per > 33.33 && per < 100)
-        {
-            return "bg-warning";
-        }
-        else if (per > 100)
-        {
-            return "bg-over";
-        }
-        else
-        {
-            return "bg-success";
-        }
+        var per = (val1 * 100) / val2;
+        return CaseCss(per);
     }
+
+
+    public string CaseCss(double per) => per switch
+    {
+        _ when per <= 33.33 => "bg-danger",
+        _ when per > 33.33 && per < 100 => "bg-warning",
+        _ when per > 100 => "bg-over",
+        _ => "bg-success"
+    };
 
     public async Task OnChangeView(ChangeEventArgs e)
     {
@@ -528,4 +414,4 @@
         }
     }
 
-}
+} 
