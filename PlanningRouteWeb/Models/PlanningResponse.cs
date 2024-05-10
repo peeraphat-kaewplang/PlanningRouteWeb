@@ -2,6 +2,32 @@ using System.Reflection.PortableExecutable;
 
 namespace PlanningRouteWeb.Models
 {
+    public class ProductLowQty : HttpResponse
+    {
+        public List<ProductLowQtyData> Data { get; set; } = new();
+    }
+
+    public class ProductLowQtyData
+    {
+        public string MACHINE_CODE { get; set; } = string.Empty;
+        public string ISONLINE { get; set; } = string.Empty;
+        public string SLOTNO { get; set; } = string.Empty;
+        public string PRODUCT_CODE { get; set; } = string.Empty;
+        public string PRODUCTNAME { get; set; } = string.Empty;
+        public string INCOME_QTY { get; set; } = string.Empty;
+        public string COUNT_QTY { get; set; } = string.Empty;
+        public string LOAD_IN_QTY { get; set; } = string.Empty;
+        public string LOAD_OUT_QTY { get; set; } = string.Empty;
+        public string LOST_QTY { get; set; } = string.Empty;
+        public string LOAD_BALANCE_QTY { get; set; } = string.Empty;
+        public string SALE_SUCCESS_QTY { get; set; } = string.Empty;
+        public string SALE_FAIL_QTY { get; set; } = string.Empty;
+        public string BALANCE_QTY { get; set; } = string.Empty;
+        public string LOW_QTY { get; set; } = string.Empty;
+        public string LOW_DAY { get; set; } = string.Empty;
+        public string LOW_DAY_START { get; set; } = string.Empty;
+    }
+
     public class OrganizationResponse : HttpResponse
     {
         public List<OrganizationData> Data { get; set; } = new();
@@ -92,6 +118,11 @@ namespace PlanningRouteWeb.Models
         public string MSORT { get; set; } = string.Empty;
         public string SALE_LAST_WEEK { get; set; } = string.Empty;
         public string SALE_LAST_WEEK_END { get; set; } = string.Empty;
+        public string ISONLINE { get; set; } = string.Empty;
+        public string IS_LOW_QTY { get;set; } = string.Empty;
+        public string TOTAL_SLOT_INSTALLPRICE { get;set; } = string.Empty;  
+        public string TOTAL_COST_SALEPRICE { get;set; } = string.Empty;  
+        public string GP_PRODUCT { get;set; } = string.Empty;  
         public List<PlanningDetail> GETPLAN_DETAIL { get; set; } = new();
         public Dictionary<string, List<string>> Week1 { get; set; } = new();
         public Dictionary<string, List<string>> Week2 { get; set; } = new();
@@ -148,7 +179,11 @@ namespace PlanningRouteWeb.Models
         public double SALE_LAST_WEEK { get; set; }
         public double SALE_LAST_WEEK_END { get; set; }
         public bool IS_DUPLICATE { get; set; }
-        
+        public string ISONLINE { get; set; } = string.Empty;
+        public string IS_LOW_QTY { get; set; } = string.Empty;
+        public string GP { get; set; } = string.Empty;
+        public string GP_PRODUCT { get; set; } = string.Empty;
+
     }
     public class Group2 : Group1
     {
@@ -229,6 +264,7 @@ namespace PlanningRouteWeb.Models
         public string HOLIDAY { get; set; } = string.Empty;
         public string MACHINE_CODE { get; set; } = string.Empty;
         public string CHANGEPRODUCT { get; set; } = string.Empty;
+        public string REQUISITION { get; set; } = string.Empty;
     }
 
     public class PlanningDetail2
@@ -245,6 +281,7 @@ namespace PlanningRouteWeb.Models
         public string HOLIDAY { get; set; } = string.Empty;
         public string MACHINE_CODE { get; set; } = string.Empty;
         public string CHANGEPRODUCT { get; set; } = string.Empty;
+        public string REQUISITION { get; set; } = string.Empty;
     }
 
    

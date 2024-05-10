@@ -44,6 +44,34 @@
     <script src="lib/bootstrap-datepicker/locales/bootstrap-datepicker.th.min.js" charset="UTF-8"></script>
     <script src="lib/dayjs/dayjs.min.js"></script>
     @* <script src="js/site.js"></script> *@
+    <script>
+        window.InitDragAndDrop = ()=> {
+            const tbody = document.getElementsByTagName("tbody")[0];
+            let rows = tbody.rows;
+            console.log(tbody)
+            for (i = 0; i < rows.length; i++) {
+                var row = rows[i];
+                row.setAttribute('draggable', true);
+
+                row.addEventListener('dragstart', (event) => {
+                    row = event.target;
+                });
+
+                row.addEventListener('dragover', (event) => {
+                    var e = event;
+                    e.preventDefault();
+
+                    let allRows = Array.from(rows);
+
+                    if (allRows.indexOf(e.target.parentNode) > allRows.indexOf(row))
+                        e.target.parentNode.after(row);
+                    else
+                        e.target.parentNode.before(row);
+                })
+            }
+
+        }
+    </script>
 </body>
 
 </html>

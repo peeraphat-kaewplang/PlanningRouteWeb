@@ -1,13 +1,9 @@
-using System;
 using System.Globalization;
-using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.Json;
-using Microsoft.Extensions.Options;
 using PlanningRouteWeb.Helpers;
 using PlanningRouteWeb.Interfaces;
 using PlanningRouteWeb.Models;
-using PlanningRouteWeb.Models.V2;
 using PlanningRouteWeb.Services.V2;
 
 namespace PlanningRouteWeb.Services
@@ -36,7 +32,7 @@ namespace PlanningRouteWeb.Services
                 var requestMessage = new HttpRequestMessage()
                 {
                     Method = new HttpMethod("POST"),
-                    RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}API_PLANNING/V1/GETORG"),
+                    RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}/V1/GETORG"),
                     Content = JsonContent.Create(org)
                 };
 
@@ -53,7 +49,7 @@ namespace PlanningRouteWeb.Services
             }
             catch (Exception ex)
             {
-               
+
                 _stateContainer.IsLoading = false;
                 await _commonService.ShowAlert(new ToastModel
                 {
@@ -70,7 +66,7 @@ namespace PlanningRouteWeb.Services
             var requestMessage = new HttpRequestMessage()
             {
                 Method = new HttpMethod("POST"),
-                RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}API_PLANNING/V1/GETROUTE"),
+                RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}/V1/GETROUTE"),
                 Content = JsonContent.Create(org)
             };
 
@@ -93,7 +89,7 @@ namespace PlanningRouteWeb.Services
                 var requestMessage = new HttpRequestMessage()
                 {
                     Method = new HttpMethod("POST"),
-                    RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}API_PLANNING/V1/GETPLAN"),
+                    RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}/V1/GETPLAN"),
                     Content = JsonContent.Create(body)
                 };
                 var response = await _httpClient.SendAsync(requestMessage);
@@ -103,11 +99,9 @@ namespace PlanningRouteWeb.Services
                     throw new ApplicationException($"Http error : {content}");
                 }
 
-                //_stateContainer.BeforeConfig = 1;
-
                 var plannings = JsonSerializer.Deserialize<PanningMasterResponse>(content, _options);
                 var dataPlan = plannings!.Data.Plan.Where(p => p.GETPLAN_DETAIL.Count() > 30).ToList();
-
+                var target = ConvertModel.TargetModelToTarget2Model(plannings!.Data.Target);
                 if (dataPlan.Count() != 0)
                 {
                     columns = new Dictionary<string, ColumnProperty>();
@@ -122,7 +116,8 @@ namespace PlanningRouteWeb.Services
                             FieldRankName = "Seq",
                             FieldValueName = "Value",
                             ClassColor = SubStrDay(item.CALENDAR_DATE).FullName.ToLower(),
-                            IsCurrent = DateTime.ParseExact(item.CALENDAR_DATE, "dd/MM/yyyy", null).CheckDateInCurrentWeek(_stateContainer.DateCurrent, _stateContainer.BeforeConfig),
+                            //IsCurrent = DateTime.ParseExact(item.CALENDAR_DATE, "dd/MM/yyyy", null).CheckDateInCurrentWeek(_stateContainer.DateCurrent, _stateContainer.BeforeConfig),
+                            IsCurrent = _commonService.CheckDateInCurrentWeek(DateTime.ParseExact(item.CALENDAR_DATE, "dd/MM/yyyy", null)),
                         });
                     }
 
@@ -135,7 +130,8 @@ namespace PlanningRouteWeb.Services
                             x.Week2.Add(x.MACHINE_CODE, new List<string>());
                             x.GETPLAN_DETAIL = x.GETPLAN_DETAIL.Select(d =>
                             {
-                                var current = DateTime.ParseExact(d.CALENDAR_DATE, "dd/MM/yyyy", null).CheckDateInCurrentWeek(_stateContainer.DateCurrent, _stateContainer.BeforeConfig);
+                                //var current = DateTime.ParseExact(d.CALENDAR_DATE, "dd/MM/yyyy", null).CheckDateInCurrentWeek(_stateContainer.DateCurrent, _stateContainer.BeforeConfig);
+                                var current = _commonService.CheckDateInCurrentWeek(DateTime.ParseExact(d.CALENDAR_DATE, "dd/MM/yyyy", null) , x.ORGANIZATION_CODE , x.ROUTE_CODE);
                                 DateTime dateCurrent = DateTime.ParseExact(d.CALENDAR_DATE, "dd/MM/yyyy", null);
                                 int week = _stateContainer.DateCurrent.GetWeekNumberOfMonth();
                                 int currentWeek = dateCurrent.GetWeekNumberOfMonth();
@@ -148,23 +144,23 @@ namespace PlanningRouteWeb.Services
                                 {
                                     x.Week2[x.MACHINE_CODE].Add(d.CALENDAR_DATE);
                                 }
-                                else if (week == currentWeek && d.STATUS_MANUAL == "Y"  && current)
+                                else if (week == currentWeek && d.STATUS_MANUAL == "Y" && current)
                                 {
                                     col.Week1Value = true;
                                     if (!string.IsNullOrWhiteSpace(d.RANK))
                                     {
                                         col.Week1 = true;
                                     }
-                                   
+
                                 }
-                                else if (week +1 == currentWeek && d.STATUS_MANUAL == "Y" && current)
+                                else if (week + 1 == currentWeek && d.STATUS_MANUAL == "Y" && current)
                                 {
                                     col.Week2Value = true;
                                     if (!string.IsNullOrWhiteSpace(d.RANK))
                                     {
                                         col.Week2 = true;
                                     }
-                                    
+
                                 }
                                 return d;
                             }).ToList();
@@ -173,10 +169,10 @@ namespace PlanningRouteWeb.Services
                         .GroupBy(x => x.LOCATION_CODE,
                                 (key, grp) =>
                                 {
-                                    var value = ConvertModel.PlanningMasterDataModeltoModel(grp.OrderBy(x => int.Parse(x.MSORT)).FirstOrDefault()!, _stateContainer.DateCurrent, grp, _stateContainer.BeforeConfig);
+                                    var model = grp.OrderBy(x => int.Parse(x.MSORT)).FirstOrDefault()!;
+                                    var value = _stateContainer.PlanningMasterDataModeltoModel(model,  grp , target.SYSTEMCART);
                                     return value;
                                 })
-
                         .ToList();
 
                     var data = mapModel!.Select((x, idx) =>
@@ -193,11 +189,11 @@ namespace PlanningRouteWeb.Services
                     .OrderBy(x => x.LOCATION_CODE)
                     .ThenBy(x => int.Parse(x.MSORT))
                     .ToList();
-                    return Tuple.Create(new columnSet { column = columns  , Week = col }, data, ConvertModel.TargetModelToTarget2Model(plannings!.Data.Target));
+                    return Tuple.Create(new columnSet { column = columns, Week = col }, data, target);
                 }
                 else
                 {
-                    return Tuple.Create(new columnSet {  }, new List<PlanningMasterData2>(), ConvertModel.TargetModelToTarget2Model(plannings!.Data.Target));
+                    return Tuple.Create(new columnSet { }, new List<PlanningMasterData2>(), target);
                 }
 
             }
@@ -210,24 +206,24 @@ namespace PlanningRouteWeb.Services
         {
             try
             {
-                var requestMessage = new HttpRequestMessage()
-                {
-                    Method = new HttpMethod("POST"),
-                    RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}API_PLANNING/V1/GETPLAN"),
-                    Content = JsonContent.Create(body)
-                };
-                var response = await _httpClient.SendAsync(requestMessage);
-                var content = await response.Content.ReadAsStringAsync();
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw new ApplicationException($"Http error : {content}");
-                }
+                //var requestMessage = new HttpRequestMessage()
+                //{
+                //    Method = new HttpMethod("POST"),
+                //    RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}/V1/GETPLAN"),
+                //    Content = JsonContent.Create(body)
+                //};
+                //var response = await _httpClient.SendAsync(requestMessage);
+                //var content = await response.Content.ReadAsStringAsync();
+                //if (!response.IsSuccessStatusCode)
+                //{
+                //    throw new ApplicationException($"Http error : {content}");
+                //}
 
-                var plannings = JsonSerializer.Deserialize<PanningMasterResponse>(content, _options);
+                //var plannings = JsonSerializer.Deserialize<PanningMasterResponse>(content, _options);
 
-                var data = plannings!.Data.Plan.Select(x => ConvertModel.PlanningMasterDataModeltoExcel(x, _stateContainer.DateCurrent, _stateContainer.BeforeConfig)).ToList();
+                //var data = plannings!.Data.Plan.Select(x => ConvertModel.PlanningMasterDataModeltoExcel(x, _stateContainer.DateCurrent, _stateContainer.BeforeConfig)).ToList();
 
-                return data;
+                return new List<PlanningMasterData2>();
             }
             catch (Exception ex)
             {
@@ -242,7 +238,7 @@ namespace PlanningRouteWeb.Services
                 var requestMessage = new HttpRequestMessage()
                 {
                     Method = new HttpMethod("POST"),
-                    RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}API_PLANNING/V1/GETPLAN"),
+                    RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}/V1/GETPLAN"),
                     Content = JsonContent.Create(body)
                 };
                 var response = await _httpClient.SendAsync(requestMessage);
@@ -253,7 +249,7 @@ namespace PlanningRouteWeb.Services
                 }
 
                 var res = JsonSerializer.Deserialize<PanningMasterResponse>(content, _options);
-                var target = res!.Data.Target;
+                var target = ConvertModel.TargetModelToTarget2Model(res!.Data.Target);
                 var plannings = res!.Data.Plan
                     .OrderBy(x => x.LOCATION_CODE)
                     .ThenBy(x => int.Parse(x.MSORT))
@@ -381,7 +377,8 @@ namespace PlanningRouteWeb.Services
                     .GroupBy(x => x.LOCATION_CODE,
                             (key, grp) =>
                             {
-                                var value = ConvertModel.PlanningMasterDataModeltoModel(grp.OrderBy(x => int.Parse(x.MSORT)).FirstOrDefault()!, _stateContainer.DateCurrent, grp, _stateContainer.BeforeConfig);
+                                var model = grp.OrderBy(x => int.Parse(x.MSORT)).FirstOrDefault()!;
+                                var value = _stateContainer.PlanningMasterDataModeltoModel(model, grp , target.SYSTEMCART);
                                 return value;
                             })
                     .ToList();
@@ -397,7 +394,7 @@ namespace PlanningRouteWeb.Services
                     x.GETPLAN_DETAIL = calData;
                     return x;
                 })
-                
+
                 .ToList();
 
                 return data;
@@ -422,7 +419,7 @@ namespace PlanningRouteWeb.Services
             var requestMessage = new HttpRequestMessage()
             {
                 Method = new HttpMethod("POST"),
-                RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}API_PLANNING/V1/SAVEPLAN"),
+                RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}/V1/SAVEPLAN"),
                 Content = JsonContent.Create(contentBody)
             };
 
@@ -442,7 +439,7 @@ namespace PlanningRouteWeb.Services
             var requestMessage = new HttpRequestMessage()
             {
                 Method = new HttpMethod("POST"),
-                RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}API_PLANNING/V1/SAVETARGET"),
+                RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}/V1/SAVETARGET"),
                 Content = JsonContent.Create(body)
 
             };
@@ -490,7 +487,7 @@ namespace PlanningRouteWeb.Services
             var requestMessage = new HttpRequestMessage()
             {
                 Method = new HttpMethod("POST"),
-                RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}API_PLANNING/V1/CALPLAN"),
+                RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}/V1/CALPLAN"),
                 Content = JsonContent.Create(body)
 
             };
@@ -617,7 +614,7 @@ namespace PlanningRouteWeb.Services
             var requestMessage = new HttpRequestMessage()
             {
                 Method = new HttpMethod("POST"),
-                RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}API_PLANNING/V1/GETPLAN"),
+                RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}/V1/GETPLAN"),
                 Content = JsonContent.Create(body)
             };
             var response = await _httpClient.SendAsync(requestMessage);
@@ -632,6 +629,27 @@ namespace PlanningRouteWeb.Services
             var plannings = JsonSerializer.Deserialize<PanningMasterResponse>(content, _options);
 
             return ConvertModel.TargetModelToTarget2Model(plannings!.Data.Target);
+        }
+
+        public async Task<ProductLowQty> PlanningGetProductLowQty(string mc)
+        {
+            var requestMessage = new HttpRequestMessage()
+            {
+                Method = new HttpMethod("POST"),
+                RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}/V1/GETEMPTYPRODUCTBYMACHINE"),
+                Content = JsonContent.Create(new { MACHINE_CODE = mc })
+
+            };
+
+            var response = await _httpClient.SendAsync(requestMessage);
+            var content = await response.Content.ReadAsStringAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new ApplicationException(content);
+            }
+
+            var prd = JsonSerializer.Deserialize<ProductLowQty>(content, _options);
+            return prd!;
         }
     }
 }

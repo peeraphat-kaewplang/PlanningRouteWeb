@@ -49,6 +49,8 @@ namespace PlanningRouteWeb.Models
         public string SALETOTAL { get; set; } = string.Empty;
         public string LOADIN { get; set; } = string.Empty;
         public string STATUSCHANGE { get; set; } = string.Empty;
+        public string QTY { get; set; } = string.Empty;
+        public string COSTSALEPRICE { get; set; } = string.Empty;
     }
 
     public class ChangeProductDetail2 
@@ -73,7 +75,9 @@ namespace PlanningRouteWeb.Models
         public bool IsSave { get;set; }
         public double? Move { get; set; }
         public bool IsCopy { get; set; }
-
+        public double? Cost { get; set; }
+        public double? COSTSALEPRICE { get; set; }
+        public int QTY { get; set; }
 
         public object Clone()
         {
@@ -112,6 +116,7 @@ namespace PlanningRouteWeb.Models
     {
         public string SLOT_NO { get; set; } = string.Empty;
         public double SLOT_REALPRICE { get; set; } 
+        public double SLOT_INSTALLPRICE { get; set; } 
         public List<ChangeProductDetail2> Products { get; set; } = new();
         public bool SlotStatus { get; set; } 
         public bool IsAddSlot { get; set; } 

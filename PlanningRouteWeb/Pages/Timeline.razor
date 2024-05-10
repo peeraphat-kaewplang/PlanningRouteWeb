@@ -5,6 +5,7 @@
 @inject ICommonService CommonService
 @inject StateContainer StateContainer
 @inject NavigationManager NavigationManager
+@inject IConfiguration Configuration
 @implements IAsyncDisposable
 
 <div class="d-flex align-items-center gap-2 pb-2 w-100">
@@ -157,6 +158,7 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        await Task.Delay(500);
         if (firstRender)
         {
             StateContainer.IsLoading = true;
@@ -210,7 +212,7 @@
 
         if (systems.Count() == 1)
         {
-            NavigationManager.NavigateTo($"/Timeline/Detail?ORG={systems[0]}&Start={date[0]}&End={date[1]}");
+            NavigationManager.NavigateTo($"{Configuration.GetValue<string>("Configs:UrlRoute")}Timeline/Detail?ORG={systems[0]}&Start={date[0]}&End={date[1]}");
         }
 
         selectOrg = systems[0];

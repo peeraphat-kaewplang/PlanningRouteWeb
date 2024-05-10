@@ -64,7 +64,7 @@
             <tr>
                 @if (IsCurrent)
                 {
-                    <th class="text-center" style="font-size: 12px;">
+                    <th class="text-center" style="font-size: 12px;z-index:1;">
                         <RadzenButton Click="()=> AddRowGrpup()"
                                       Icon="add"
                                       ButtonStyle="ButtonStyle.Primary"
@@ -75,17 +75,21 @@
                 }
                 <th style="font-size: 12px;">ช่องสินค้า</th>
                 <th style="font-size: 12px;">กลุ่มราคาขาย</th>
-                <th style="font-size: 12px;">กลุ่มราคาเดิม</th>
+                <th style="font-size: 12px;">ราคาเรียกเก็บ</th>
                 <th style="font-size: 12px;">ราคาตามสัญญา</th>
                 <th style="font-size: 12px;">ประเภทกลุ่มสินค้า</th>
                 <th style="font-size: 12px;">ชื่อสินค้า</th>
-                <th style="font-size: 12px;">ยอดขายเฉลี่ย</th>
-                <th style="font-size: 12px;">ยอดโหลด</th>
-                <th style="font-size: 12px;">ราคากลาง</th>
+                <th style="font-size: 12px;">ต้นทุน</th>
+                <th style="font-size: 12px;">GP รายสินค้า</th>
+                <th style="font-size: 12px;">GP ยอดขาย </th>
+                <th style="font-size: 12px;z-index:1;">ยอดขายเฉลี่ย</th>
+                <th style="font-size: 12px;z-index:1;">ยอดโหลด</th>
+                <th style="font-size: 12px;z-index:1;">ราคากลาง</th>
+                <th style="font-size: 12px;">กลุ่มราคาเดิม</th>
                 @if (IsCurrent)
                 {
-                    <th style="font-size: 12px;">เปลี่ยนกลุ่มราคาขาย</th>
-                    <th style="font-size: 12px;" colspan="2"></th>
+                    <th style="font-size: 12px;z-index:1;">เปลี่ยนกลุ่มราคาขาย</th>
+                    <th style="font-size: 12px;z-index:1;" colspan="2"></th>
                 }
             </tr>
         </thead>
@@ -137,10 +141,12 @@
                     <td style="width:2rem" rowspan=@rowSpan>
                         @i.SLOT_REALPRICE
                     </td>
-                    <td class=@($"{tdClassColor}") style="width:2rem">
-                        @(i.Products.Count() != 0 && !i.IsEmptySlot || i.Products[0].IsCopy ? i.Products[0].SlotRealPriceOld : "")
+
+                    <td class=@($"{tdClassColor}") rowspan=@rowSpan style="width:2rem">
+                        @(i.Products.Count() != 0 && !i.IsEmptySlot || i.Products[0].IsCopy ? i.Products[0].SLOT_INSTALLPRICE : "")
                     </td>
-                    <td class=@($"{tdClassColor}") style="width:2rem">
+
+                    <td class=@($"{tdClassColor}") rowspan=@rowSpan style="width:2rem">
                         @* @i.IsEmptySlot
                     @i.Products[0].STATUSCHANGE
                     @i.Products[0].IsStatusChange
@@ -150,6 +156,7 @@
                     <td class=@($"{tdClassColor}") style="width:10rem">
                         @if (selectRowGroup == index && selectRowGroupProduct == 0)
                         {
+                            
                             <RadzenDropDown class="dropdown-sm fw-bold w-100"
                                             TValue="string"
                                             Data=@product
@@ -182,6 +189,12 @@
                             @(i.Products.Count() != 0 ? i.Products[0].PRODUCT_NAME : "")
                         }
                     </td>
+                    @{
+                        var gp = (double)(((i.SLOT_INSTALLPRICE - i.Products[0].COSTSALEPRICE) / i.Products[0].COSTSALEPRICE) * 100)!;
+                    }
+                    <td class=@($"{tdClassColor}") style="width:3rem">@(i.Products.Count() != 0 && !i.IsEmptySlot || i.Products[0].IsCopy ? i.Products[0].COSTSALEPRICE : "")</td>
+                    <td class=@($"{tdClassColor}") style="width:3rem">@(i.Products.Count() != 0 && !i.IsEmptySlot || i.Products[0].IsCopy ? $"{gp.ToStringNumberFormat2()}%" : "")</td>
+                    <td class=@($"{tdClassColor}") style="width:3rem">@(i.Products.Count() != 0 && !i.IsEmptySlot || i.Products[0].IsCopy ? $"24%" : "")</td>
                     <td class=@($"{tdClassColor}") style="width:3rem">@(i.Products.Count() != 0 && !i.IsEmptySlot || i.Products[0].IsCopy ? i.Products[0].SALETOTAL : "")</td>
                     <td class=@($"{tdClassColor}") style="width:3rem">
                         @if (selectRowGroup == index && selectRowGroupProduct == 0 && !i.IsEmptySlot)
@@ -202,14 +215,17 @@
                     <td class=@($"{tdClassColor}") style="width:3rem">
                         @(i.Products.Count() != 0 && !i.IsEmptySlot || i.Products[0].IsCopy ? i.Products[0].SALEPRICE : "")
                     </td>
+
+                    <td class=@($"{tdClassColor}") style="width:2rem">
+                        @(i.Products.Count() != 0 && !i.IsEmptySlot || i.Products[0].IsCopy ? i.Products[0].SlotRealPriceOld : "")
+                    </td>
                    
                     @if (IsCurrent)
                     {
                         <td class=@($"{tdClassColor}") style="width:4.5rem">
                             <div style="width:4rem">
-
-
-                                @if (!i.IsEmptySlot && i.Products[0].SLOTSTATUS)
+                               
+                                 @if (!i.IsEmptySlot && i.Products[0].SLOTSTATUS)
                                 {
                                     <RadzenDropDown class="dropdown-sm fw-bold w-100"
                                                     TValue="double?"
@@ -242,17 +258,36 @@
                         </td>
                     }
                 </tr>
+
+                // แถว2
                 @foreach (var (d, idx) in i.Products.Skip(1).WithIndex())
                 {
                     var rawProductName2 = product.Find(x => x.RAWPRODUCTCODE == d.RAWPRODUCTCODE);
                     var trClassColorDetail = d.IsAddSlot ? "table-success" : trClassColor;
                     var tdClassColorDetail = d.IsAddSlot ? "grp-color-new" : d.IsStatusChange ? "grp-color-change" : !d.SLOTSTATUS ? "grp-color-off" : null;
 
-                    <tr role="button" draggable="@(formModel.Filter == "FIXED" ? "true" : "false")" @ondrop="@(()=> Drop(i))" @ondrag="@(e => StartDrag(i))" class=@($"{trClassColorDetail}")>
-                        <td class=@($"{tdClassColorDetail}") style="width:2rem"> @(d != null ? d.SlotRealPriceOld : "")</td>
-                        <td class=@($"{tdClassColorDetail}") style="width:2rem"> @(d != null ? d.SLOT_CONTRACT_PRICE : "")</td>
-                        <td class=@($"{tdClassColorDetail}")>
+                    var gpDt = (double)(((d.SLOT_INSTALLPRICE - d.COSTSALEPRICE) / d.COSTSALEPRICE) * 100)!;
 
+                    <tr role="button" draggable="@(formModel.Filter == "FIXED" ? "true" : "false")" @ondrop="@(()=> Drop(i))" @ondrag="@(e => StartDrag(i))" class=@($"{trClassColorDetail}")>
+                       
+                        @* <td class=@($"{tdClassColorDetail}") style="width:2rem">
+                            @if (selectRowGroup == index && selectRowGroupProduct == idx + 1)
+                            {
+                                var validat = OnValidateInputLoadin(d!.SLOT_INSTALLPRICE, i.SLOT_NO, false) ? "validat" : null;
+                                <RadzenNumeric class=@($"text-size {validat}")
+                                               ShowUpDown="false"
+                                               TextAlign="TextAlign.End"
+                                               TValue="double"
+                                               @bind-Value=@d.SLOT_INSTALLPRICE
+                                               @oninput=@(args => OnChangeInputLoadin(args , d ,"SLOT_INSTALLPRICE")) />
+                            }
+                            else
+                            {
+                                @(d != null ? d.SLOT_INSTALLPRICE : "")
+                            }
+                        </td>
+                        <td class=@($"{tdClassColorDetail}") style="width:2rem"> @(d != null ? d.SLOT_CONTRACT_PRICE : "")</td> *@
+                        <td class=@($"{tdClassColorDetail}")>
                             @if (selectRowGroup == index && selectRowGroupProduct == idx + 1)
                             {
                                 <RadzenDropDown class="dropdown-sm fw-bold w-100"
@@ -287,6 +322,9 @@
                                 @(d != null ? d.PRODUCT_NAME : "")
                             }
                         </td>
+                        <td class=@($"{tdClassColorDetail}")>@(d != null ? d.COSTSALEPRICE : 0)</td>
+                        <td class=@($"{tdClassColorDetail}")>@(d != null ? $"{gpDt.ToStringNumberFormat2()}%" : 0)</td>
+                        <td class=@($"{tdClassColorDetail}")>@(d != null ? $"24.5%" : 0)</td>
                         <td class=@($"{tdClassColorDetail}")>@(d != null ? d.SALETOTAL : 0)</td>
                         <td class=@($"{tdClassColorDetail}")>
                             @if (selectRowGroup == index && selectRowGroupProduct == idx + 1)
@@ -308,7 +346,7 @@
 
                             @(d != null ? d.SALEPRICE : "")
                         </td>
-                        
+                        <td class=@($"{tdClassColorDetail}") style="width:2rem"> @(d != null ? d.SlotRealPriceOld : "")</td>
                         @if (IsCurrent)
                         {
                             <td class=@($"{tdClassColorDetail}") style="width:4.5rem">
@@ -364,11 +402,35 @@
                           Style="width: 200px;text-transform: none;"
                           Disabled=@(selectRowGroup != null && selectRowGroupProduct != null) />
         </RadzenStack>
+
+        <RadzenStack Orientation="Orientation.Vertical">
+            <RadzenText class="m-0">
+                @($"GP เฉลี่ยรายสินค้า : {AgvGPDefult.ToStringNumberFormat()}%")
+            </RadzenText>
+            <RadzenText>
+                @($"GP เฉลี่ยยอดขาย : 40%")
+            </RadzenText>
+
+        </RadzenStack>
+
+        <RadzenStack Orientation="Orientation.Vertical">
+            @{
+                var textColor = AgvGPDefult == CalAgvGP() ? "#00800008" : "green";
+            }
+            <RadzenText class="m-0" Style=@($"color:{textColor};")>
+                @($"New GP เฉลี่ยรายสินค้า : {CalAgvGP().ToStringNumberFormat()}%")
+            </RadzenText>
+
+            <RadzenText Style=@($"color:{textColor};")>
+                @($"New GP เฉลี่ยยอดขาย : 33%")
+            </RadzenText>
+        </RadzenStack>
+
         <RadzenButton Text="ปิด" Click="(() => DialogService.Close(false))" ButtonStyle="ButtonStyle.Light" Style="text-transform: none;" />
     }
 </RadzenStack>
 
-@code {
+    @code {
     #region Parameter
     [Parameter]
     public ChangeProductRequest Item { get; set; } = new();
@@ -393,6 +455,7 @@
     int targetRealPrice = 0;
     int? selectRowGroup = null;
     int? selectRowGroupProduct = null;
+    public double AgvGPDefult;
 
     List<double> optionsSlot = new();
     List<Rawproduct> product = new();
@@ -416,6 +479,8 @@
         {
             Data = Data.FilterGroup(formModel.Filter);
             optionsSlot = Data.Select(x => x.SLOT_REALPRICE).ToList();
+
+            AgvGPDefult = CalAgvGP();
         }
 
         if (Header is not null)
@@ -433,6 +498,9 @@
             product = resProduct.Data;
             
         }
+
+       
+
         StateHasChanged();
     }
     #endregion
@@ -513,6 +581,8 @@
                     SLOT_NO = slot,
                     SLOTSTATUS = true,
                     IsAddSlot = true,
+                    Cost = 11,
+                    COSTSALEPRICE = 0
                 });
         }
         else
@@ -594,6 +664,11 @@
                     copy.SLOT_REALPRICE = val;
                     copy.LOADIN = item.LOADIN;
                     copy.IsSave = false;
+                    copy.Cost = item.Cost;
+                    copy.COSTSALEPRICE = item.COSTSALEPRICE;
+
+                    copy.SLOT_INSTALLPRICE = slot.SLOT_REALPRICE;
+                    copy.SLOT_CONTRACT_PRICE = slot.SLOT_REALPRICE;
 
                     item.SLOTSTATUS = false;
                     item.IsCopy = true;
@@ -637,6 +712,9 @@
                 prd.IsSave = false;
                 prd.SLOT_REALPRICE = val;
                 prd.SlotRealPriceOld = grp.SLOT_REALPRICE;
+                prd.SLOT_CONTRACT_PRICE= grp.SLOT_REALPRICE;
+                prd.SLOT_INSTALLPRICE = grp.SLOT_REALPRICE;
+
                 slot.Products.Add(prd);
             }
 
@@ -645,7 +723,9 @@
                 {
                     SLOT_NO = int.Parse(grp.SLOT_NO) ,
                     SLOTSTATUS = true,
-                    SLOT_REALPRICE = grp.SLOT_REALPRICE
+                    SLOT_REALPRICE = grp.SLOT_REALPRICE,
+                    COSTSALEPRICE = 0,
+                    Cost =0
                 }
             };
             grp.IsEmptySlot = true;
@@ -1000,7 +1080,7 @@
 
     #region Event Disable Btn Save
     bool DisableBtnSave(ChangeProductGroup item, int index = 0) => item.Products[index].PRODUCT_CODE == "" || item.Products[index].RAWPRODUCTCODE == "" ? true :
-        OnValidateInputLoadin(item.SLOT_REALPRICE, item.SLOT_NO) || OnValidateInputLoadin(item.Products[index].LOADIN, item.SLOT_NO, false);
+    OnValidateInputLoadin(item.SLOT_REALPRICE, item.SLOT_NO) || OnValidateInputLoadin(item.Products[index].LOADIN, item.SLOT_NO, false) || OnValidateInputLoadin(item.Products[index].SLOT_INSTALLPRICE, item.SLOT_NO, false);
     #endregion
 
     #region Event Input LOADIN Change Value
@@ -1047,9 +1127,27 @@
                   ButtonStyle=@(item.SLOTSTATUS ? ButtonStyle.Danger : ButtonStyle.Success)
                   Style="text-transform: none;"
                   Size="ButtonSize.ExtraSmall"
-                  Disabled=@disable2 />;
+                  Disabled=@disable2 />
+    ;
         }
         return content;
     }
     #endregion
+
+    private double CalAgvGP()
+    {
+        var data = Data!.Where(x => !x.IsEmptySlot).Select(x => new
+        {
+            // SumPrice = x.Products.Count() * x.SLOT_INSTALLPRICE,
+            SumPrice = x.Products.Where(p => p.SLOTSTATUS).Sum(p => p.SLOT_INSTALLPRICE),
+            SumCost = x.Products.Where(p => p.SLOTSTATUS).Sum(p => p.COSTSALEPRICE)
+        });
+
+        var price = data.Sum(x => x.SumPrice);
+        var cost = data.Sum(x => x.SumCost);
+
+        var gpAgv = (double)(((price - cost) / cost) * 100)!;
+
+        return gpAgv;
+    }
 }

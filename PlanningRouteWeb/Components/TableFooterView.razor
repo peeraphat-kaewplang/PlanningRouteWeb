@@ -3,32 +3,31 @@
     var grpData = LoadFooter();
 }
 <tr>
-    <td rowspan="2" colspan="4" class="sticky-col first-col" style="z-index:20;"></td>
-    <td></td>
-    <td class="text-end fw-bold" style="font-size: 12px;">
+    <td rowspan="2" colspan="4" class="sticky-col first-col" style=""></td>
+    <td class="text-end fw-bold sticky-col six-col" style="font-size: 12px;">
         @(beforeSale == 0 ? beforeSale : beforeSale.ToString("0,0", CultureInfo.InvariantCulture))
     </td>
-    <td class="text-end fw-bold" style="font-size: 12px;">
+    <td class="text-end fw-bold sticky-col sevent-col" style="font-size: 12px;">
         @(beforeMTD == 0 ? beforeMTD : beforeMTD.ToString("0,0", CultureInfo.InvariantCulture))
     </td>
-    <td class="text-end fw-bold" style="font-size: 12px;">
+    <td class="text-end fw-bold sticky-col eight-col" style="font-size: 12px;">
         @(currentMTD == 0 ? currentMTD : currentMTD.ToString("0,0", CultureInfo.InvariantCulture))
     </td>
     @if (!HideMaster)
     {
-        <td class="text-center fw-bold" style="font-size: 12px;">@Data.Count(c => c.MONDAY == true)</td>
-        <td class="text-center fw-bold" style="font-size: 12px;">@Data.Count(c => c.TUESDAY == true)</td>
-        <td class="text-center fw-bold" style="font-size: 12px;">@Data.Count(c => c.WEDNESDAY == true)</td>
-        <td class="text-center fw-bold" style="font-size: 12px;">@Data.Count(c => c.THURSDAY == true)</td>
-        <td class="text-center fw-bold" style="font-size: 12px;">@Data.Count(c => c.FRIDAY == true)</td>
-        <td class="text-center fw-bold" style="font-size: 12px;">@Data.Count(c => c.SATURDAY == true)</td>
-        <td class="text-center fw-bold" style="font-size: 12px;">@Data.Count(c => c.SUNDAY == true)</td>
-        <td colspan="4" rowspan="2"></td>
+        <td class="text-center fw-bold sticky-col nine-col" style="font-size: 12px;">@Data.Count(c => c.MONDAY == true)</td>
+        <td class="text-center fw-bold sticky-col ten-col" style="font-size: 12px;">@Data.Count(c => c.TUESDAY == true)</td>
+        <td class="text-center fw-bold sticky-col eleven-col" style="font-size: 12px;">@Data.Count(c => c.WEDNESDAY == true)</td>
+        <td class="text-center fw-bold sticky-col twelve-col" style="font-size: 12px;">@Data.Count(c => c.THURSDAY == true)</td>
+        <td class="text-center fw-bold sticky-col thirteen-col" style="font-size: 12px;">@Data.Count(c => c.FRIDAY == true)</td>
+        <td class="text-center fw-bold sticky-col fourteen-col" style="font-size: 12px;">@Data.Count(c => c.SATURDAY == true)</td>
+        <td class="text-center fw-bold sticky-col fifteen-col" style="font-size: 12px;">@Data.Count(c => c.SUNDAY == true)</td>
+        <td class="sticky-col sixteen-col" colspan="3" rowspan="2"></td>
     }
     
-    <td rowspan="2" class="text-end fw-bold" style="font-size: 12px;">
+   @*  <td rowspan="2" class="text-end fw-bold" style="font-size: 12px;">
         @Data.Sum(x => x.SALE_LAST_WEEK).ToString("0,0", CultureInfo.InvariantCulture)
-    </td>
+    </td> *@
     <td rowspan="2" class="text-end fw-bold" style="font-size: 12px;">
         @DropMonth.Sum(x =>x)
     </td>
@@ -89,14 +88,13 @@
     }
 </tr>
 <tr>
-    <td></td>
-    <td></td>
+    <td class="sticky-col six-col"></td>
     @{
         var before = beforeMTD -beforeSale;
         var style1 = before > 1 ? "sum-current-mtd" : "sum-error-mtd";
         var style2 = (currentMTD - beforeMTD) > 1 ? "sum-current-mtd" : "sum-error-mtd";
     }
-    <td class=@($"text-end fw-bold {style1}") style="font-size: 12px;">
+    <td class=@($"text-end fw-bold {style1} sticky-col sevent-col") style="font-size: 12px;">
         @if (before == 0)
         {
             @before
@@ -106,18 +104,18 @@
             @(before.ToString("0,0", CultureInfo.InvariantCulture))
         }
     </td>
-    <td class=@($"text-end fw-bold {style2}") style="font-size: 12px;">
+    <td class=@($"text-end fw-bold {style2} sticky-col eight-col") style="font-size: 12px;">
         @((currentMTD - beforeMTD) == 0 ? (currentMTD - beforeMTD) : (currentMTD - beforeMTD).ToString("0,0", CultureInfo.InvariantCulture))
     </td>
     @if (!HideMaster)
     {
-        <td class="text-center fw-bold" style="font-size: 12px;">@(Target - Data.Count(c => c.MONDAY == true))</td>
-        <td class="text-center fw-bold" style="font-size: 12px;">@(Target - Data.Count(c => c.TUESDAY == true))</td>
-        <td class="text-center fw-bold" style="font-size: 12px;">@(Target - Data.Count(c => c.WEDNESDAY == true))</td>
-        <td class="text-center fw-bold" style="font-size: 12px;">@(Target - Data.Count(c => c.THURSDAY == true))</td>
-        <td class="text-center fw-bold" style="font-size: 12px;">@(Target - Data.Count(c => c.FRIDAY == true))</td>
-        <td class="text-center fw-bold" style="font-size: 12px;">@(Target - Data.Count(c => c.SATURDAY == true))</td>
-        <td class="text-center fw-bold" style="font-size: 12px;">@(Target - Data.Count(c => c.SUNDAY == true))</td>
+        <td class="text-center fw-bold sticky-col nine-col" style="font-size: 12px;">@(Target - Data.Count(c => c.MONDAY == true))</td>
+        <td class="text-center fw-bold sticky-col ten-col" style="font-size: 12px;">@(Target - Data.Count(c => c.TUESDAY == true))</td>
+        <td class="text-center fw-bold sticky-col eleven-col" style="font-size: 12px;">@(Target - Data.Count(c => c.WEDNESDAY == true))</td>
+        <td class="text-center fw-bold sticky-col twelve-col" style="font-size: 12px;">@(Target - Data.Count(c => c.THURSDAY == true))</td>
+        <td class="text-center fw-bold sticky-col thirteen-col" style="font-size: 12px;">@(Target - Data.Count(c => c.FRIDAY == true))</td>
+        <td class="text-center fw-bold sticky-col fourteen-col" style="font-size: 12px;">@(Target - Data.Count(c => c.SATURDAY == true))</td>
+        <td class="text-center fw-bold sticky-col fifteen-col" style="font-size: 12px;">@(Target - Data.Count(c => c.SUNDAY == true))</td>
     }
 
     @foreach (var (obj, index) in grpData.WithIndex())

@@ -21,7 +21,7 @@ namespace PlanningRouteWeb.Services
             var requestMessage = new HttpRequestMessage()
             {
                 Method = new HttpMethod("POST"),
-                RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}API_PLANNING/V1/GETBESTPRODUCT"),
+                RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}/V1/GETBESTPRODUCT"),
                 Content = JsonContent.Create(body)
             };
 

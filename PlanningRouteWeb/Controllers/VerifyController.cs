@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PlanningRouteWeb.Models;
-using System.Text.Json;
 
 namespace PlanningRouteWeb.Controllers
 {
@@ -9,9 +7,9 @@ namespace PlanningRouteWeb.Controllers
         public IActionResult Index()
         {
             var json = System.IO.File.ReadAllText("wwwroot/data/permission.json");
-            Permission permission = JsonSerializer.Deserialize<Permission>(json)!;
+            //Permission permission = JsonSerializer.Deserialize<Permission>(json)!;
 
-            return View(permission);
+            return View(new { text = json });
         }
         [HttpPost]
         public IActionResult Index(string permission)

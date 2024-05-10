@@ -102,10 +102,11 @@
                         @model.SumDropService.ToStringNumberFormat(false)
                     </td>
                     <td class="text-center">
-                        <button @onclick="@(() => NavigationManager.NavigateTo($"Dashboard/Detail?ORG={model.OrganizationCode}&ORGName={model.Organization}&Month={selectedMonth}&Year={selectYear}"))"
+                        <i class="fa-solid fa-eye text-primary" style="cursor:pointer" @onclick="@(() => NavigationManager.NavigateTo($"Dashboard/Detail?ORG={model.OrganizationCode}&ORGName={model.Organization}&Month={selectedMonth}&Year={selectYear}"))"></i>
+                      @*   <button @onclick="@(() => NavigationManager.NavigateTo($"Dashboard/Detail?ORG={model.OrganizationCode}&ORGName={model.Organization}&Month={selectedMonth}&Year={selectYear}"))"
                                 type="button" class="btn btn-primary btn-sm">
                             <i class="fa-solid fa-eye fa-xs"></i>
-                        </button>
+                        </button> *@
                     </td>
                 </tr>
             }
@@ -183,8 +184,6 @@
     public string? systems { get; set; }
     public DashboardViewModel dashboards { get; set; } = new();
 
-
-
     protected override void OnInitialized()
     {
         selectedMonth = DateTime.Now.Month.ToString("D2");
@@ -194,6 +193,7 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        await Task.Delay(500);
         if (firstRender)
         {
             try

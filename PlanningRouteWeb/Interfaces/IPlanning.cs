@@ -14,6 +14,8 @@ namespace PlanningRouteWeb.Interfaces
         Task<SavePlanResponse> PlanningCalPlan(CalPlanning body);
         Task<SavePlanResponse> PlanningSaveTarget(TargetSave body);
         Task<Target2> PlanningGetTarget(PanningMasterRequest body);
-        
+
+        Task<ProductLowQty> PlanningGetProductLowQty(string mc);
+
     }
 }

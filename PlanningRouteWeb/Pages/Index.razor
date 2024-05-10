@@ -9,6 +9,7 @@
 @inject NavigationManager NavManager
 @inject StateContainer StateContainer
 @inject IJSRuntime JSRuntime
+@inject ICommonService CommonService 
 @implements IAsyncDisposable
 
 @{  
@@ -20,7 +21,7 @@
                 data-bs-placement="right" title="ย้อนกลับ">
             <i class="fa-solid fa-arrow-left fa-xs"></i>
         </button>
-        <RadzenDropDown TValue="string"  Style="width: 100%; max-width: 200px; position: sticky;left: 27px;" TextProperty="ORGANIZATION_NAME"
+        <RadzenDropDown  TValue="string"  Style="width: 100%; max-width: 200px; position: sticky;left: 27px;" TextProperty="ORGANIZATION_NAME"
             ValueProperty="ORGANIZATION_CODE" @bind-Value=@selectOrg Data=@optionsOrg Change="@(args => ChangeOrg(args))" />
         <RadzenDropDown TValue="string" TextProperty="ROUTE_NAME" ValueProperty="ROUTE_CODE"
             Style="width: 100%; max-width: 270px;position: sticky;left: 200px;" @bind-Value=@selectRoute Data=@optionsRoute />
@@ -68,17 +69,18 @@
                     OnChangeMasterCallback="@OnChangeMater"
                     OnChageRankCallback="@((args) => OnChageRank( args.Item2))"
                     ShowdialogChangeProductCallback="@((args) => ShowdialogChangeProduct(args.Item1 , args.Item2))"
+                    ShowdialogProductLowQtyCallback="@ShowdialogProductLowQty"
                     ShowdialogBestProductCallback="@ShowdialogBestProduct"/>
                     
             </tbody>
-            <tfoot>
+          @*   <tfoot>
                 <TableFooterView 
                     Data="data" 
                     Columns="columns" 
                     DropMonth="dropMonth" 
                     Target="target.DROP_PER_DAY"
                     HideMaster="hideMaster"/>
-            </tfoot>
+            </tfoot> *@
         </table>
    @*  </div>
     </div> *@
@@ -88,7 +90,7 @@
         <p>Data is empty!</P>
     }
 
-    <div style="display:none">
+   @*  <div style="display:none">
         @{
             var total = selectMonth.Number == "01" ? "ธ.ค." : GetDatetimeClass.monthObjects.Single(x => x.Number == (int.Parse(selectMonth.Number) - 1).ToString("D2")).ShortName;
             var mdtBefore = selectMonth.Number == "01" ? "ธ.ค." : GetDatetimeClass.monthObjects.Single(x => x.Number == (int.Parse(selectMonth.Number) - 1).ToString("D2")).ShortName;
@@ -410,7 +412,7 @@
             </tr>
             </tfoot>
         </table>
-    </div>
+    </div> *@
 @code {
     [Parameter]
     [SupplyParameterFromQuery]
@@ -539,9 +541,11 @@
             ORG = $"{selectOrg}", 
             Route = $"{selectRoute}" 
         };
+
+
         var (column, record , targets ) = await PlanningService.PlanningGetMaster(req);
 
-        dataExel = await PlanningService.PlanningExportExcel(req);
+        // dataExel = await PlanningService.PlanningExportExcel(req);
 
         columns = column.column;
         data = record;
@@ -549,9 +553,9 @@
         weekValue = column.Week;
 
 
-        beforeSale = dataExel.Sum(x => !string.IsNullOrWhiteSpace(x.BEFORE_SALE) ? int.Parse(x.BEFORE_SALE) : 0);
-        beforeMTD = dataExel.Sum(x => !string.IsNullOrWhiteSpace(x.BEFORE_MTD) ? int.Parse(x.BEFORE_MTD) : 0);
-        currentMTD = dataExel.Sum(x => !string.IsNullOrWhiteSpace(x.CURRENT_MTD) ? int.Parse(x.CURRENT_MTD) : 0);
+        // beforeSale = dataExel.Sum(x => !string.IsNullOrWhiteSpace(x.BEFORE_SALE) ? int.Parse(x.BEFORE_SALE) : 0);
+        // beforeMTD = dataExel.Sum(x => !string.IsNullOrWhiteSpace(x.BEFORE_MTD) ? int.Parse(x.BEFORE_MTD) : 0);
+        // currentMTD = dataExel.Sum(x => !string.IsNullOrWhiteSpace(x.CURRENT_MTD) ? int.Parse(x.CURRENT_MTD) : 0);
 
         CalDropMonth();
         FindRankEmpty(record);
@@ -865,7 +869,13 @@
     private async Task ShowdialogChangeProduct(ChangeProductRequest item , bool isCurrent) {
         var result = await DialogService.OpenAsync("เปลี่ยนสินค้า", ds =>
         @<ModalChangeProduct Item="item" IsCurrent="isCurrent" Dialog="ds" ShowdialogBestProductCallback="@ShowdialogBestProduct"/>,new DialogOptions() { Width = "80%", Height = "90%" });
-        await ShowBusyDialog();
+        // await ShowBusyDialog();
+    }
+
+    private async Task ShowdialogProductLowQty(string mc)
+    {
+       await DialogService.OpenAsync($"สิ้นค้าน้อยว่าที่กำหนด ตู้ : {mc}", ds =>
+        @<ModalProductLowQty McCode="@mc"/>,new DialogOptions() { Width = "80%", Height = "90%" });
     }
 
     private async Task ShowdialogBestProduct(BestProductRequest item)
@@ -977,7 +987,7 @@
     private void OnChageRank(string date)
     {
         var detail = new List<DeatilRank>();
-        if(data.Count() != 0 )
+        if(data.Count() != 0 && target.SYSTEMCART)
         {
             foreach(var i in data)
             {
@@ -1059,7 +1069,6 @@
                     actionButton = new();
                     actionButton.Action = "create";
                 }
-               
             }
         }
     }

@@ -14,7 +14,7 @@ namespace PlanningRouteWeb.Services.V2
         private readonly HttpClient _httpClient;
         private readonly JsonSerializerOptions _options;
         private readonly IPlanningService _planningService;
-        public DashboardService(IConfiguration configuration, HttpClient httpClient , IPlanningService planningService)
+        public DashboardService(IConfiguration configuration, HttpClient httpClient, IPlanningService planningService)
         {
             _configuration = configuration;
             _httpClient = httpClient;
@@ -31,7 +31,7 @@ namespace PlanningRouteWeb.Services.V2
                 var requestMessage = new HttpRequestMessage()
                 {
                     Method = new HttpMethod("POST"),
-                    RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}API_PLANNING/V1/REPORT_SALES_ORG"),
+                    RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}/V1/REPORT_SALES_ORG"),
                     Content = JsonContent.Create(model)
                 };
 
@@ -86,7 +86,7 @@ namespace PlanningRouteWeb.Services.V2
                 var requestMessage = new HttpRequestMessage()
                 {
                     Method = new HttpMethod("POST"),
-                    RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}API_PLANNING/V1/REPORT_SALES_ROUTE"),
+                    RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}/V1/REPORT_SALES_ROUTE"),
                     Content = JsonContent.Create(model)
                 };
 

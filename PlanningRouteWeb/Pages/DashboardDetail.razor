@@ -1,11 +1,15 @@
 ﻿@page "/Dashboard/Detail"
+@using static PlanningRouteWeb.Pages.TimelineRoute
 
 @inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager
 @inject StateContainer StateContainer
 @inject IDashboardService DashboardService
 @inject ISetDatetimeService SetDatetimeService
+@inject IPlanningService PlanningService
 @inject ICommonService CommonService
+@inject TooltipService TooltipService
+@inject DialogService DialogService
 @implements IAsyncDisposable
 
 <div class="d-flex gap-2 pb-2 w-50">
@@ -16,7 +20,7 @@
             <i class="fa-solid fa-arrow-left fa-xs"></i>
         </button>
     }
-    <button @onclick="@(() => OnChangeBackwardForward("backwar"))" type="button" class="btn btn-primary btn-sm">
+    <button @onclick="@(() => OnChangeBackwardForward("backward"))" type="button" class="btn btn-primary btn-sm">
         <i class="fa-solid fa-backward fa-xs"></i>
     </button>
     <select value="@selectedMonth" @onchange="OnChangeMonth" class="w-25 form-select form-select-sm">
@@ -56,7 +60,7 @@
                     เดือน @(GetDatetimeClass.monthObjects.Find(x =>
                     x.Number.Contains(selectedMonth))!.Name) (ปัจจุบัน)
                 </th>
-                <th scope="col" rowspan="3" class=""></th>
+                <th scope="col" rowspan="3" style="width:3rem" class=""></th>
             </tr>
             <tr class="th-border">
                 @* <th scope="col" class="">@ORGName</th> *@
@@ -110,11 +114,13 @@
                     <td class="@(model.SumDropService <= 0 ? "fw-bold value-error" : "fw-bold value-success")">
                         @model.SumDropService.ToStringNumberFormat(false)
                     </td>
-                    <td class="text-center">
-                        <button @onclick="@(() => NavigationManager.NavigateTo($"Planning?ORG={ORG}&ROUTE={model.RouteCode}&MONTH={selectedMonth}&YEAR={selectYear}"))"
-                                type="button" class="btn btn-primary btn-sm">
-                            <i class="fa-solid fa-eye fa-xs"></i>
-                        </button>
+                    <td class="d-flex justify-content-around">
+                        <RadzenText MouseEnter="@(args => ShowTooltip(args , "แก้ไขค่าเริ่มต้น") )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
+                            <i class="fa-solid fa-pen-to-square text-warning" style="cursor:pointer" @onclick="@(()=> ShowInlineDialog(model.RouteCode!))"></i>
+                        </RadzenText>
+                        <RadzenText MouseEnter="@(args => ShowTooltip(args , "ไปหน้า Planning") )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
+                            <i class="fa-solid fa-eye text-primary" style="cursor:pointer" @onclick="@(() => NavigationManager.NavigateTo($"Planning?ORG={ORG}&ROUTE={model.RouteCode}&MONTH={selectedMonth}&YEAR={selectYear}"))"></i>
+                        </RadzenText>
                     </td>
                 </tr>
             }
@@ -207,8 +213,9 @@
     public int selectYear { get; set; }
     public DashboardDetailViewModel dashboards { get; set; } = new();
     public List<int> yearOptions = new();
-
+    public Target2 target = new();
     public bool hideGoback { get; set; }
+    Variant variant = Variant.Outlined;
 
     protected override async Task OnInitializedAsync()
     {
@@ -236,6 +243,7 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        await Task.Delay(500);
         if (firstRender)
         {
             JSModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/site.js");
@@ -247,6 +255,13 @@
             }
         }
     }
+    // public async Task GoToPlanning(string route)
+    // {
+    //     var date = await JSModule!.InvokeAsync<ResulteDatepicker>("JsFunction.getValueDatepicker");
+
+    //     NavigationManager.NavigateTo($"Planning?ORG={ORG}&ROUTE={route}&MONTH={selectedMonth}&YEAR={selectYearr}");
+    // }
+    private void ShowTooltip(ElementReference elementReference, string text, TooltipOptions? options = null) => TooltipService.Open(elementReference, $"{text}", new TooltipOptions { Duration = 500, Style = "font-size: 14px", Position = TooltipPosition.Left });
 
     public async Task OnChangeBackwardForward(string action)
     {
@@ -290,6 +305,60 @@
         }
     }
 
+    private async Task ShowInlineDialog(string route)
+    {
+        StateContainer.IsLoading = true;
+
+        var req = new PanningMasterRequest
+                {
+                    YEARMONTH = $"{selectYear}{selectedMonth}",
+                    ORG = $"{ORG}",
+                    Route = $"{route}"
+                };
+        target = await PlanningService.PlanningGetTarget(req);
+        StateContainer.IsLoading = false;
+        var result = await DialogService.OpenAsync("ตั้งค่าเริ่มต้น", ds =>
+        @<RadzenStack Gap="1.5rem">
+            <RadzenFormField Text="จำนวนการเข้าเติมสินค้าต่อวัน" Variant="@variant">
+                <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value=@target.DROP_PER_DAY />
+            </RadzenFormField>
+            <RadzenFormField Text="เป้ายอดขายต่อวัน" Variant="@variant">
+                <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value=@target.VALUE_PER_DAY />
+            </RadzenFormField>
+            <RadzenFormField Text="เป้ายอดขายต่อเดือน" Variant="@variant">
+                <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value=@target.VALUE_PER_MONTH />
+            </RadzenFormField>
+            <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+                <RadzenStack Orientation="Orientation.Horizontal">
+                    <RadzenButton Text="บันทึก" Click="() => SaveTarget(ds , route)" Style="width: 80px;" />
+                    <RadzenButton Text="ยกเลิก" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" />
+                </RadzenStack>
+            </RadzenStack>
+        </RadzenStack>
+        );
+    }
+    private async Task SaveTarget(DialogService ds, string route = "")
+    {
+        StateContainer.IsLoading = true;
+        var req = new TargetSave
+            {
+                ORG = ORG!,
+                Route = route,
+                DROP_PER_DAY = target.DROP_PER_DAY.ToString(),
+                VALUE_PER_DAY = target.VALUE_PER_DAY.ToString(),
+                VALUE_PER_MONTH = target.VALUE_PER_MONTH.ToString(),
+                BASKET_SYSTEM = target.SYSTEMCART ? "1" : "0"
+            };
+        var response = await PlanningService.PlanningSaveTarget(req);
+
+        if (response.ErrorMessage == "success")
+        {
+            await LoadData();
+            ds.Close(true);
+            StateContainer.IsLoading = false;
+            StateHasChanged();
+        }
+    }
     public async Task OnSearch()
     {
         StateContainer.IsLoading = true;

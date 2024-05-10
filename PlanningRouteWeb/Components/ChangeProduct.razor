@@ -53,6 +53,10 @@
                 <th style="font-size: 12px;">ช่องสินค้า</th>
                 <th style="font-size: 12px;">ประเภทกลุ่มสินค้า</th>
                 <th style="font-size: 12px;">ชื่อสินค้า</th>
+                <th style="font-size: 12px;">ยอดขาย</th>
+                <th style="font-size: 12px;">ต้นทุน</th>
+                <th style="font-size: 12px;">GP รายสินค้า</th>
+                <th style="font-size: 12px;">GP ยอดขาย </th>
                 <th style="font-size: 12px;">ยอดโหลด</th>
                 <th style="font-size: 12px;">ยอดขายเฉลี่ย</th>
                 <th style="font-size: 12px;">ราคากลาง</th>
@@ -76,7 +80,9 @@
                     <td class="text-end" style="font-size: 12px;width: 3rem;">
                         @(i.SLOT_NO == 0 ? "" : i.SLOT_NO)
                     </td>
-
+                    @{
+                        var gp = (double)(((i.SLOT_INSTALLPRICE - i.COSTSALEPRICE) / i.COSTSALEPRICE) * 100)!;
+                    }
                     @if (SelectRowEdit == idx)
                     {
                         <td style="width:10rem;">
@@ -95,6 +101,10 @@
                                                ProductCode="@i.PRODUCT_CODE"
                                                SelectDetailCallback="@((args) => SelectDetail(i,args.Item1, idx))" />
                         </td>
+                        <td class="text-end" style="font-size: 12px;width:3rem;">@i.QTY</td>
+                        <td class="text-end" style="font-size: 12px;width:3rem;">@i.COSTSALEPRICE</td>
+                        <td class="text-end" style="font-size: 12px;">@($"{gp.ToStringNumberFormat2()}%")</td>
+                        <td class="text-end" style="font-size: 12px;">0%</td>
                         <td class="text-end" style="width:3rem;font-size: 12px;">
                             @{
                                 var prd = Data[idx - 1].PRODUCT_CODE == i.PRODUCT_CODE;
@@ -117,6 +127,7 @@
                     }
                     else
                     {
+                        
                         var rawProductName = product.Find(x => x.RAWPRODUCTCODE == i.RAWPRODUCTCODE);
                         <td style="width:10rem;">
                             <div style="font-size: 12px;">
@@ -128,13 +139,19 @@
                                 @i.PRODUCT_NAME
                             </div>
                         </td>
+                        <td class="text-end" style="font-size: 12px;width:3rem;">@i.QTY</td>
+                        <td class="text-end" style="font-size: 12px;width:3rem;">@i.COSTSALEPRICE</td>
+                        <td class="text-end" style="font-size: 12px;">@($"{gp.ToStringNumberFormat2()}%")</td>
+                        <td class="text-end" style="font-size: 12px;">0%</td>
                         <td style="width:3rem;">
                             <div class="text-end" style="font-size: 12px;">
                                 @i.LOADIN
                             </div>
                         </td>
                     }
-                    <td class="text-end" style="font-size: 12px;width:5rem;">@(string.IsNullOrWhiteSpace(i.SALETOTAL) ? "0" : i.SALETOTAL)</td>
+
+                    <td class="text-end" style="font-size: 12px;width:5rem;">@(string.IsNullOrWhiteSpace(i.SALETOTAL) ? "0" : i.SALETOTAL.ToStringNumberFormat(false))</td>
+
                     <td class="text-end" style="font-size: 12px;width:3rem;">@i.SALEPRICE</td>
 
                     <td class="text-end" style="font-size: 12px;width:3rem;">
@@ -150,14 +167,16 @@
                         }
                         else
                         {
-                            @i.SLOT_REALPRICE
+                           @i.SLOT_REALPRICE
                         }
                     </td>
 
                     <td style="width:3rem;">
                         <div class="text-end" style="font-size: 12px">
+
                             @if (SelectRowEdit == idx)
                             {
+                              
                                 var validat = i.SLOT_INSTALLPRICE == 0 ? "validat" : null;
                                 <RadzenNumeric class=@($"text-size {validat}")
                                                ShowUpDown="false"
@@ -244,7 +263,6 @@
                                         prd ? i.SLOT_REALPRICE != 0 && i.SLOT_INSTALLPRICE != 0 && i.SLOT_CONTRACT_PRICE != 0 ? false : true :
                                         i.LOADIN != 0 && i.SLOT_REALPRICE != 0 && i.SLOT_INSTALLPRICE != 0 && i.SLOT_CONTRACT_PRICE != 0 ? false : true;
 
-
                                         <RadzenButton Click="()=>SaveRowChange(i)"
                                                       Text="บันทึก"
                                                       ButtonStyle="ButtonStyle.Primary"
@@ -291,7 +309,7 @@
     </table>
 </div>
 
-<RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+<RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" class="pt-3" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
     @if (IsCurrent)
     {
         <RadzenStack Orientation="Orientation.Horizontal">
@@ -306,8 +324,33 @@
                           Style="width: 200px;text-transform: none;"
                           Disabled=@(SelectRowEdit != null ) />
         </RadzenStack>
+
+        <RadzenStack Orientation="Orientation.Vertical">
+            <RadzenText class="m-0">
+                @($"GP เฉลี่ยรายสินค้า : {AgvGPDefult.ToStringNumberFormat()}%")
+            </RadzenText>
+            <RadzenText>
+                @($"GP เฉลี่ยยอดขาย : 40%")
+            </RadzenText>
+          
+        </RadzenStack>
+
+        <RadzenStack Orientation="Orientation.Vertical">
+            @{
+                var textColor = AgvGPDefult == CalAgvGP() ? "#00800008" : "green";
+            }
+            <RadzenText class="m-0" Style=@($"color:{textColor};")>
+                @($"New GP เฉลี่ยรายสินค้า : {CalAgvGP().ToStringNumberFormat()}%")
+            </RadzenText>
+
+            <RadzenText Style=@($"color:{textColor};")>
+                @($"New GP เฉลี่ยยอดขาย : 33%")
+            </RadzenText>
+        </RadzenStack>
+
         <RadzenButton Text="ปิด" Click="(() => DialogService.Close(false))" ButtonStyle="ButtonStyle.Light" Style="text-transform: none;" />
     }
+
 </RadzenStack>
 
 
@@ -329,7 +372,7 @@
     public int? SelectRowEdit = null;
     public bool actionButton = true;
 
-
+    public double AgvGPDefult;
     // ChangeProductHeader header = new();
     // List<ChangeProductDetail2> detail = new();
     List<Rawproduct> product = new();
@@ -367,6 +410,8 @@
         var res = await ChangeProductService.GetRawproduct(body);
 
         product = res.Data;
+
+        AgvGPDefult = CalAgvGP();
         StateHasChanged();
     }
     #endregion
@@ -452,7 +497,7 @@
                         change.SLOT_INSTALLPRICE = productChang.SLOT_INSTALLPRICE;
                         change.SLOT_CONTRACT_PRICE = productChang.SLOT_CONTRACT_PRICE;
                     }
-                   
+
                 }
 
                 // var idx = detail.FindIndex(x => x.SLOT_NO == i.SLOT_NO);
@@ -521,6 +566,9 @@
                     IsStatusChange = true,
                     STATUSCHANGE = true,
                     IsAddSlot = false,
+                    Cost = item.Cost,
+                    COSTSALEPRICE = item.COSTSALEPRICE,
+                    QTY = item.QTY
                 });
 
         if (selectRow) SelectRowEdit = index + 1;
@@ -626,6 +674,16 @@
             objField.SetValue(obj, value);
         }
 
+    }
+
+    private double CalAgvGP()
+    {
+        var dataSum = Data.Where(x => (x.IsStatusChange && x.STATUSCHANGE && !x.IsAddSlot) || (!x.IsStatusChange && !x.STATUSCHANGE && !x.IsAddSlot));
+        var price = dataSum.Sum(x => x.SLOT_INSTALLPRICE);
+        var c = dataSum.Sum(x => x.COSTSALEPRICE);
+        var gpAgv = (double)(((price - c) / c) * 100)!;
+
+        return gpAgv;
     }
     #endregion
 
@@ -1202,6 +1260,8 @@
     //     StateHasChanged();
     // }
     // #endregion
+
+
 }
 
 

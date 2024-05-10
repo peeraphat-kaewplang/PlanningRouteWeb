@@ -1,0 +1,77 @@
+﻿@inject IPlanningService PlanningService
+@inject IJSRuntime JS
+@* <div>ตู้ : @McCode</div> *@
+
+<RadzenDataGrid AllowVirtualization="true" Style="height:500px" IsLoading=@isLoading AllowFiltering="false" AllowColumnResize="true" AllowAlternatingRows="false" AllowSorting="false" AllowPaging="false"
+                Data="@prdLowQtyData" ColumnWidth="300px" >
+    <Columns >
+        <RadzenDataGridColumn  TItem="ProductLowQtyData" Property="SLOTNO" Title="Slot No" Width="30px" />
+        <RadzenDataGridColumn TItem="ProductLowQtyData" Property="PRODUCT_CODE" Title="Product Code" Width="50px" />
+        <RadzenDataGridColumn TItem="ProductLowQtyData" Property="PRODUCTNAME" Title="Product Name" Width="160px"/>
+        <RadzenDataGridColumn TItem="ProductLowQtyData" Property="BALANCE_QTY" Title="Balance" Width="50px" />
+        <RadzenDataGridColumn TItem="ProductLowQtyData" Property="LOW_QTY" Title="Low QTY" Width="50px" />
+        <RadzenDataGridColumn TItem="ProductLowQtyData" Property="LOW_DAY_START" Title="Low Date Start" Width="100px" />
+        <RadzenDataGridColumn TItem="ProductLowQtyData" Property="LOW_DAY" Title="Low Date" Width="100px" />
+    </Columns>
+</RadzenDataGrid>
+
+@* <table class="table">
+    <thead>
+        <tr>
+            <th>
+                USER ID
+            </th>
+            <th>
+                Name
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                sadasd
+            </td>
+            <td>
+                sadasdasd
+            </td>
+        </tr>
+        <tr>
+            <td>
+                sadasd111111
+            </td>
+            <td>
+                sadasdasd
+            </td>
+        </tr>
+        <tr>
+            <td>
+                sadasd22222
+            </td>
+            <td>
+                sadasdasd
+            </td>
+        </tr>
+    </tbody>
+</table> *@
+
+@code {
+    [Parameter]
+    public string McCode { get; set; } = string.Empty;
+
+    IEnumerable<ProductLowQtyData> prdLowQtyData = new List<ProductLowQtyData>();
+
+    bool isLoading = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+        var res = await PlanningService.PlanningGetProductLowQty(McCode);
+        prdLowQtyData = res.Data;
+        isLoading = false;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JS.InvokeVoidAsync("InitDragAndDrop");
+    }
+}

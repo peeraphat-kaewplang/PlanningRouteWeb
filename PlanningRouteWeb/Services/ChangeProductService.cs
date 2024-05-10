@@ -24,7 +24,7 @@ namespace PlanningRouteWeb.Services
             var requestMessage = new HttpRequestMessage()
             {
                 Method = new HttpMethod("POST"),
-                RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}API_PLANNING/V1/GETCHANGEPRODUCT"),
+                RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}/V1/GETCHANGEPRODUCT"),
                 Content = JsonContent.Create(body)
             };
 
@@ -80,7 +80,7 @@ namespace PlanningRouteWeb.Services
             var requestMessage = new HttpRequestMessage()
             {
                 Method = new HttpMethod("POST"),
-                RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}API_PLANNING/V1/GETRAWPRODUCT"),
+                RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}/V1/GETRAWPRODUCT"),
                 Content = JsonContent.Create(body)
             };
 
@@ -101,7 +101,7 @@ namespace PlanningRouteWeb.Services
             var requestMessage = new HttpRequestMessage()
             {
                 Method = new HttpMethod("POST"),
-                RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}API_PLANNING/V1/GETRAWPRODUCTDT"),
+                RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}/V1/GETRAWPRODUCTDT"),
                 Content = JsonContent.Create(body)
             };
 
@@ -114,7 +114,7 @@ namespace PlanningRouteWeb.Services
 
             var productDetail = JsonSerializer.Deserialize<RawproductDetailResponse>(content, _options);
 
-           
+
             return productDetail!;
         }
 
@@ -123,7 +123,7 @@ namespace PlanningRouteWeb.Services
             var requestMessage = new HttpRequestMessage()
             {
                 Method = new HttpMethod("POST"),
-                RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}API_PLANNING/V1/GETRAWPRODUCTDT2"),
+                RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}/V1/GETRAWPRODUCTDT2"),
                 Content = JsonContent.Create(body)
             };
 
@@ -145,7 +145,7 @@ namespace PlanningRouteWeb.Services
             var requestMessage = new HttpRequestMessage()
             {
                 Method = new HttpMethod("POST"),
-                RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}API_PLANNING/V1/SAVECHANGEPRODUCT"),
+                RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}/V1/SAVECHANGEPRODUCT"),
                 Content = JsonContent.Create(body)
             };
 

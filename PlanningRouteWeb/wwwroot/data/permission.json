@@ -1,16 +1,16 @@
 {
   "ENABLED": "1",
-  "EXPIRED_DAYS": "33",
+  "EXPIRED_DAYS": "82",
   "FAIL_COUNT": "0",
   "HoldInfos": null,
   "LOCKED": "0",
-  "LoginDate": "2024-02-28T11:24:51.375518+07:00",
+  "LoginDate": "2024-03-29T15:21:01.8261429+07:00",
   "SELF_RENEW": "1",
   "emp_detail": {
-    "EMPLOYEE_ID": "03842",
-    "EMPLOYEE_MAIL": "vms.suwinthawong@sun108.co.th",
-    "EMPLOYEE_NAME": "นางสาวณิชกมล พรหมจันทร์",
-    "EMPLOYEE_PHONE": "098-305-5681",
+    "EMPLOYEE_ID": "003641",
+    "EMPLOYEE_MAIL": "surasak.s@sunvending.co.th",
+    "EMPLOYEE_NAME": "พีรพล นิมิตไตรทิพย์",
+    "EMPLOYEE_PHONE": "-",
     "POSITION_CODE": null,
     "POSITION_DEPARTMENT": null,
     "POSITION_DEPARTMENT_NAME": null,
@@ -23,2179 +23,2445 @@
     "POSITION_SECTOR_NAME": null
   },
   "firstname": null,
-  "id": "03842",
+  "id": "003641",
   "permissions": [
     {
       "permissionList": [
         {
-          "form_code": "VMS_AUTOCONFIRMTRANSACTIONMASTER",
+          "form_code": "VMS_ADMIN_WEBCONFIG",
           "function_allow": "yes",
-          "function_code": "247",
+          "function_code": "2264",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_AUTOCONFIRMTRANSACTIONMASTER",
           "function_allow": "yes",
           "function_code": "246",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_CALLCENTERMACHINE",
           "function_allow": "yes",
           "function_code": "2044",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_CALLCENTERMACHINEDT",
           "function_allow": "yes",
           "function_code": "318",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CALL_SHOWROUTE",
+          "function_allow": "yes",
+          "function_code": "331",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CALL_SHOWROUTE",
+          "function_allow": "yes",
+          "function_code": "330",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CALL_SHOWROUTE",
+          "function_allow": "yes",
+          "function_code": "328",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CALL_SHOWROUTE",
+          "function_allow": "yes",
+          "function_code": "329",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CALL_SHOWROUTE",
+          "function_allow": "yes",
+          "function_code": "332",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CALL_SHOWROUTE",
+          "function_allow": "yes",
+          "function_code": "333",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_CHECKENDMONTH",
           "function_allow": "yes",
           "function_code": "2850",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_CMACCEPT",
-          "function_allow": "yes",
-          "function_code": "1725",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_CMACCEPT",
-          "function_allow": "yes",
-          "function_code": "1726",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_CMACCEPT",
           "function_allow": "yes",
           "function_code": "1724",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_COINCOUNTERMASTERFILE",
+          "function_allow": "yes",
+          "function_code": "1779",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_CONFIRMTRANSACTIONMASTER",
           "function_allow": "yes",
           "function_code": "236",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
-          "form_code": "VMS_CONFIRMTRANSACTIONMASTER",
+          "form_code": "VMS_CONFIRM_CHARGEBACK",
           "function_allow": "yes",
-          "function_code": "238",
+          "function_code": "1827",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CONFIRM_PAYMENTS_CASH",
+          "function_allow": "yes",
+          "function_code": "1831",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CONFIRM_PAYMENTS_FILE",
+          "function_allow": "yes",
+          "function_code": "1833",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CONFIRM_PAYMENTS_OTHER",
+          "function_allow": "yes",
+          "function_code": "1829",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CONFIRM_SALE",
+          "function_allow": "yes",
+          "function_code": "1825",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CONTRACTPRINTNEW",
+          "function_allow": "yes",
+          "function_code": "2045",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_CONUTMONEYTOVMS",
           "function_allow": "yes",
           "function_code": "2052",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_CONUTMONEYTOVMS",
-          "function_allow": "yes",
-          "function_code": "2185",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_CONUTMONEYTOVMS_EDIT",
-          "function_allow": "yes",
-          "function_code": "2055",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_CONUTMONEYTOVMS_EDIT",
           "function_allow": "yes",
           "function_code": "2053",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
-          "form_code": "VMS_CREATE_CHERGEBACK",
+          "form_code": "VMS_CREATECUSTOMERBYCS",
           "function_allow": "yes",
-          "function_code": "421",
+          "function_code": "534",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_CREATE_CHERGEBACK",
           "function_allow": "yes",
           "function_code": "426",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_CREATE_CHERGEBACK",
           "function_allow": "yes",
-          "function_code": "427",
+          "function_code": "425",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_CREATE_CHERGEBACK",
-          "function_allow": "yes",
-          "function_code": "428",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_CREATE_CHERGEBACK",
           "function_allow": "yes",
           "function_code": "423",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_CREATE_CHERGEBACK",
           "function_allow": "yes",
-          "function_code": "422",
+          "function_code": "421",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_CREATE_CHERGEBACK",
           "function_allow": "yes",
           "function_code": "424",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CREATE_PAYMENTS_FILE",
+          "function_allow": "yes",
+          "function_code": "439",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CREATE_PAYMENTS_FILE",
+          "function_allow": "yes",
+          "function_code": "440",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CREATE_PAYMENTS_FILE",
+          "function_allow": "yes",
+          "function_code": "438",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CREATE_PAYMENTS_FILE",
+          "function_allow": "yes",
+          "function_code": "437",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CREATE_PAYMENTS_FILE",
+          "function_allow": "yes",
+          "function_code": "436",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CREATE_PAYMENTS_FILE",
+          "function_allow": "yes",
+          "function_code": "435",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CREATE_PAYMENTS_FILE",
+          "function_allow": "yes",
+          "function_code": "434",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CREATE_PAYMENTS_FILE",
+          "function_allow": "yes",
+          "function_code": "433",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CREATE_PAYMENTS_FILE",
+          "function_allow": "yes",
+          "function_code": "432",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CREATE_PAYMENTS_FILE",
+          "function_allow": "yes",
+          "function_code": "431",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CREATE_PAYMENTS_FILE",
+          "function_allow": "yes",
+          "function_code": "430",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_CREATE_WHT",
           "function_allow": "yes",
           "function_code": "1761",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
-          "form_code": "VMS_CREATE_WHT",
+          "form_code": "VMS_CS_MACHINEADDNEW",
           "function_allow": "yes",
-          "function_code": "1762",
+          "function_code": "537",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CS_MACHINEINSTALL",
+          "function_allow": "yes",
+          "function_code": "526",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CS_MOVEMACHINE",
+          "function_allow": "yes",
+          "function_code": "539",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CS_MOVEMACHINE",
+          "function_allow": "yes",
+          "function_code": "1804",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CS_MOVEMACHINE",
+          "function_allow": "yes",
+          "function_code": "1805",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CS_MOVEMACHINE",
+          "function_allow": "yes",
+          "function_code": "1806",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CS_RENEWCUSTOMER",
+          "function_allow": "yes",
+          "function_code": "532",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CUSTOMERBYCS",
+          "function_allow": "yes",
+          "function_code": "523",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_CUSTOMERNEW",
           "function_allow": "yes",
-          "function_code": "1849",
+          "function_code": "1841",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_CUSTOMERNEW",
-          "function_allow": "yes",
-          "function_code": "1847",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_CUSTOMERNEW",
-          "function_allow": "yes",
-          "function_code": "1845",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_CUSTOMERNEW",
           "function_allow": "yes",
           "function_code": "1843",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_CUSTOMERNEW",
-          "function_allow": "yes",
-          "function_code": "1839",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_CUSTOMERNEW",
-          "function_allow": "yes",
-          "function_code": "1838",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_CUSTOMERNEW",
           "function_allow": "yes",
           "function_code": "1836",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_CUSTOMERNEW",
           "function_allow": "yes",
-          "function_code": "1855",
+          "function_code": "1845",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_CUSTOMERNEW",
           "function_allow": "yes",
-          "function_code": "1853",
+          "function_code": "1847",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_CUSTOMERNEW",
           "function_allow": "yes",
-          "function_code": "1851",
+          "function_code": "1849",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_CUSTOMERNEW",
           "function_allow": "yes",
-          "function_code": "1835",
+          "function_code": "2006",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_CUSTOMERNEW",
-          "function_allow": "yes",
-          "function_code": "2011",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_CUSTOMERNEW",
           "function_allow": "yes",
           "function_code": "2008",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CUSTOMERNEW",
+          "function_allow": "yes",
+          "function_code": "2011",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CUSTOMERNEW",
+          "function_allow": "yes",
+          "function_code": "1835",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CUSTOMERNEW",
+          "function_allow": "yes",
+          "function_code": "1851",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CUSTOMERNEW",
+          "function_allow": "yes",
+          "function_code": "1853",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CUSTOMERNEW",
+          "function_allow": "yes",
+          "function_code": "1855",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_CUSTOMERNEW",
           "function_allow": "yes",
           "function_code": "1857",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CUSTOMERNEW",
+          "function_allow": "yes",
+          "function_code": "1839",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_CUSTOMERNEW",
+          "function_allow": "yes",
+          "function_code": "2004",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_DOCWAITAPPROVEEDITMETER",
           "function_allow": "yes",
           "function_code": "294",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EDITCONFIRMTRANSACTIONMASTER",
-          "function_allow": "yes",
-          "function_code": "242",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EDITCONFIRMTRANSACTIONMASTER",
-          "function_allow": "yes",
-          "function_code": "245",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EDITCONFIRMTRANSACTIONMASTER",
           "function_allow": "yes",
           "function_code": "244",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EDITCONFIRMTRANSACTIONMASTER",
-          "function_allow": "yes",
-          "function_code": "243",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EDITCONFIRMTRANSACTIONMASTER",
-          "function_allow": "yes",
-          "function_code": "241",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EDITCONFIRMTRANSACTIONMASTER",
           "function_allow": "yes",
           "function_code": "240",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
-          "form_code": "VMS_EDITTRANSACTIONMASTER",
+          "form_code": "VMS_EDITCONTRACT",
           "function_allow": "yes",
-          "function_code": "269",
+          "function_code": "1713",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EDITCONTRACT",
+          "function_allow": "yes",
+          "function_code": "1714",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EDITCONTRACT",
+          "function_allow": "yes",
+          "function_code": "1712",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EDITCONTRACT",
+          "function_allow": "yes",
+          "function_code": "278",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EDITCONTRACT",
+          "function_allow": "yes",
+          "function_code": "277",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EDITCONTRACT",
+          "function_allow": "yes",
+          "function_code": "276",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EDITCONTRACT",
+          "function_allow": "yes",
+          "function_code": "275",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EDITCONTRACT",
+          "function_allow": "yes",
+          "function_code": "1708",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EDITCONTRACT",
+          "function_allow": "yes",
+          "function_code": "1709",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EDITCONTRACT",
+          "function_allow": "yes",
+          "function_code": "1710",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EDITCONTRACT",
+          "function_allow": "yes",
+          "function_code": "1711",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EDITCONTRACTNEWVIEW",
+          "function_allow": "yes",
+          "function_code": "285",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EDITCONTRACTVIEW",
+          "function_allow": "yes",
+          "function_code": "284",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EDITCONTRACTVIEW",
+          "function_allow": "yes",
+          "function_code": "279",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EDITCUSTOMERPAYTRANFER",
+          "function_allow": "yes",
+          "function_code": "290",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EDITCUSTOMERPAYTRANFER",
+          "function_allow": "yes",
+          "function_code": "293",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EDITTRANSACTIONMASTER",
           "function_allow": "yes",
           "function_code": "267",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
-          "form_code": "VMS_EDITTRANSACTIONMASTER",
+          "form_code": "VMS_EMPLOYEE",
           "function_allow": "yes",
-          "function_code": "268",
+          "function_code": "181",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EDITTRANSACTIONMASTER",
-          "function_allow": "yes",
-          "function_code": "2426",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXCHANGECOINBYCLT",
-          "function_allow": "yes",
-          "function_code": "196",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EXCHANGECOINBYCLT",
           "function_allow": "yes",
           "function_code": "195",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXCHANGECOINBYCLT_EDIT",
-          "function_allow": "yes",
-          "function_code": "235",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EXCHANGECOINBYCLT_EDIT",
           "function_allow": "yes",
           "function_code": "233",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXCHANGECOINBYCLT_EDIT",
-          "function_allow": "yes",
-          "function_code": "234",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EXCHANGECOINREQUISITIONBYCLT",
           "function_allow": "yes",
           "function_code": "188",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXCHANGECOINREQUISITIONBYCLT",
-          "function_allow": "yes",
-          "function_code": "193",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXCHANGECOINREQUISITIONEDITBYCLT",
-          "function_allow": "yes",
-          "function_code": "228",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EXCHANGECOINREQUISITIONEDITBYCLT",
           "function_allow": "yes",
           "function_code": "223",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXCHANGECOINREQUISITIONEDITBYCLT",
-          "function_allow": "yes",
-          "function_code": "227",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EXCHANGECOINRETURNEDITBYCLT",
           "function_allow": "yes",
           "function_code": "229",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
-          "form_code": "VMS_EXCHANGECOINRETURNEDITBYCLT",
+          "form_code": "VMS_EXPANSION_ADDMACHINEINCUSTOMEROLD",
           "function_allow": "yes",
-          "function_code": "230",
+          "function_code": "536",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
-          "form_code": "VMS_EXCHANGECOINRETURNEDITBYCLT",
+          "form_code": "VMS_EXPANSION_CUSTOMER",
           "function_allow": "yes",
-          "function_code": "231",
+          "function_code": "461",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
-          "form_code": "VMS_EXPANSION_FILECUSTOMER",
+          "form_code": "VMS_EXPANSION_CUSTOMER",
           "function_allow": "yes",
-          "function_code": "312",
+          "function_code": "1783",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER",
+          "function_allow": "yes",
+          "function_code": "1782",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER",
+          "function_allow": "yes",
+          "function_code": "1803",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER",
+          "function_allow": "yes",
+          "function_code": "484",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER",
+          "function_allow": "yes",
+          "function_code": "483",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER",
+          "function_allow": "yes",
+          "function_code": "482",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER",
+          "function_allow": "yes",
+          "function_code": "1784",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER",
+          "function_allow": "yes",
+          "function_code": "465",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER",
+          "function_allow": "yes",
+          "function_code": "466",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER",
+          "function_allow": "yes",
+          "function_code": "468",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER",
+          "function_allow": "yes",
+          "function_code": "469",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER",
+          "function_allow": "yes",
+          "function_code": "470",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER",
+          "function_allow": "yes",
+          "function_code": "471",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER",
+          "function_allow": "yes",
+          "function_code": "472",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER",
+          "function_allow": "yes",
+          "function_code": "473",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER",
+          "function_allow": "yes",
+          "function_code": "474",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER",
+          "function_allow": "yes",
+          "function_code": "475",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER",
+          "function_allow": "yes",
+          "function_code": "476",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER",
+          "function_allow": "yes",
+          "function_code": "477",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER",
+          "function_allow": "yes",
+          "function_code": "478",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER",
+          "function_allow": "yes",
+          "function_code": "479",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER",
+          "function_allow": "yes",
+          "function_code": "480",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER",
+          "function_allow": "yes",
+          "function_code": "481",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER_SUB_MENU1",
+          "function_allow": "yes",
+          "function_code": "485",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER_SUB_MENU10",
+          "function_allow": "yes",
+          "function_code": "505",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER_SUB_MENU11",
+          "function_allow": "yes",
+          "function_code": "510",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER_SUB_MENU11",
+          "function_allow": "yes",
+          "function_code": "511",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER_SUB_MENU12",
+          "function_allow": "yes",
+          "function_code": "516",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER_SUB_MENU12",
+          "function_allow": "yes",
+          "function_code": "515",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER_SUB_MENU12",
+          "function_allow": "yes",
+          "function_code": "513",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER_SUB_MENU13",
+          "function_allow": "yes",
+          "function_code": "1797",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER_SUB_MENU13",
+          "function_allow": "yes",
+          "function_code": "1798",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER_SUB_MENU13",
+          "function_allow": "yes",
+          "function_code": "517",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER_SUB_MENU15",
+          "function_allow": "yes",
+          "function_code": "521",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER_SUB_MENU16",
+          "function_allow": "yes",
+          "function_code": "1789",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER_SUB_MENU17",
+          "function_allow": "yes",
+          "function_code": "2059",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER_SUB_MENU18",
+          "function_allow": "yes",
+          "function_code": "2060",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER_SUB_MENU2",
+          "function_allow": "yes",
+          "function_code": "1785",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER_SUB_MENU3",
+          "function_allow": "yes",
+          "function_code": "1786",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER_SUB_MENU4",
+          "function_allow": "yes",
+          "function_code": "489",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER_SUB_MENU5",
+          "function_allow": "yes",
+          "function_code": "492",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER_SUB_MENU6",
+          "function_allow": "yes",
+          "function_code": "494",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER_SUB_MENU7",
+          "function_allow": "yes",
+          "function_code": "496",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER_SUB_MENU8",
+          "function_allow": "yes",
+          "function_code": "498",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_EXPANSION_CUSTOMER_SUB_MENU9",
+          "function_allow": "yes",
+          "function_code": "500",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EXPANSION_FILECUSTOMER",
           "function_allow": "yes",
           "function_code": "307",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXPANSION_FILECUSTOMER",
-          "function_allow": "yes",
-          "function_code": "308",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXPANSION_FILECUSTOMER",
-          "function_allow": "yes",
-          "function_code": "309",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXPANSION_FILECUSTOMER",
-          "function_allow": "yes",
-          "function_code": "311",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXPANSION_FILECUSTOMER",
-          "function_allow": "yes",
-          "function_code": "313",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EXPANSION_REPORT",
           "function_allow": "yes",
-          "function_code": "549",
+          "function_code": "1760",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXPANSION_REPORT",
-          "function_allow": "yes",
-          "function_code": "548",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXPANSION_REPORT",
-          "function_allow": "yes",
-          "function_code": "547",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXPANSION_REPORT",
-          "function_allow": "yes",
-          "function_code": "546",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXPANSION_REPORT",
-          "function_allow": "yes",
-          "function_code": "545",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXPANSION_REPORT",
-          "function_allow": "yes",
-          "function_code": "1754",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXPANSION_REPORT",
-          "function_allow": "yes",
-          "function_code": "1755",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EXPANSION_REPORT",
           "function_allow": "yes",
           "function_code": "544",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EXPANSION_REPORT",
           "function_allow": "yes",
-          "function_code": "1757",
+          "function_code": "1759",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EXPANSION_REPORT",
           "function_allow": "yes",
           "function_code": "1758",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EXPANSION_REPORT",
           "function_allow": "yes",
-          "function_code": "550",
+          "function_code": "1757",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EXPANSION_REPORT",
           "function_allow": "yes",
           "function_code": "1756",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
-          "form_code": "VMS_EXPORT_DATA_GP",
+          "form_code": "VMS_EXPANSION_REPORT",
           "function_allow": "yes",
-          "function_code": "1885",
+          "function_code": "1754",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
-          "form_code": "VMS_EXPORT_DATA_GP",
+          "form_code": "VMS_EXPANSION_REPORT",
           "function_allow": "yes",
-          "function_code": "1745",
+          "function_code": "1755",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXPORT_DATA_GP",
-          "function_allow": "yes",
-          "function_code": "1744",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXPORT_DATA_GP",
-          "function_allow": "yes",
-          "function_code": "1743",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXPORT_DATA_GP",
-          "function_allow": "yes",
-          "function_code": "1742",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXPORT_DATA_GP",
-          "function_allow": "yes",
-          "function_code": "1741",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXPORT_DATA_GP",
-          "function_allow": "yes",
-          "function_code": "1740",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXPORT_DATA_GP",
-          "function_allow": "yes",
-          "function_code": "1739",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXPORT_DATA_GP",
-          "function_allow": "yes",
-          "function_code": "1738",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXPORT_DATA_GP",
-          "function_allow": "yes",
-          "function_code": "1737",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXPORT_DATA_GP",
-          "function_allow": "yes",
-          "function_code": "1736",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXPORT_DATA_GP",
-          "function_allow": "yes",
-          "function_code": "1735",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXPORT_DATA_GP",
-          "function_allow": "yes",
-          "function_code": "1734",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXPORT_DATA_GP",
-          "function_allow": "yes",
-          "function_code": "1733",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXPORT_DATA_GP",
-          "function_allow": "yes",
-          "function_code": "2315",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXPORT_DATA_GP",
-          "function_allow": "yes",
-          "function_code": "355",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXPORT_DATA_GP",
-          "function_allow": "yes",
-          "function_code": "2024",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_EXPORT_DATA_GP",
-          "function_allow": "yes",
-          "function_code": "2314",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EXPORT_DATA_GP",
           "function_allow": "yes",
           "function_code": "339",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EXPORT_DATA_GP",
           "function_allow": "yes",
-          "function_code": "340",
+          "function_code": "2314",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EXPORT_DATA_GP",
           "function_allow": "yes",
-          "function_code": "341",
+          "function_code": "2315",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EXPORT_DATA_GP",
           "function_allow": "yes",
-          "function_code": "342",
+          "function_code": "1733",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EXPORT_DATA_GP",
           "function_allow": "yes",
-          "function_code": "343",
+          "function_code": "1734",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EXPORT_DATA_GP",
           "function_allow": "yes",
-          "function_code": "344",
+          "function_code": "1735",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EXPORT_DATA_GP",
           "function_allow": "yes",
-          "function_code": "345",
+          "function_code": "1736",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EXPORT_DATA_GP",
           "function_allow": "yes",
-          "function_code": "346",
+          "function_code": "1737",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EXPORT_DATA_GP",
           "function_allow": "yes",
-          "function_code": "347",
+          "function_code": "1738",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EXPORT_DATA_GP",
           "function_allow": "yes",
-          "function_code": "348",
+          "function_code": "1739",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EXPORT_DATA_GP",
           "function_allow": "yes",
-          "function_code": "349",
+          "function_code": "1740",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EXPORT_DATA_GP",
           "function_allow": "yes",
-          "function_code": "350",
+          "function_code": "1741",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EXPORT_DATA_GP",
           "function_allow": "yes",
-          "function_code": "351",
+          "function_code": "1742",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EXPORT_DATA_GP",
           "function_allow": "yes",
-          "function_code": "352",
+          "function_code": "1743",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EXPORT_DATA_GP",
           "function_allow": "yes",
-          "function_code": "353",
+          "function_code": "1744",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EXPORT_DATA_GP",
           "function_allow": "yes",
-          "function_code": "354",
+          "function_code": "1745",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_EXPORT_DATA_GP_EXCAL",
           "function_allow": "yes",
           "function_code": "1746",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_GIRDCMACCEPT",
           "function_allow": "yes",
           "function_code": "1723",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_GP",
-          "function_allow": "yes",
-          "function_code": "1748",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_GP",
-          "function_allow": "yes",
-          "function_code": "1749",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_GP",
-          "function_allow": "yes",
-          "function_code": "1750",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_GP",
           "function_allow": "yes",
           "function_code": "1747",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_GP",
+          "function_allow": "yes",
+          "function_code": "1749",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_GP",
+          "function_allow": "yes",
+          "function_code": "1750",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_GP",
           "function_allow": "yes",
           "function_code": "1751",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_GP_ORG",
           "function_allow": "yes",
           "function_code": "2188",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_GP_STANDARD_GP",
           "function_allow": "yes",
           "function_code": "2192",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_GP_TARGET",
+          "function_allow": "yes",
+          "function_code": "2189",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_GRIDCREATE_PAYMENT_FILE",
+          "function_allow": "yes",
+          "function_code": "446",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_GRIDDATASALE",
           "function_allow": "yes",
           "function_code": "266",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_GRIDEMPLOYEE",
           "function_allow": "yes",
           "function_code": "304",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_GRIDMACHINE",
-          "function_allow": "yes",
-          "function_code": "315",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_GRIDMACHINE",
           "function_allow": "yes",
           "function_code": "314",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_GRIDMETEREANDW",
-          "function_allow": "yes",
-          "function_code": "258",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_GRIDMETEREANDW",
           "function_allow": "yes",
           "function_code": "257",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_GRIDMOVEMACHINE",
           "function_allow": "yes",
           "function_code": "185",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_GRIDORGANIZATION",
+          "function_allow": "yes",
+          "function_code": "303",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_GRIDRAWDT",
+          "function_allow": "yes",
+          "function_code": "323",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_GRIDRAWPEPRODUCT",
+          "function_allow": "yes",
+          "function_code": "319",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_GRIDRENTNEW",
           "function_allow": "yes",
           "function_code": "270",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_GRIDROUTE",
           "function_allow": "yes",
           "function_code": "217",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_GRIDROUTE",
-          "function_allow": "yes",
-          "function_code": "218",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_GRIDSERVICELOCATION",
-          "function_allow": "yes",
-          "function_code": "302",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_GRIDSERVICELOCATION",
           "function_allow": "yes",
           "function_code": "301",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_JOBMACHINEINSTALLMONTH",
+          "function_allow": "yes",
+          "function_code": "543",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_JOBMACHINESERVICE",
+          "function_allow": "yes",
+          "function_code": "1727",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_KPISALE",
           "function_allow": "yes",
           "function_code": "408",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_KPISALE",
-          "function_allow": "yes",
-          "function_code": "409",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_KPISALE",
           "function_allow": "yes",
           "function_code": "410",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_KPISALE",
-          "function_allow": "yes",
-          "function_code": "415",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_KPISALE",
-          "function_allow": "yes",
-          "function_code": "412",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_KPISALE",
-          "function_allow": "yes",
-          "function_code": "413",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_KPISALE",
-          "function_allow": "yes",
-          "function_code": "414",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_KPISALE",
           "function_allow": "yes",
           "function_code": "411",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_KPISALE",
+          "function_allow": "yes",
+          "function_code": "416",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_KPISALE",
+          "function_allow": "yes",
+          "function_code": "413",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_KPISALE",
+          "function_allow": "yes",
+          "function_code": "414",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_KPISALE",
+          "function_allow": "yes",
+          "function_code": "415",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_KPISALE",
+          "function_allow": "yes",
+          "function_code": "412",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MACHINEINLOCATIONVIEW",
           "function_allow": "yes",
           "function_code": "456",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_MACHINEINLOCATIONVIEW",
-          "function_allow": "yes",
-          "function_code": "457",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_MACHINENEW",
-          "function_allow": "yes",
-          "function_code": "317",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MACHINENEW",
           "function_allow": "yes",
           "function_code": "316",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MACHINESLOTCASHBYCLT",
           "function_allow": "yes",
           "function_code": "214",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_MACHINESLOTCASHBYCLT",
-          "function_allow": "yes",
-          "function_code": "216",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_MACHINESLOTCASHBYCLT",
-          "function_allow": "yes",
-          "function_code": "215",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_MACHINESLOTNEW",
-          "function_allow": "yes",
-          "function_code": "255",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MACHINESLOTNEW",
           "function_allow": "yes",
           "function_code": "254",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_MACHINESLOTNEW",
-          "function_allow": "yes",
-          "function_code": "256",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_MACHINESLOTNEW",
-          "function_allow": "yes",
-          "function_code": "1699",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_MENU",
-          "function_allow": "yes",
-          "function_code": "2025",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_MENU",
-          "function_allow": "yes",
-          "function_code": "2746",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_MENU",
-          "function_allow": "yes",
-          "function_code": "2789",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "2849",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "121",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "122",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "123",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "124",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "125",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU",
+          "function_allow": "yes",
+          "function_code": "126",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "127",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU",
+          "function_allow": "yes",
+          "function_code": "128",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "129",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "130",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "131",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "132",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "133",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "134",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "135",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "136",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "137",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "138",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU",
+          "function_allow": "yes",
+          "function_code": "139",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "140",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU",
+          "function_allow": "yes",
+          "function_code": "174",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "142",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "143",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU",
+          "function_allow": "yes",
+          "function_code": "144",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU",
+          "function_allow": "yes",
+          "function_code": "145",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU",
+          "function_allow": "yes",
+          "function_code": "146",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU",
+          "function_allow": "yes",
+          "function_code": "147",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "148",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "149",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "150",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "151",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "152",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "153",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "154",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "155",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "156",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "157",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "158",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU",
+          "function_allow": "yes",
+          "function_code": "159",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU",
+          "function_allow": "yes",
+          "function_code": "160",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU",
+          "function_allow": "yes",
+          "function_code": "161",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU",
+          "function_allow": "yes",
+          "function_code": "162",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU",
+          "function_allow": "yes",
+          "function_code": "163",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "164",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "165",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "166",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU",
+          "function_allow": "yes",
+          "function_code": "167",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU",
           "function_allow": "yes",
           "function_code": "168",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU",
+          "function_allow": "yes",
+          "function_code": "2826",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU",
+          "function_allow": "yes",
+          "function_code": "2647",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU",
+          "function_allow": "yes",
+          "function_code": "2746",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU",
+          "function_allow": "yes",
+          "function_code": "2025",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU",
+          "function_allow": "yes",
+          "function_code": "141",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU_EXCHANGECOIN",
           "function_allow": "yes",
-          "function_code": "208",
+          "function_code": "203",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_MENU_EXCHANGECOIN",
-          "function_allow": "yes",
-          "function_code": "207",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_MENU_EXCHANGECOIN",
-          "function_allow": "yes",
-          "function_code": "206",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_MENU_EXCHANGECOIN",
-          "function_allow": "yes",
-          "function_code": "210",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_MENU_EXCHANGECOIN",
-          "function_allow": "yes",
-          "function_code": "209",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_MENU_EXCHANGECOIN",
-          "function_allow": "yes",
-          "function_code": "194",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_MENU_EXCHANGECOIN",
-          "function_allow": "yes",
-          "function_code": "205",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_MENU_EXCHANGECOIN",
-          "function_allow": "yes",
-          "function_code": "199",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_MENU_EXCHANGECOIN",
-          "function_allow": "yes",
-          "function_code": "200",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_MENU_EXCHANGECOIN",
-          "function_allow": "yes",
-          "function_code": "201",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_MENU_EXCHANGECOIN",
-          "function_allow": "yes",
-          "function_code": "202",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU_EXCHANGECOIN",
           "function_allow": "yes",
           "function_code": "204",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU_EXCHANGECOIN",
+          "function_allow": "yes",
+          "function_code": "205",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU_EXCHANGECOIN",
+          "function_allow": "yes",
+          "function_code": "206",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU_EXCHANGECOIN",
+          "function_allow": "yes",
+          "function_code": "207",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU_EXCHANGECOIN",
+          "function_allow": "yes",
+          "function_code": "208",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU_EXCHANGECOIN",
+          "function_allow": "yes",
+          "function_code": "209",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU_EXCHANGECOIN",
+          "function_allow": "yes",
+          "function_code": "210",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU_EXCHANGECOIN",
+          "function_allow": "yes",
+          "function_code": "194",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MENU_EXCHANGECOIN",
           "function_allow": "yes",
           "function_code": "197",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
-          "form_code": "VMS_METERWATERELEC",
+          "form_code": "VMS_MENU_EXCHANGECOIN",
           "function_allow": "yes",
-          "function_code": "262",
+          "function_code": "198",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
-          "form_code": "VMS_METERWATERELEC",
+          "form_code": "VMS_MENU_EXCHANGECOIN",
           "function_allow": "yes",
-          "function_code": "261",
+          "function_code": "199",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU_EXCHANGECOIN",
+          "function_allow": "yes",
+          "function_code": "200",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU_EXCHANGECOIN",
+          "function_allow": "yes",
+          "function_code": "201",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU_EXCHANGECOIN",
+          "function_allow": "yes",
+          "function_code": "202",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU_LINK_REPORT",
+          "function_allow": "yes",
+          "function_code": "3086",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_MENU_LINK_REPORT",
+          "function_allow": "yes",
+          "function_code": "3087",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_METERWATERELEC",
           "function_allow": "yes",
           "function_code": "259",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
-          "form_code": "VMS_METERWATERELEC",
+          "form_code": "VMS_MOVEMACHINEBACKPRODUCTION",
           "function_allow": "yes",
-          "function_code": "260",
+          "function_code": "541",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
-          "form_code": "VMS_MOVEMECHINEBYCOLLECTOR",
+          "form_code": "VMS_MOVEMACHINEBACKPRODUCTIONEDIT",
           "function_allow": "yes",
-          "function_code": "213",
+          "function_code": "529",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_MOVEMECHINEBYCOLLECTOR",
           "function_allow": "yes",
           "function_code": "211",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_MOVEMECHINEBYCOLLECTOR",
-          "function_allow": "yes",
-          "function_code": "212",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_MOVEMECHINEBYCOLLECTOR",
-          "function_allow": "yes",
-          "function_code": "2057",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_NOTIFYSO",
-          "function_allow": "yes",
-          "function_code": "1732",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_NOTIFYSO",
           "function_allow": "yes",
           "function_code": "1731",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
-          "form_code": "VMS_RENTNEW",
+          "form_code": "VMS_ORGANIZATION",
           "function_allow": "yes",
-          "function_code": "2058",
+          "function_code": "1716",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_RENTNEW",
-          "function_allow": "yes",
-          "function_code": "272",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_RENTNEW",
           "function_allow": "yes",
           "function_code": "271",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_REPORTEXCHANGE",
-          "function_allow": "yes",
-          "function_code": "221",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_REPORTEXCHANGE",
-          "function_allow": "yes",
-          "function_code": "222",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_REPORTEXCHANGE",
           "function_allow": "yes",
           "function_code": "220",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_RETURNTOSALE",
-          "function_allow": "yes",
-          "function_code": "450",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_RETURNTOSALE",
           "function_allow": "yes",
           "function_code": "449",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_RETURNTOSALEADMIN",
+          "function_allow": "yes",
+          "function_code": "2389",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_RIVALCOMPETITORSNVIEW",
           "function_allow": "yes",
           "function_code": "458",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_ROUTE",
-          "function_allow": "yes",
-          "function_code": "1720",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_ROUTE",
           "function_allow": "yes",
           "function_code": "1719",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
-          "form_code": "VMS_ROUTE",
+          "form_code": "VMS_SELECTMACHINESERVICE",
           "function_allow": "yes",
-          "function_code": "1721",
+          "function_code": "1729",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_SELECTPRODUCTINSLOT",
-          "function_allow": "yes",
-          "function_code": "1781",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SELECTPRODUCTINSLOT",
           "function_allow": "yes",
           "function_code": "1780",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
-          "form_code": "VMS_SHOWREPORT",
+          "form_code": "VMS_SHOWCREATE_PAYMENT_FILE",
           "function_allow": "yes",
-          "function_code": "2626",
+          "function_code": "447",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
-          "form_code": "VMS_SHOWREPORT",
+          "form_code": "VMS_SHOWJOBSOSUP",
           "function_allow": "yes",
-          "function_code": "2766",
+          "function_code": "334",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_SHOWREPORT",
-          "function_allow": "yes",
-          "function_code": "1753",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "1752",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "356",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_SHOWREPORT",
-          "function_allow": "yes",
-          "function_code": "357",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "358",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "359",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "360",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "361",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "362",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "363",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "364",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "365",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "366",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "367",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "368",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "369",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "370",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "371",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "372",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "373",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "374",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "375",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "376",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "377",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "378",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "379",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "380",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "381",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "382",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "383",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "384",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "385",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "386",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "387",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_SHOWREPORT",
+          "function_allow": "yes",
+          "function_code": "2926",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_SHOWREPORT",
+          "function_allow": "yes",
+          "function_code": "2906",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "388",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "389",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "390",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "391",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "392",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "393",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "394",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "395",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "396",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "397",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "398",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "399",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "400",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "401",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
           "function_code": "402",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
-          "function_code": "403",
+          "function_code": "3046",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_SHOWREPORT",
           "function_allow": "yes",
-          "function_code": "404",
+          "function_code": "3047",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
-          "form_code": "VMS_SHOWREPORT",
+          "form_code": "VMS_TO_ACCSTAR",
           "function_allow": "yes",
-          "function_code": "405",
+          "function_code": "1822",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
-          "form_code": "VMS_SHOWREPORT",
+          "form_code": "VMS_TO_ACCSTAR",
           "function_allow": "yes",
-          "function_code": "406",
+          "function_code": "1820",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
-          "form_code": "VMS_SHOWREPORT",
+          "form_code": "VMS_TO_ACCSTAR",
           "function_allow": "yes",
-          "function_code": "407",
+          "function_code": "1821",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
-          "form_code": "VMS_TRANSECTIONMASTER",
+          "form_code": "VMS_TO_ACCSTAR",
           "function_allow": "yes",
-          "function_code": "187",
+          "function_code": "1819",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_TO_ACCSTAR",
+          "function_allow": "yes",
+          "function_code": "1818",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_TO_ACCSTAR",
+          "function_allow": "yes",
+          "function_code": "1817",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_TO_ACCSTAR_PAYMENT",
+          "function_allow": "yes",
+          "function_code": "2148",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
+        },
+        {
+          "form_code": "VMS_TO_ACCSTAR_PAYMENT_HD",
+          "function_allow": "yes",
+          "function_code": "2193",
+          "function_value": "",
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_TRANSECTIONMASTER",
           "function_allow": "yes",
           "function_code": "186",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_TRANSFER",
-          "function_allow": "yes",
-          "function_code": "264",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_TRANSFER",
           "function_allow": "yes",
           "function_code": "263",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_VIEW_CUSTOMERS",
           "function_allow": "yes",
           "function_code": "1704",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_VIEW_NOTIFYSO",
           "function_allow": "yes",
           "function_code": "459",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_VIEW_NOTIFYSO",
-          "function_allow": "yes",
-          "function_code": "460",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_VMSFILE",
-          "function_allow": "yes",
-          "function_code": "1768",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_VMSFILE",
-          "function_allow": "yes",
-          "function_code": "1769",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_VMSFILE",
-          "function_allow": "yes",
-          "function_code": "1770",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_VMSFILE",
-          "function_allow": "yes",
-          "function_code": "1771",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_VMSFILE",
-          "function_allow": "yes",
-          "function_code": "1772",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_VMSFILE",
-          "function_allow": "yes",
-          "function_code": "1773",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_VMSFILE",
-          "function_allow": "yes",
-          "function_code": "1774",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_VMSFILE",
-          "function_allow": "yes",
-          "function_code": "1775",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_VMSFILE",
-          "function_allow": "yes",
-          "function_code": "1776",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_VMSFILE",
-          "function_allow": "yes",
-          "function_code": "1777",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_VMSFILE",
-          "function_allow": "yes",
-          "function_code": "1778",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_VMSFILE",
-          "function_allow": "yes",
-          "function_code": "1767",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_VMSFILE",
-          "function_allow": "yes",
-          "function_code": "1766",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_VMSFILE",
-          "function_allow": "yes",
-          "function_code": "1765",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_VMSFILE",
-          "function_allow": "yes",
-          "function_code": "1764",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         },
         {
           "form_code": "VMS_VMSFILE",
           "function_allow": "yes",
           "function_code": "1763",
           "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_VMSFILE",
-          "function_allow": "yes",
-          "function_code": "2206",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_VMSFILE",
-          "function_allow": "yes",
-          "function_code": "2204",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
-        },
-        {
-          "form_code": "VMS_VMSFILE",
-          "function_allow": "yes",
-          "function_code": "2205",
-          "function_value": "",
-          "name": "VMS-เจ้าหน้าที่ฝ่ายข้อมูล "
+          "name": "VMS-เจ้าหน้าที่โปรแกรมเมอร์"
         }
       ]
     }
@@ -2210,7 +2476,7 @@
     "SystemID": "2",
     "SystemNAME": "VMS"
   },
-  "username": "03842",
+  "username": "003641",
   "ErrorMessage": "SUCCESSED",
   "Errorcode": "0"
 }

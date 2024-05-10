@@ -30,7 +30,7 @@ public class TimelineService : ITimelineService
             var requestMessage = new HttpRequestMessage()
             {
                 Method = new HttpMethod("POST"),
-                RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}API_PLANNING/V1/REPORT_TIMELINE"),
+                RequestUri = new Uri($"{_configuration.GetValue<string>("Configs:UrlApi")}/V1/REPORT_TIMELINE"),
                 Content = JsonContent.Create(req)
             };
 

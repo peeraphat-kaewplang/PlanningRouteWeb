@@ -1,7 +1,6 @@
 ﻿@page "/Timeline/Detail"
- @inject IJSRuntime JSRuntime
+@inject IJSRuntime JSRuntime
 @inject ITimelineService TimelineService
-@inject IPlanningService PlanningService
 @inject IPlanningService PlanningService
 @inject ICommonService CommonService
 @inject StateContainer StateContainer
@@ -75,7 +74,7 @@
             {
             <tr>
                 <td class="d-flex align-items-center gap-2">
-                    <div class="d-inline-block text-truncate w-25"> @model.ORGANIZATION_NAME</div>
+                    <div class="d-inline-block text-truncate w-25"> @model.ROUTE_CODE</div>
                     <div class="progress w-75" role="progressbar" aria-label="Success example">
                         <div class=@($"progress-bar overflow-visible text-dark {StyleProgress(isView ? model.ProgressSale : model.ProgressDrop ,isView ? model.SUM_AMOUT : model.MAX_DROP)}") style=@($"width: {calValueProgress(isView ? model.ProgressSale : model.ProgressDrop ,isView ? model.SUM_AMOUT : model.MAX_DROP)}%")>
                                 @($"{(isView ? model.ProgressSale.ToStringNumberFormat(false) : model.ProgressDrop.ToStringNumberFormat(false))}/{(isView ? model.SUM_AMOUT.ToStringNumberFormat(false) : model.MAX_DROP.ToStringNumberFormat(false))}")
@@ -192,11 +191,12 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        // AutoLoadData();
+        AutoLoadData();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        await Task.Delay(500);
         if (firstRender)
         {
          
@@ -363,10 +363,6 @@
             <RadzenFormField Text="เป้ายอดขายต่อเดือน" Variant="@variant">
                 <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value=@target.VALUE_PER_MONTH />
             </RadzenFormField>
-            <RadzenStack Gap="0.5rem" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
-                <RadzenLabel Text="ระบบตระกร้า" />
-                <RadzenSwitch @bind-Value=@target.SYSTEMCART />
-            </RadzenStack>
             <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
                 <RadzenStack Orientation="Orientation.Horizontal">
                     <RadzenButton Text="บันทึก" Click="() => SaveTarget(ds , route)" Style="width: 80px;" />
