@@ -84,7 +84,7 @@
                 <th style="font-size: 12px;">GP ยอดขาย </th>
                 <th style="font-size: 12px;z-index:1;">ยอดขายเฉลี่ย</th>
                 <th style="font-size: 12px;z-index:1;">ยอดโหลด</th>
-                <th style="font-size: 12px;z-index:1;">ราคากลาง</th>
+                <th style="font-size: 12px;z-index:1;">ราคาขายหน้าตู้</th>
                 <th style="font-size: 12px;">กลุ่มราคาเดิม</th>
                 @if (IsCurrent)
                 {
@@ -403,28 +403,32 @@
                           Disabled=@(selectRowGroup != null && selectRowGroupProduct != null) />
         </RadzenStack>
 
-        <RadzenStack Orientation="Orientation.Vertical">
-            <RadzenText class="m-0">
-                @($"GP เฉลี่ยรายสินค้า : {AgvGPDefult.ToStringNumberFormat()}%")
-            </RadzenText>
-            <RadzenText>
-                @($"GP เฉลี่ยยอดขาย : 40%")
-            </RadzenText>
+        <div class="chp-wrap-sum">
+            <div class="chp-in-wrap-sum">
+                <RadzenStack Orientation="Orientation.Vertical">
+                    <RadzenText class="m-0">
+                        @($"GP เฉลี่ยรายสินค้า : {AgvGPDefult.ToStringNumberFormat()}%")
+                    </RadzenText>
+                    <RadzenText>
+                        @($"GP เฉลี่ยยอดขาย : 40%")
+                    </RadzenText>
 
-        </RadzenStack>
+                </RadzenStack>
 
-        <RadzenStack Orientation="Orientation.Vertical">
-            @{
-                var textColor = AgvGPDefult == CalAgvGP() ? "#00800008" : "green";
-            }
-            <RadzenText class="m-0" Style=@($"color:{textColor};")>
-                @($"New GP เฉลี่ยรายสินค้า : {CalAgvGP().ToStringNumberFormat()}%")
-            </RadzenText>
+                <RadzenStack Orientation="Orientation.Vertical">
+                    @{
+                        var textColor = AgvGPDefult == CalAgvGP() ? "#00800008" : "green";
+                    }
+                    <RadzenText class="m-0" Style=@($"color:{textColor};")>
+                        @($"New GP เฉลี่ยรายสินค้า : {CalAgvGP().ToStringNumberFormat()}%")
+                    </RadzenText>
 
-            <RadzenText Style=@($"color:{textColor};")>
-                @($"New GP เฉลี่ยยอดขาย : 33%")
-            </RadzenText>
-        </RadzenStack>
+                    <RadzenText Style=@($"color:{textColor};")>
+                        @($"New GP เฉลี่ยยอดขาย : 33%")
+                    </RadzenText>
+                </RadzenStack>
+            </div>
+        </div>
 
         <RadzenButton Text="ปิด" Click="(() => DialogService.Close(false))" ButtonStyle="ButtonStyle.Light" Style="text-transform: none;" />
     }

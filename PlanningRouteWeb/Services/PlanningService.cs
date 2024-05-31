@@ -101,6 +101,9 @@ namespace PlanningRouteWeb.Services
 
                 var plannings = JsonSerializer.Deserialize<PanningMasterResponse>(content, _options);
                 var dataPlan = plannings!.Data.Plan.Where(p => p.GETPLAN_DETAIL.Count() > 30).ToList();
+
+                var j = JsonSerializer.Serialize(dataPlan.Take(0).Skip(1));
+
                 var target = ConvertModel.TargetModelToTarget2Model(plannings!.Data.Target);
                 if (dataPlan.Count() != 0)
                 {
@@ -170,7 +173,7 @@ namespace PlanningRouteWeb.Services
                                 (key, grp) =>
                                 {
                                     var model = grp.OrderBy(x => int.Parse(x.MSORT)).FirstOrDefault()!;
-                                    var value = _stateContainer.PlanningMasterDataModeltoModel(model,  grp , target.SYSTEMCART);
+                                    var value = _stateContainer.PlanningMasterDataModeltoModel(model, grp, target.SYSTEMCART);
                                     return value;
                                 })
                         .ToList();

@@ -81,7 +81,7 @@ namespace PlanningRouteWeb.Services
 
         public PlanningMasterData2 PlanningMasterDataModeltoModel(PlanningMasterData model, IEnumerable<PlanningMasterData> Grp ,bool isCart)
         {
-            var g = (double)(((double.Parse(model.TOTAL_SLOT_INSTALLPRICE) - double.Parse(model.TOTAL_COST_SALEPRICE)) / double.Parse(model.TOTAL_COST_SALEPRICE)) * 100);
+            //var g = (double)(((double.Parse(model.TOTAL_SLOT_INSTALLPRICE) - double.Parse(model.TOTAL_COST_SALEPRICE)) / double.Parse(model.TOTAL_COST_SALEPRICE)) * 100);
             var data = new PlanningMasterData2
             {
                 YEARMONTH = model.YEARMONTH,
@@ -115,8 +115,8 @@ namespace PlanningRouteWeb.Services
                 SALE_LAST_WEEK_END = !string.IsNullOrWhiteSpace(model.SALE_LAST_WEEK_END) ? double.Parse(model.SALE_LAST_WEEK_END) : 0,
                 ISONLINE = model.ISONLINE,
                 IS_LOW_QTY = model.IS_LOW_QTY,
-                GP_PRODUCT = model.GP_PRODUCT,
-                GP = g.ToStringNumberFormat(),
+                GP_PRODUCT = "0",
+                GP = "0",
                 GETPLAN_DETAIL = model.GETPLAN_DETAIL.Select(x => PlanningDetailModeltoModel(x , model.ORGANIZATION_CODE , model.ROUTE_CODE , isCart)).ToList(),
                 GroupData = Grp.Select(x => PlanningMasterDataModeltoModel2(x , isCart)).OrderBy(x => int.Parse(x.MSORT)).ToList(),
                 Week1 = model.Week1,

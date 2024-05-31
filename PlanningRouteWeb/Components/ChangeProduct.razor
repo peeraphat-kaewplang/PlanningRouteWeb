@@ -53,15 +53,34 @@
                 <th style="font-size: 12px;">ช่องสินค้า</th>
                 <th style="font-size: 12px;">ประเภทกลุ่มสินค้า</th>
                 <th style="font-size: 12px;">ชื่อสินค้า</th>
-                <th style="font-size: 12px;">ยอดขาย</th>
                 <th style="font-size: 12px;">ต้นทุน</th>
-                <th style="font-size: 12px;">GP รายสินค้า</th>
-                <th style="font-size: 12px;">GP ยอดขาย </th>
+                <th style="font-size: 12px;">
+                    <p class="m-0">ราคา</p>
+                    <p class="m-0">เรียกเก็บ</p>
+                </th>
+                <th style="font-size: 12px;">
+                    <p class="m-0">GP</p>
+                    <p class="m-0">ตู้</p>
+                </th>
+                <th style="font-size: 12px;">ต้นทุนกลาง</th>
+                <th style="font-size: 12px;">
+                    <p class="m-0">ราคา</p>
+                    <p class="m-0">กลาง</p>
+                </th>
+                <th style="font-size: 12px;">
+                    <p class="m-0">GP</p>
+                    <p class="m-0">กลาง</p>
+                </th>
+                <th style="font-size: 12px;">ยอดขาย</th>
+                <th style="font-size: 12px;">
+                    <p class="m-0">GP</p>
+                    <p class="m-0">ยอดขาย</p>
+                </th>
                 <th style="font-size: 12px;">ยอดโหลด</th>
                 <th style="font-size: 12px;">ยอดขายเฉลี่ย</th>
-                <th style="font-size: 12px;">ราคากลาง</th>
+                <th style="font-size: 12px;">ราคาขายหน้าตู้</th>
                 <th style="font-size: 12px;">ราคาขาย</th>
-                <th style="font-size: 12px;">ราคาเรียกเก็บ</th>
+                
                 <th style="font-size: 12px;">ราคาตามสัญญา</th>
                 @if (IsCurrent)
                 {
@@ -81,11 +100,11 @@
                         @(i.SLOT_NO == 0 ? "" : i.SLOT_NO)
                     </td>
                     @{
-                        var gp = (double)(((i.SLOT_INSTALLPRICE - i.COSTSALEPRICE) / i.COSTSALEPRICE) * 100)!;
+                        // var gp = (double)(((i.SLOT_INSTALLPRICE - i.COSTSALEPRICE) / i.COSTSALEPRICE) * 100)!;
                     }
                     @if (SelectRowEdit == idx)
                     {
-                        <td style="width:10rem;">
+                        <td style="width:7rem;">
                             <RadzenDropDown class="dropdown-sm fw-bold w-100"
                                             TValue="string"
                                             Data=@product
@@ -94,17 +113,42 @@
                             @bind-Value=@i.RAWPRODUCTCODE
                                             Change="@(args => actionButton = false)" />
                         </td>
-                        <td style="width:30rem;">
+                        <td style="width:20rem;">
                             <DropDownProductDt index="@idx"
                                                ItemModal="@Item"
                                                RawProductCode="@i.RAWPRODUCTCODE"
                                                ProductCode="@i.PRODUCT_CODE"
                                                SelectDetailCallback="@((args) => SelectDetail(i,args.Item1, idx))" />
                         </td>
-                        <td class="text-end" style="font-size: 12px;width:3rem;">@i.QTY</td>
+
                         <td class="text-end" style="font-size: 12px;width:3rem;">@i.COSTSALEPRICE</td>
-                        <td class="text-end" style="font-size: 12px;">@($"{gp.ToStringNumberFormat2()}%")</td>
-                        <td class="text-end" style="font-size: 12px;">0%</td>
+                        <td style="width:4rem;">
+                            <div class="text-end" style="font-size: 12px">
+
+                                @if (SelectRowEdit == idx)
+                                {
+
+                                    var validat = i.SLOT_INSTALLPRICE == 0 ? "validat" : null;
+                                    <RadzenNumeric class=@($"text-size {validat}")
+                                                   ShowUpDown="false"
+                                                   TextAlign="TextAlign.End"
+                                                   TValue="double"
+                                                   @bind-Value=@i.SLOT_INSTALLPRICE
+                                                   @oninput=@(args => OnChangeNumber(args , i , "SLOT_INSTALLPRICE")) />
+                                }
+                                else
+                                {
+                                    @i.SLOT_INSTALLPRICE
+                                }
+                            </div>
+                        </td>
+                        <td class="text-end" style="font-size: 12px;width:3rem;">0%</td>
+                        <td class="text-end" style="font-size: 12px;width:3rem;">11</td>
+                        <td class="text-end" style="font-size: 12px;width:4rem;">20</td>
+                        <td class="text-end" style="font-size: 12px;width:3rem;">0%</td>
+                        <td class="text-end" style="font-size: 12px;width:3rem;">111</td>
+                        <td class="text-end" style="font-size: 12px;width:3rem;">0%</td>
+
                         <td class="text-end" style="width:3rem;font-size: 12px;">
                             @{
                                 var prd = Data[idx - 1].PRODUCT_CODE == i.PRODUCT_CODE;
@@ -129,20 +173,43 @@
                     {
                         
                         var rawProductName = product.Find(x => x.RAWPRODUCTCODE == i.RAWPRODUCTCODE);
-                        <td style="width:10rem;">
+                        <td style="width:7rem;">
                             <div style="font-size: 12px;">
                                 @(rawProductName is not null ?  rawProductName!.RAWPRODUCTNAME : "")
                             </div>
                         </td>
-                        <td style="width:30rem;">
+                        <td style="width:20rem;">
                             <div style="font-size: 12px;">
                                 @i.PRODUCT_NAME
                             </div>
                         </td>
-                        <td class="text-end" style="font-size: 12px;width:3rem;">@i.QTY</td>
                         <td class="text-end" style="font-size: 12px;width:3rem;">@i.COSTSALEPRICE</td>
-                        <td class="text-end" style="font-size: 12px;">@($"{gp.ToStringNumberFormat2()}%")</td>
-                        <td class="text-end" style="font-size: 12px;">0%</td>
+                        <td style="width:4rem;">
+                            <div class="text-end" style="font-size: 12px">
+
+                                @if (SelectRowEdit == idx)
+                                {
+
+                                    var validat = i.SLOT_INSTALLPRICE == 0 ? "validat" : null;
+                                    <RadzenNumeric class=@($"text-size {validat}")
+                                                   ShowUpDown="false"
+                                                   TextAlign="TextAlign.End"
+                                                   TValue="double"
+                                                   @bind-Value=@i.SLOT_INSTALLPRICE
+                                                   @oninput=@(args => OnChangeNumber(args , i , "SLOT_INSTALLPRICE")) />
+                                }
+                                else
+                                {
+                                    @i.SLOT_INSTALLPRICE
+                                }
+                            </div>
+                        </td>
+                        <td class="text-end" style="font-size: 12px;width:3rem;">0%</td>
+                        <td class="text-end" style="font-size: 12px;width:3rem;">11</td>
+                        <td class="text-end" style="font-size: 12px;width:4rem;">20</td>
+                        <td class="text-end" style="font-size: 12px;width:3rem;">0%</td>
+                        <td class="text-end" style="font-size: 12px;width:3rem;">111</td>
+                        <td class="text-end" style="font-size: 12px;width:3rem;">0%</td>
                         <td style="width:3rem;">
                             <div class="text-end" style="font-size: 12px;">
                                 @i.LOADIN
@@ -171,26 +238,7 @@
                         }
                     </td>
 
-                    <td style="width:3rem;">
-                        <div class="text-end" style="font-size: 12px">
-
-                            @if (SelectRowEdit == idx)
-                            {
-                              
-                                var validat = i.SLOT_INSTALLPRICE == 0 ? "validat" : null;
-                                <RadzenNumeric class=@($"text-size {validat}")
-                                               ShowUpDown="false"
-                                               TextAlign="TextAlign.End"
-                                               TValue="double"
-                                @bind-Value=@i.SLOT_INSTALLPRICE
-                                @oninput=@(args => OnChangeNumber(args , i , "SLOT_INSTALLPRICE")) />
-                            }
-                            else
-                            {
-                                @i.SLOT_INSTALLPRICE
-                            }
-                        </div>
-                    </td>
+                    
                     <td style="width:3rem;">
                         <div class="text-end" style="font-size: 12px;">
                             @if (SelectRowEdit == idx)
@@ -243,7 +291,7 @@
                                                           Text="แก้ไข"
                                                           ButtonStyle="ButtonStyle.Warning"
                                                           Size="ButtonSize.ExtraSmall"
-                                                          Style="text-transform: none;"
+                                                          Style="text-transform: none;font-size:smaller;"
                                                           Disabled=@(!i.SLOTSTATUS || SelectRowEdit != null) />
                                         }
                                         else
@@ -267,7 +315,7 @@
                                                       Text="บันทึก"
                                                       ButtonStyle="ButtonStyle.Primary"
                                                       Size="ButtonSize.ExtraSmall"
-                                                      Style="text-transform: none;"
+                                                      Style="text-transform: none;font-size:smaller;"
                                                       Disabled=@(disble) />
                                     }
                                 </div>
@@ -306,10 +354,61 @@
                 </tr>
             }
         </tbody>
+        <tfoot>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="text-end"></td>
+                <td class="text-end"></td>
+                <td class="text-end"></td>
+                <td class="text-end"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tfoot>
     </table>
 </div>
+<RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" class="pt-1" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End">
+<div class="chp-wrap-sum">
+    <div class="chp-in-wrap-sum">
+        <RadzenStack Orientation="Orientation.Vertical">
+            <RadzenText class="m-0">
+                @($"GP ตู้เฉลี่ย : 10%")
+            </RadzenText>
+            <RadzenText class="m-0">
+                @($"GP เฉลี่ยยอดขาย : 40%")
+            </RadzenText>
 
-<RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" class="pt-3" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+        </RadzenStack>
+
+        <RadzenStack Orientation="Orientation.Vertical">
+            @{
+                var textColor = AgvGPDefult == CalAgvGP() ? "#00800008" : "green";
+            }
+            <RadzenText class="m-0" Style=@($"color:{textColor};")>
+                @($"New GP เฉลี่ยรายสินค้า : {CalAgvGP().ToStringNumberFormat()}%")
+            </RadzenText>
+
+            <RadzenText class="m-0" Style=@($"color:{textColor};")>
+                @($"New GP เฉลี่ยยอดขาย : 33%")
+            </RadzenText>
+        </RadzenStack>
+    </div>
+</div>
+</RadzenStack>
+
+<RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" class="pt-1" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
     @if (IsCurrent)
     {
         <RadzenStack Orientation="Orientation.Horizontal">
@@ -325,28 +424,8 @@
                           Disabled=@(SelectRowEdit != null ) />
         </RadzenStack>
 
-        <RadzenStack Orientation="Orientation.Vertical">
-            <RadzenText class="m-0">
-                @($"GP เฉลี่ยรายสินค้า : {AgvGPDefult.ToStringNumberFormat()}%")
-            </RadzenText>
-            <RadzenText>
-                @($"GP เฉลี่ยยอดขาย : 40%")
-            </RadzenText>
-          
-        </RadzenStack>
-
-        <RadzenStack Orientation="Orientation.Vertical">
-            @{
-                var textColor = AgvGPDefult == CalAgvGP() ? "#00800008" : "green";
-            }
-            <RadzenText class="m-0" Style=@($"color:{textColor};")>
-                @($"New GP เฉลี่ยรายสินค้า : {CalAgvGP().ToStringNumberFormat()}%")
-            </RadzenText>
-
-            <RadzenText Style=@($"color:{textColor};")>
-                @($"New GP เฉลี่ยยอดขาย : 33%")
-            </RadzenText>
-        </RadzenStack>
+        
+        
 
         <RadzenButton Text="ปิด" Click="(() => DialogService.Close(false))" ButtonStyle="ButtonStyle.Light" Style="text-transform: none;" />
     }

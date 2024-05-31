@@ -11,8 +11,12 @@
     <th class="sticky-col second-col" rowspan="4" style="font-size: 8px;width:2rem;">ตู้ปัจจุบัน</th>
     @* <th class="sticky-col last-col" rowspan="4" style="font-size: 12px;">MODEL</th> *@
     @* <th rowspan="4" style="width: 4rem;font-size: 12px;">ค่าธรรมเนียม</th> *@
-    <th rowspan="4" class="text-center sticky-col thired-col" style="width: 1.5rem;font-size: 8px;">
+    <th rowspan="4" class="text-center sticky-col thired-col" style="width: 3rem;font-size: 8px;">
        GP
+    </th>
+
+    <th rowspan="4" class="text-center sticky-col four-col" style="width: 3rem;font-size: 8px;">
+        GP ยอดขาย
     </th>
 
     <th rowspan="4" class="text-center sticky-col five-col" style="width: 2rem;font-size: 8px;width:2rem;">
@@ -37,7 +41,7 @@
     @if (!HideMaster)
     {
         @* <th colspan="9" class="text-center p-1 sticky-col nine-col"> *@
-        <th colspan="9" class="text-center p-1">
+        <th colspan="9" class="text-center p-1 sticky-col nine-col">
             <RadzenButton Text="บันทึกค่ามาตรฐาน"
                           ButtonStyle="ButtonStyle.Secondary"
                           Style="width: 100%;text-transform: none;font-size: 10px;"
@@ -172,26 +176,26 @@
     @if (!HideMaster)
     {
         @* ค่ามาตรฐาน *@
-        @* <th rowspan="3" class="text-center sticky-col nine-col" style="width: 1.25rem;font-size: 10px;">จ</th> *@
-        <th rowspan="3" class="text-center" style="width: 1.25rem;font-size: 10px;">จ</th>
-        @* <th rowspan="3" class="text-center sticky-col ten-col" style="width: 1.25rem;font-size: 10px;">อ</th> *@
-        <th rowspan="3" class="text-centerl" style="width: 1.25rem;font-size: 10px;">อ</th>
-        @* <th rowspan="3" class="text-center sticky-col eleven-col" style="width: 1.25rem;font-size: 10px;">พ</th> *@
-        <th rowspan="3" class="text-center" style="width: 1.25rem;font-size: 10px;">พ</th>
-        @* <th rowspan="3" class="text-center sticky-col twelve-col" style="width: 1.25rem;font-size: 10px;">พฤ</th> *@
-        <th rowspan="3" class="text-center" style="width: 1.25rem;font-size: 10px;">พฤ</th>
-        @* <th rowspan="3" class="text-center sticky-col thirteen-col" style="width: 1.25rem;font-size: 10px;">ศ</th> *@
-        <th rowspan="3" class="text-center" style="width: 1.25rem;font-size: 10px;">ศ</th>
-        @* <th rowspan="3" class="text-center sticky-col fourteen-col" style="width: 1.25rem;font-size: 10px;">ส</th> *@
-        <th rowspan="3" class="text-center" style="width: 1.25rem;font-size: 10px;">ส</th>
-        @* <th rowspan="3" class="px-1 text-center sticky-col fifteen-col" style="width: 1.25rem;font-size: 10px;">อา</th> *@
-        <th rowspan="3" class="px-1 text-center" style="width: 1.25rem;font-size: 10px;">อา</th>
-        <th rowspan="3" class="px-2 " style="width: 1rem;font-size: 8px;">
+        <th rowspan="3" class="text-center sticky-col nine-col" style="width: 1.25rem;font-size: 10px;">จ</th>
+        @* <th rowspan="3" class="text-center" style="width: 1.25rem;font-size: 10px;">จ</th> *@
+        <th rowspan="3" class="text-center sticky-col ten-col" style="width: 1.25rem;font-size: 10px;">อ</th>
+        @* <th rowspan="3" class="text-center" style="width: 1.25rem;font-size: 10px;">อ</th> *@
+        <th rowspan="3" class="text-center sticky-col eleven-col" style="width: 1.25rem;font-size: 10px;">พ</th>
+        @* <th rowspan="3" class="text-center" style="width: 1.25rem;font-size: 10px;">พ</th> *@
+        <th rowspan="3" class="text-center sticky-col twelve-col" style="width: 1.25rem;font-size: 10px;">พฤ</th>
+        @* <th rowspan="3" class="text-center" style="width: 1.25rem;font-size: 10px;">พฤ</th> *@
+        <th rowspan="3" class="text-center sticky-col thirteen-col" style="width: 1.25rem;font-size: 10px;">ศ</th>
+        @* <th rowspan="3" class="text-center" style="width: 1.25rem;font-size: 10px;">ศ</th> *@
+        <th rowspan="3" class="text-center sticky-col fourteen-col" style="width: 1.25rem;font-size: 10px;">ส</th>
+        @* <th rowspan="3" class="text-center" style="width: 1.25rem;font-size: 10px;">ส</th> *@
+        <th rowspan="3" class="px-1 text-center sticky-col fifteen-col" style="width: 1.25rem;font-size: 10px;">อา</th>
+        @* <th rowspan="3" class="px-1 text-center" style="width: 1.25rem;font-size: 10px;">อา</th> *@
+        <th rowspan="3" class="px-2 sticky-col sixteen-col" style="width: 1rem;font-size: 8px;">
             <p class="m-0">Drop</p>
             <p class="m-0">Week</p>
         </th>
-        @* <th rowspan="3" class="px-3 text-center sticky-col seventeen-col" style="width: 3.15rem;font-size: 8px;"> *@
-        <th rowspan="3" class="px-3 text-center" style="width: 3.15rem;font-size: 8px;">
+        <th rowspan="3" class="px-3 text-center sticky-col seventeen-col" style="width: 3.15rem;font-size: 8px;">
+        @* <th rowspan="3" class="px-3 text-center" style="width: 3.15rem;font-size: 8px;"> *@
             Drop Day
         </th>
         @* <th rowspan="2" style="width: 12.5rem;font-size: 12px;">Remark</th> *@

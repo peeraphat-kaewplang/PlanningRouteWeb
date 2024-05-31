@@ -28,15 +28,24 @@
             sessionStorage.setItem("permission", JSON.stringify(permis));
             var month = (new Date().getMonth() + 1).toString().padStart(2, '0');
             var year = new Date().getFullYear();
+            var date = new Date().getDate().toString().padStart(2, '0');
 
             setTimeout(function () {
+                // if (permis.system.OrganizationList.length > 1) {
+                //     window.location.href = "Dashboard"
+                // }
+                // else {
+                //     window.location.href = `Dashboard/Detail?ORG=${permis.system.OrganizationList[0].ORGANIZATION_CODE}&ORGName=${permis.system.OrganizationList[0].ORGANIZATION_NAME}&Month=${month}&Year=${year}`
+                // }
                 if (permis.system.OrganizationList.length > 1) {
-                    window.location.href = "Dashboard"
+                    window.location.href = "Timeline"
                 }
                 else {
-                    window.location.href = `Dashboard/Detail?ORG=${permis.system.OrganizationList[0].ORGANIZATION_CODE}&ORGName=${permis.system.OrganizationList[0].ORGANIZATION_NAME}&Month=${month}&Year=${year}`
+                    window.location.href = `Timeline/Detail?ORG=${permis.system.OrganizationList[0].ORGANIZATION_CODE}&Start=${year}-${month}-${date}&End=${year}-${month}-${date}`
                 }
             }, 100);
+
+
         })();
     </script>
 </body>

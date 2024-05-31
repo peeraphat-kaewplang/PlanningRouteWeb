@@ -18,11 +18,18 @@
         </div>
     }
     <div class="col-auto">
-        <input @bind="isView" class="form-check-input" type="checkbox">
+        @* <input @bind="isView" class="form-check-input" type="checkbox">
         <label class="form-check-label" for="checkView">
             มุมมองจำนวนเงิน
-        </label>
+        </label> *@
+        <select @bind="selectView" 
+            class=" form-select form-select-sm">
+            <option value=1>มุมมองจำนวนเงิน</option>
+            <option value=2>มุมมองDrop</option>
+            <option value=3>มุมมองตู้</option>
+        </select>
     </div>
+
     <div class="col-auto">
         <label for="organize" class="col-form-label">สาขา</label>
     </div>
@@ -34,25 +41,31 @@
             }
         </select>
     </div>
-    <div class="col-auto">
-        <label for="dateStart" class="col-form-label">From</label>
-    </div>
-    <div class="col-auto">
-        <input id="dateStart" class="form-control form-control-sm" />
-    </div>
 
-    <div class="col-auto">
-        <label for="dateEnd" class="col-form-label">To</label>
-    </div>
-    <div class="col-auto">
-        <input id="dateEnd" class="form-control form-control-sm" />
-    </div>
+    @* @if(selectView != 3)
+    { *@
+        <div class="col-auto">
+            <label for="dateStart" class="col-form-label">From</label>
+        </div>
+        <div class="col-auto">
+            <input id="dateStart" class="form-control form-control-sm" />
+        </div>
+
+    <div class="col-auto @(selectView == 3 ? "d-none" : "")">
+            <label for="dateEnd" class="col-form-label">To</label>
+        </div>
+    <div class="col-auto @(selectView == 3 ? "d-none" : "")">
+            <input id="dateEnd" class="form-control form-control-sm" />
+        </div>
+
     <button @onclick="@(()=> OnSearch())" class="btn btn-primary btn-sm" data-bs-toggle="tooltip"
             data-bs-placement="right" title="ค้าหา">
         <i class="fa-solid fa-magnifying-glass fa-xs"></i>
     </button>
 </div>
 
+@if (selectView != 3)
+{
 <div class="table-wraper">
     <table id="tbl-line" class="table table-bordered table-sm table-striped table-hover table-dashboard table-timeline table-timeline-detail align-middle border-start border-end mb-0">
         <thead>
@@ -76,35 +89,35 @@
                 <td class="d-flex align-items-center gap-2">
                     <div class="d-inline-block text-truncate w-25"> @model.ROUTE_CODE</div>
                     <div class="progress w-75" role="progressbar" aria-label="Success example">
-                        <div class=@($"progress-bar overflow-visible text-dark {StyleProgress(isView ? model.ProgressSale : model.ProgressDrop ,isView ? model.SUM_AMOUT : model.MAX_DROP)}") style=@($"width: {calValueProgress(isView ? model.ProgressSale : model.ProgressDrop ,isView ? model.SUM_AMOUT : model.MAX_DROP)}%")>
-                                @($"{(isView ? model.ProgressSale.ToStringNumberFormat(false) : model.ProgressDrop.ToStringNumberFormat(false))}/{(isView ? model.SUM_AMOUT.ToStringNumberFormat(false) : model.MAX_DROP.ToStringNumberFormat(false))}")
+                            <div class=@($"progress-bar overflow-visible text-dark {StyleProgress(selectView == 1 ? model.ProgressSale : model.ProgressDrop ,selectView == 1 ? model.SUM_AMOUT : model.MAX_DROP)}") style=@($"width: {calValueProgress(selectView == 1 ? model.ProgressSale : model.ProgressDrop ,selectView == 1 ? model.SUM_AMOUT : model.MAX_DROP)}%")>
+                                @($"{(selectView == 1 ? model.ProgressSale.ToStringNumberFormat(false) : model.ProgressDrop.ToStringNumberFormat(false))}/{(selectView == 1 ? model.SUM_AMOUT.ToStringNumberFormat(false) : model.MAX_DROP.ToStringNumberFormat(false))}")
                         </div>
                     </div>
                 </td>
-                <td class="text-center @(isView ? model.T00_SALE != 0 ? "bg-isValue" : null :  model.T00_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T00_SALE.ToStringNumberFormat(false) : model.T00_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center @(isView ? model.T01_SALE != 0 ? "bg-isValue" : null :  model.T01_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T01_SALE.ToStringNumberFormat(false) : model.T01_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center @(isView ? model.T02_SALE != 0 ? "bg-isValue" : null :  model.T02_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T02_SALE.ToStringNumberFormat(false) : model.T02_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center @(isView ? model.T03_SALE != 0 ? "bg-isValue" : null :  model.T03_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T03_SALE.ToStringNumberFormat(false) : model.T03_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center @(isView ? model.T04_SALE != 0 ? "bg-isValue" : null :  model.T04_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T04_SALE.ToStringNumberFormat(false) : model.T04_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center @(isView ? model.T05_SALE != 0 ? "bg-isValue" : null :  model.T05_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T05_SALE.ToStringNumberFormat(false) : model.T05_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center @(isView ? model.T06_SALE != 0 ? "bg-isValue" : null :  model.T06_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T06_SALE.ToStringNumberFormat(false) : model.T06_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center @(isView ? model.T07_SALE != 0 ? "bg-isValue" : null :  model.T07_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T07_SALE.ToStringNumberFormat(false) : model.T07_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center @(isView ? model.T08_SALE != 0 ? "bg-isValue" : null :  model.T08_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T08_SALE.ToStringNumberFormat(false) : model.T08_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center @(isView ? model.T09_SALE != 0 ? "bg-isValue" : null :  model.T09_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T09_SALE.ToStringNumberFormat(false) : model.T09_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center @(isView ? model.T10_SALE != 0 ? "bg-isValue" : null :  model.T10_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T10_SALE.ToStringNumberFormat(false) : model.T10_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center @(isView ? model.T11_SALE != 0 ? "bg-isValue" : null :  model.T11_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T11_SALE.ToStringNumberFormat(false) : model.T11_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center @(isView ? model.T12_SALE != 0 ? "bg-isValue" : null :  model.T12_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T12_SALE.ToStringNumberFormat(false) : model.T12_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center @(isView ? model.T13_SALE != 0 ? "bg-isValue" : null :  model.T13_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T13_SALE.ToStringNumberFormat(false) : model.T13_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center @(isView ? model.T14_SALE != 0 ? "bg-isValue" : null :  model.T14_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T14_SALE.ToStringNumberFormat(false) : model.T14_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center @(isView ? model.T15_SALE != 0 ? "bg-isValue" : null :  model.T15_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T15_SALE.ToStringNumberFormat(false) : model.T15_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center @(isView ? model.T16_SALE != 0 ? "bg-isValue" : null :  model.T16_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T16_SALE.ToStringNumberFormat(false) : model.T16_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center @(isView ? model.T17_SALE != 0 ? "bg-isValue" : null :  model.T17_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T17_SALE.ToStringNumberFormat(false) : model.T17_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center @(isView ? model.T18_SALE != 0 ? "bg-isValue" : null :  model.T18_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T18_SALE.ToStringNumberFormat(false) : model.T18_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center @(isView ? model.T19_SALE != 0 ? "bg-isValue" : null :  model.T19_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T19_SALE.ToStringNumberFormat(false) : model.T19_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center @(isView ? model.T20_SALE != 0 ? "bg-isValue" : null :  model.T20_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T20_SALE.ToStringNumberFormat(false) : model.T20_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center @(isView ? model.T21_SALE != 0 ? "bg-isValue" : null :  model.T21_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T21_SALE.ToStringNumberFormat(false) : model.T21_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center @(isView ? model.T22_SALE != 0 ? "bg-isValue" : null :  model.T22_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T22_SALE.ToStringNumberFormat(false) : model.T22_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center @(isView ? model.T23_SALE != 0 ? "bg-isValue" : null :  model.T23_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(isView ? model.T23_SALE.ToStringNumberFormat(false) : model.T23_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(selectView == 1 ? model.T00_SALE != 0 ? "bg-isValue" : null :  model.T00_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(selectView == 1 ? model.T00_SALE.ToStringNumberFormat(false) : model.T00_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(selectView == 1 ? model.T01_SALE != 0 ? "bg-isValue" : null :  model.T01_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(selectView == 1 ? model.T01_SALE.ToStringNumberFormat(false) : model.T01_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(selectView == 1 ? model.T02_SALE != 0 ? "bg-isValue" : null :  model.T02_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(selectView == 1 ? model.T02_SALE.ToStringNumberFormat(false) : model.T02_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(selectView == 1 ? model.T03_SALE != 0 ? "bg-isValue" : null :  model.T03_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(selectView == 1 ? model.T03_SALE.ToStringNumberFormat(false) : model.T03_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(selectView == 1 ? model.T04_SALE != 0 ? "bg-isValue" : null :  model.T04_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(selectView == 1 ? model.T04_SALE.ToStringNumberFormat(false) : model.T04_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(selectView == 1 ? model.T05_SALE != 0 ? "bg-isValue" : null :  model.T05_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(selectView == 1 ? model.T05_SALE.ToStringNumberFormat(false) : model.T05_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(selectView == 1 ? model.T06_SALE != 0 ? "bg-isValue" : null :  model.T06_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(selectView == 1 ? model.T06_SALE.ToStringNumberFormat(false) : model.T06_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(selectView == 1 ? model.T07_SALE != 0 ? "bg-isValue" : null :  model.T07_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(selectView == 1 ? model.T07_SALE.ToStringNumberFormat(false) : model.T07_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(selectView == 1 ? model.T08_SALE != 0 ? "bg-isValue" : null :  model.T08_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(selectView == 1 ? model.T08_SALE.ToStringNumberFormat(false) : model.T08_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(selectView == 1 ? model.T09_SALE != 0 ? "bg-isValue" : null :  model.T09_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(selectView == 1 ? model.T09_SALE.ToStringNumberFormat(false) : model.T09_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(selectView == 1 ? model.T10_SALE != 0 ? "bg-isValue" : null :  model.T10_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(selectView == 1 ? model.T10_SALE.ToStringNumberFormat(false) : model.T10_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(selectView == 1 ? model.T11_SALE != 0 ? "bg-isValue" : null :  model.T11_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(selectView == 1 ? model.T11_SALE.ToStringNumberFormat(false) : model.T11_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(selectView == 1 ? model.T12_SALE != 0 ? "bg-isValue" : null :  model.T12_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(selectView == 1 ? model.T12_SALE.ToStringNumberFormat(false) : model.T12_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(selectView == 1 ? model.T13_SALE != 0 ? "bg-isValue" : null :  model.T13_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(selectView == 1 ? model.T13_SALE.ToStringNumberFormat(false) : model.T13_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(selectView == 1 ? model.T14_SALE != 0 ? "bg-isValue" : null :  model.T14_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(selectView == 1 ? model.T14_SALE.ToStringNumberFormat(false) : model.T14_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(selectView == 1 ? model.T15_SALE != 0 ? "bg-isValue" : null :  model.T15_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(selectView == 1 ? model.T15_SALE.ToStringNumberFormat(false) : model.T15_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(selectView == 1 ? model.T16_SALE != 0 ? "bg-isValue" : null :  model.T16_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(selectView == 1 ? model.T16_SALE.ToStringNumberFormat(false) : model.T16_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(selectView == 1 ? model.T17_SALE != 0 ? "bg-isValue" : null :  model.T17_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(selectView == 1 ? model.T17_SALE.ToStringNumberFormat(false) : model.T17_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(selectView == 1 ? model.T18_SALE != 0 ? "bg-isValue" : null :  model.T18_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(selectView == 1 ? model.T18_SALE.ToStringNumberFormat(false) : model.T18_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(selectView == 1 ? model.T19_SALE != 0 ? "bg-isValue" : null :  model.T19_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(selectView == 1 ? model.T19_SALE.ToStringNumberFormat(false) : model.T19_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(selectView == 1 ? model.T20_SALE != 0 ? "bg-isValue" : null :  model.T20_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(selectView == 1 ? model.T20_SALE.ToStringNumberFormat(false) : model.T20_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(selectView == 1 ? model.T21_SALE != 0 ? "bg-isValue" : null :  model.T21_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(selectView == 1 ? model.T21_SALE.ToStringNumberFormat(false) : model.T21_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(selectView == 1 ? model.T22_SALE != 0 ? "bg-isValue" : null :  model.T22_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(selectView == 1 ? model.T22_SALE.ToStringNumberFormat(false) : model.T22_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center @(selectView == 1 ? model.T23_SALE != 0 ? "bg-isValue" : null :  model.T23_DROP != 0 ? "bg-isValue" : null)" style="width:4rem">@(selectView == 1 ? model.T23_SALE.ToStringNumberFormat(false) : model.T23_DROP.ToStringNumberFormat(false))</td>
                     <td class="d-flex justify-content-around">
                         <RadzenText MouseEnter="@(args => ShowTooltip(args , "แก้ไขค่าเริ่มต้น") )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
                             <i class="fa-solid fa-pen-to-square text-warning" style="cursor:pointer" @onclick="@(()=> ShowInlineDialog(model.ROUTE_CODE!))"></i>
@@ -121,8 +134,8 @@
                 <td class="d-flex align-items-center gap-2">
                     <div class="w-25 text-center">รวม</div>
                     @{
-                        var value = isView ? timelineData.TimeLineSum.ProgressSale : timelineData.TimeLineSum.ProgressDrop;
-                        var max = isView ? timelineData.TimeLineSum.SUM_AMOUT : timelineData.TimeLineSum.MAX_DROP;
+                        var value = selectView == 1 ? timelineData.TimeLineSum.ProgressSale : timelineData.TimeLineSum.ProgressDrop;
+                        var max = selectView == 1 ? timelineData.TimeLineSum.SUM_AMOUT : timelineData.TimeLineSum.MAX_DROP;
                     }
                     <div class="w-75 progress" role="progressbar" aria-label="Example with label" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
                         <div class=@($"progress-bar overflow-visible text-dark {StyleProgress(value, max)}")
@@ -131,35 +144,231 @@
                         </div>
                     </div>
                 </td>
-                <td class="text-center">@(isView ? timelineData.TimeLineSum.T00_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T00_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center">@(isView ? timelineData.TimeLineSum.T01_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T01_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center">@(isView ? timelineData.TimeLineSum.T02_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T02_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center">@(isView ? timelineData.TimeLineSum.T03_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T03_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center">@(isView ? timelineData.TimeLineSum.T04_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T04_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center">@(isView ? timelineData.TimeLineSum.T05_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T05_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center">@(isView ? timelineData.TimeLineSum.T06_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T06_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center">@(isView ? timelineData.TimeLineSum.T07_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T07_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center">@(isView ? timelineData.TimeLineSum.T08_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T08_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center">@(isView ? timelineData.TimeLineSum.T09_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T09_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center">@(isView ? timelineData.TimeLineSum.T10_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T10_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center">@(isView ? timelineData.TimeLineSum.T11_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T11_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center">@(isView ? timelineData.TimeLineSum.T12_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T12_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center">@(isView ? timelineData.TimeLineSum.T13_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T13_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center">@(isView ? timelineData.TimeLineSum.T14_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T14_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center">@(isView ? timelineData.TimeLineSum.T15_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T15_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center">@(isView ? timelineData.TimeLineSum.T16_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T16_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center">@(isView ? timelineData.TimeLineSum.T17_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T17_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center">@(isView ? timelineData.TimeLineSum.T18_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T18_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center">@(isView ? timelineData.TimeLineSum.T19_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T19_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center">@(isView ? timelineData.TimeLineSum.T20_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T20_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center">@(isView ? timelineData.TimeLineSum.T21_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T21_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center">@(isView ? timelineData.TimeLineSum.T22_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T22_DROP.ToStringNumberFormat(false))</td>
-                <td class="text-center">@(isView ? timelineData.TimeLineSum.T23_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T23_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(selectView == 1 ? timelineData.TimeLineSum.T00_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T00_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(selectView == 1 ? timelineData.TimeLineSum.T01_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T01_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(selectView == 1 ? timelineData.TimeLineSum.T02_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T02_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(selectView == 1 ? timelineData.TimeLineSum.T03_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T03_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(selectView == 1 ? timelineData.TimeLineSum.T04_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T04_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(selectView == 1 ? timelineData.TimeLineSum.T05_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T05_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(selectView == 1 ? timelineData.TimeLineSum.T06_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T06_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(selectView == 1 ? timelineData.TimeLineSum.T07_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T07_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(selectView == 1 ? timelineData.TimeLineSum.T08_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T08_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(selectView == 1 ? timelineData.TimeLineSum.T09_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T09_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(selectView == 1 ? timelineData.TimeLineSum.T10_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T10_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(selectView == 1 ? timelineData.TimeLineSum.T11_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T11_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(selectView == 1 ? timelineData.TimeLineSum.T12_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T12_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(selectView == 1 ? timelineData.TimeLineSum.T13_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T13_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(selectView == 1 ? timelineData.TimeLineSum.T14_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T14_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(selectView == 1 ? timelineData.TimeLineSum.T15_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T15_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(selectView == 1 ? timelineData.TimeLineSum.T16_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T16_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(selectView == 1 ? timelineData.TimeLineSum.T17_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T17_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(selectView == 1 ? timelineData.TimeLineSum.T18_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T18_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(selectView == 1 ? timelineData.TimeLineSum.T19_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T19_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(selectView == 1 ? timelineData.TimeLineSum.T20_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T20_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(selectView == 1 ? timelineData.TimeLineSum.T21_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T21_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(selectView == 1 ? timelineData.TimeLineSum.T22_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T22_DROP.ToStringNumberFormat(false))</td>
+                <td class="text-center">@(selectView == 1 ? timelineData.TimeLineSum.T23_SALE.ToStringNumberFormat(false) : timelineData.TimeLineSum.T23_DROP.ToStringNumberFormat(false))</td>
                 <td class="text-center"></td>
             </tr>
         </tfoot>
     </table>
-</div>
+    </div>
+    <div class="w-100 mt-2" style="display: flex;justify-content: space-between;">
+        <div>
+            <div class="d-flex gap-2">
+                <div class="d-flex d-flex gap-2">
+                    <div class="bg-success" style="width: 20px;height: 20px;"></div>
+                    <div>เข้าตามเเพลนทุกตู้</div>
+                </div>
+                <div class="d-flex d-flex gap-2">
+                    <div class="bg-danger" style="width: 20px;height: 20px;"></div>
+                    <div>เข้า service น้อยกว่า 33%</div>
+                </div>
+            </div>
+            <div class="d-flex d-flex gap-2">
+                <div class="d-flex d-flex gap-2">
+                    <div class="bg-warning" style="width: 20px;height: 20px;"></div>
+                    <div>เข้า service มากกว่า 33%</div>
+                </div>
+                <div class="d-flex d-flex gap-2">
+                    <div class="bg-over" style="width: 20px;height: 20px;"></div>
+                    <div>เข้า service มากกว่า 100%</div>
+                </div>
+            </div>
+        </div>
+       
+
+    </div>
+}
+else
+{
+    var popup = "popup";
+    <div class="table-wraper">
+        <table id="tbl-line" style="height: 1px;" class="table table-bordered table-sm table-striped table-hover table-dashboard table-timeline table-timeline-detail  border-start border-end mb-0">
+            <thead>
+                <tr>
+                    <th class="d-flex align-items-center gap-2" style="width:20rem">
+                        <div class=" w-25">Route</div>
+                        <div class=" w-50">service / service ตามแพลน</div>
+                    </th>
+                    @foreach (var model in column)
+                    {
+                        <th class="text-center">@model</th>
+                    }
+                    <th style="width:3rem"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var model in timelineData2)
+                {
+                   
+                     <tr>
+                        <td class="d-flex align-items-center gap-2 h-100">
+                            <div class="d-inline-block text-truncate w-25"> @model.ROUTE_CODE</div>
+                        @*     @{
+                                var count = model.DETAIL.Where(x => string.IsNullOrEmpty(x.TIME_SERVICE)).FirstOrDefault()!.ITEMS.Where(x => !string.IsNullOrEmpty(x.STATUS_MANUAL)).Count();
+                            }
+                            <div style="width:1rem">
+                                @count
+                            </div> *@
+                            
+                            <div style="cursor:pointer;" @onclick="(e)=> ShowPopup(e , model.ROUTE_CODE , popup)"  class="progress w-75" role="progressbar" aria-label="Success example">
+                               
+                                <div class=@($"progress-bar overflow-visible text-dark {StyleProgress(model.SERVICE, model.MAX_SERVICE)}") style=@($"width: {calValueProgress(model.SERVICE, model.MAX_SERVICE)}%")>
+                                    @($"{model.SERVICE}/{model.MAX_SERVICE}")
+                                </div>
+                            </div>
+                          </td>
+                        @foreach (var col in column)
+                        {
+                            var service = model.DETAIL.Where(x => !string.IsNullOrEmpty(x.TIME_SERVICE)).Where(x => int.Parse(x.TIME_SERVICE) == int.Parse(col));
+                            if (service.Count() != 0)
+                            {
+                                <td class="text-center " style="width:4rem">
+                                @foreach (var m in @service.FirstOrDefault()!.ITEMS)
+                                {
+                                        var bg = !string.IsNullOrEmpty(m.STATUS_MANUAL) && !string.IsNullOrEmpty(m.DOC_TYPE) ? "plan-success" : string.IsNullOrEmpty(m.STATUS_MANUAL) && !string.IsNullOrEmpty(m.DOC_TYPE) ? "plan-out" : "";
+                                        <p @onclick="(e)=> ShowPopup(e , model.ROUTE_CODE , popup , m.MACHINE_CODE , col.ToString())"  class="mb-1 @bg" style="cursor:pointer;">@m.MACHINE_CODE</p>
+                                }
+                                </td>
+                            }else
+                            {
+                                <td class="text-center" style="width:4rem"></td>
+                            }
+                        }
+                        <td class=" h-100">
+                            <div class="d-flex justify-content-around">
+                            <RadzenText MouseEnter="@(args => ShowTooltip(args , "แก้ไขค่าเริ่มต้น") )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
+                                <i class="fa-solid fa-pen-to-square text-warning" style="cursor:pointer" @onclick="@(()=> ShowInlineDialog(model.ROUTE_CODE!))"></i>
+                            </RadzenText>
+                            <RadzenText MouseEnter="@(args => ShowTooltip(args , "ไปหน้า Planning") )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
+                                <i class="fa-solid fa-eye text-primary" style="cursor:pointer" @onclick="@(() => GoToPlanning(model.ROUTE_CODE!))"></i>
+                            </RadzenText>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            
+        </table>
+
+        <div class="popup-content" id="popup" style="display:none;">
+
+            @if (listMechine.Count() == 0)
+            {
+                <div> loading... </div>
+            }
+            else
+            {
+                <span class="popup-close" @onclick="(e)=>HidePopup(e , popup)">&times;</span>
+                @if (string.IsNullOrEmpty(mechinePopup))
+                {
+                    <div>ตู้ที่ยังไม่เข้า Service ตามแพลน จำนวน: @listMechine.Count() ตู้</div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>เลขตู้</th>
+                                <th>บริษัท</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var lm in listMechine)
+                            {
+                                <tr>
+                                    <td>@lm.MACHINE_CODE</td>
+                                    <td>@lm.CUSTOMER_NAME</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div>รายละเอียดตู้ @mechinePopup</div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>บริษัท</th>
+                                <th>ยอดขาย</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var lm in listMechine)
+                            {
+                                <tr>
+                                    <td>@lm.CUSTOMER_NAME</td>
+                                    <td>@lm.SALETOTAL</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+               
+            }
+
+        </div>
+
+
+       
+    </div>
+
+    <div class="w-100 mt-2" style="display: flex;justify-content: space-between;">
+        <div >
+            <div class="d-flex gap-2">
+                <div class="d-flex d-flex gap-2">
+                    <div class="bg-success" style="width: 20px;height: 20px;"></div>
+                    <div>เข้าตามเเพลนทุกตู้</div>
+                </div>
+                <div class="d-flex d-flex gap-2">
+                    <div class="bg-danger" style="width: 20px;height: 20px;"></div>
+                    <div>เข้า service น้อยกว่า 33%</div>
+                </div>
+            </div>
+            <div class="d-flex d-flex gap-2">
+                <div class="d-flex d-flex gap-2">
+                    <div class="bg-warning" style="width: 20px;height: 20px;"></div>
+                    <div>เข้า service มากกว่า 33%</div>
+                </div>
+                <div class="d-flex d-flex gap-2">
+                    <div class="bg-over" style="width: 20px;height: 20px;"></div>
+                    <div>เข้า service มากกว่า 100%</div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="d-flex gap-2">
+                <div class="plan-success" style="width: 20px;height: 20px;"></div>
+                <div>เข้า service ตามแพลน</div>
+            </div>
+            <div class="d-flex  gap-2">
+                <div class="plan-out" style="width: 20px;height: 20px;"></div>
+                <div>ไม่มีแพลนเเต่เข้า service</div>
+            </div>
+        </div>
+       
+    </div>
+}
+
 
 @code {
     [Parameter]
@@ -175,6 +384,7 @@
     public string? End { get; set; }
     private IJSObjectReference? JSModule;
     public ResultTimeline timelineData { get; set; } = new();
+    public List<TimeLineMechine> timelineData2 { get; set; } = new();
     public Target2 target = new();
     public IEnumerable<OrganizationData> optionsOrg = new List<OrganizationData>();
     public IEnumerable<PlanningRouteWeb.Models.RouteData> optionsRoute = new List<PlanningRouteWeb.Models.RouteData>();
@@ -183,6 +393,13 @@
     public string? selectOrg { get; set; }
     public string? selectRoute { get; set; }
     public bool isView { get; set; } = true;
+    public int selectView = 1;
+
+    public List<TimelineMechineData1> listMechine { get; set; } = new();
+
+    public string mechinePopup { get; set; } = string.Empty;
+
+    public string selectPopup { get; set; } = string.Empty;
 
     Variant variant = Variant.Outlined;
     public bool hideGoback { get; set; }
@@ -191,15 +408,23 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
+
         AutoLoadData();
     }
+
+    async Task DoStuff()
+    {
+        await JSModule.InvokeVoidAsync("InitailJS.tooltipTrigger");
+        await JSModule.InvokeVoidAsync("InitailJS.initailDatepicker", Start, End);
+    }
+
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await Task.Delay(500);
         if (firstRender)
         {
-         
+
             StateContainer.IsLoading = true;
             JSModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/site.js");
             await JSModule.InvokeVoidAsync("InitailJS.tooltipTrigger");
@@ -215,7 +440,7 @@
 
             await LoadOrg();
             await LoadRoute();
-            await LoadDataTimeline(isView);
+            await LoadDataTimeline(selectView);
 
 
             StateContainer.IsLoading = false;
@@ -232,7 +457,7 @@
 
            InvokeAsync(async () =>
            {
-               await LoadDataTimeline(isView);
+               await LoadDataTimeline(selectView);
                StateHasChanged();
            });
        }, null, 0, 300000);
@@ -253,7 +478,7 @@
         optionsRoute = res!.Data;
     }
 
-    public async Task LoadDataTimeline(bool view)
+    public async Task LoadDataTimeline(int view)
     {
         await LoadRoute();
         var date = await JSModule!.InvokeAsync<List<string>>("JsFunction.getDatepicker");
@@ -269,10 +494,10 @@
             };
 
 
-        var s = date[0].StringToDateTime("yyyy-MM-dd");
-        var e = date[1]!.StringToDateTime("yyyy-MM-dd");
-        var t = (e - s).TotalDays;
-        var time = Convert.ToInt32(t) + 1;
+        // var s = date[0].StringToDateTime("yyyy-MM-dd");
+        // var e = date[1]!.StringToDateTime("yyyy-MM-dd");
+        // var t = (e - s).TotalDays;
+        // var time = Convert.ToInt32(t) + 1;
 
         var (error, timeline) = await TimelineService.GetTimeLine(req);
         if (error.Error)
@@ -285,16 +510,21 @@
         }
         else
         {
-            timelineData = timeline.Data;
+            timelineData = timeline.Data.LISTITEM1;
+            timelineData2 = timeline.Data.LISTITEM2;
         }
     }
     public string calValueProgress(double val1, double val2)
     {
+        if (val2 == 0)
+            return "0";
         var per = (val1 * 100) / val2;
         return per.ToString();
     }
     public string StyleProgress(double val1, double val2)
     {
+        // if (val2 == 0)
+        //     return "bg-danger";
         var per = (val1 * 100) / val2;
         return CaseCss(per);
     }
@@ -313,14 +543,14 @@
         StateContainer.IsLoading = true;
         var val = Convert.ToBoolean($"{e.Value}");
 
-        await LoadDataTimeline(val);
+        await LoadDataTimeline(selectView);
         StateContainer.IsLoading = false;
     }
 
     public async Task OnSearch()
     {
         StateContainer.IsLoading = true;
-        await LoadDataTimeline(isView);
+        await LoadDataTimeline(selectView);
         StateContainer.IsLoading = false;
     }
 
@@ -389,7 +619,7 @@
 
         if (response.ErrorMessage == "success")
         {
-            await LoadDataTimeline(isView);
+            await LoadDataTimeline(selectView );
             ds.Close(true);
             StateContainer.IsLoading = false;
             StateHasChanged();
@@ -408,6 +638,38 @@
         {
             await JSModule.DisposeAsync();
         }
+    }
+
+    private async Task ShowPopup(MouseEventArgs e , string route , string id , string mechine = "" , string timeService = "")
+    {
+        listMechine = new();
+
+        await JSRuntime.InvokeVoidAsync("showPopup", id, e.ClientX + 10, e.ClientY + 10);
+        mechinePopup = mechine;
+        
+        var date = await JSModule!.InvokeAsync<List<string>>("JsFunction.getDatepicker");
+
+        var req = new TimelineMechineReq
+            {
+                ORG = selectOrg,
+                ROUTE = route,
+                MACHINE = mechine,
+                TIMESERVICE = timeService,
+                StartDate = date[0]
+            };
+        var (error , data) = await TimelineService.GetTimeLineMechine(req);
+        listMechine = data;
+
+       
+
+        StateHasChanged();
+    }
+
+    private async Task HidePopup(MouseEventArgs e, string id)
+    {
+        await JSRuntime.InvokeVoidAsync("hidePopup", id);
+        selectPopup = "";
+        mechinePopup = "";
     }
 
 } 

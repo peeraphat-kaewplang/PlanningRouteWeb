@@ -2,7 +2,58 @@
 {
     public class TimelineModelRes : HttpResponse
     {
-        public List<TimeLineData> Data { get; set; } = new();
+        public TimeLineData1 Data { get; set; } = new();
+    }
+
+    public class TimelineMechineModelRes : HttpResponse
+    {
+        public List<TimelineMechineData> Data { get; set; } = new();
+
+        public static TimelineMechineData1 ConvertToModel(TimelineMechineData model)
+        {
+            return new TimelineMechineData1
+            {
+                ROUTE_CODE = model.ROUTE_CODE,
+                MACHINE_CODE = model.MACHINE_CODE,
+                TIME_SERVICE = model.TIME_SERVICE.ToString(),
+                STATUS_MANUAL = model.STATUS_MANUAL,
+                SALETOTAL = model.SALETOTAL.ToString(),
+                DOC_TYPE = model.DOC_TYPE.ToString(),
+                AMOUNT =  model.AMOUNT,
+                CUSTOMER_NAME = model.CUSTOMER_NAME
+            };
+        }
+    }
+
+    public class TimelineMechineModelRes1 : HttpResponse
+    {
+        public List<TimelineMechineData1> Data { get; set; } = new();
+
+       
+    }
+
+    public class TimelineMechineData1
+    {
+        public string? ROUTE_CODE { get; set; }
+        public string? MACHINE_CODE { get; set; }
+        public string? TIME_SERVICE { get; set; }
+        public string? STATUS_MANUAL { get; set; }
+        public string? SALETOTAL { get; set; }
+        public string? DOC_TYPE { get; set; }
+        public double AMOUNT { get; set; }
+        public string? CUSTOMER_NAME { get; set; }
+    }
+
+    public class TimelineMechineData
+    {
+        public string? ROUTE_CODE { get; set; }
+        public string? MACHINE_CODE { get; set; }
+        public double TIME_SERVICE { get; set; }
+        public string? STATUS_MANUAL { get; set; }
+        public double SALETOTAL { get; set; }
+        public double DOC_TYPE { get; set; }
+        public double AMOUNT { get; set; }
+        public string? CUSTOMER_NAME { get; set; }
     }
 
     public class TimelineReq
@@ -14,9 +65,24 @@
         public string? ReportShow { get; set; }
     }
 
+    public class TimelineMechineReq
+    {
+        public string? ORG { get; set; }
+        public string? ROUTE { get; set; }
+        public string? MACHINE { get; set; }
+        public string? TIMESERVICE { get; set; }
+        public string? StartDate { get; set; }
+    }
+
     public class TimelineModel : HttpResponse
     {
-        public ResultTimeline Data { get; set; } = new();
+        public TimelineModel1 Data { get; set; } = new();
+    }
+
+    public class TimelineModel1
+    {
+        public ResultTimeline LISTITEM1 { get; set; } = new();
+        public List<TimeLineMechine> LISTITEM2 { get; set; } = new();
     }
 
     public class ResultTimeline
@@ -24,6 +90,35 @@
         public List<TimeLineData> TimelineList { get; set; } = new();
         public TimeLineData TimeLineSum { get; set; } = new();
     }
+    public class TimeLineData1
+    {
+        public List<TimeLineData> LISTITEM1 { get; set; } = new();
+        public List<TimeLineMechine> LISTITEM2 { get; set; } = new();
+    }
+
+    public class TimeLineMechine
+    {
+        public string ROUTE_CODE { get; set; } = string.Empty;
+        public int SERVICE { get;  set; }
+        public int MAX_SERVICE { get; set; }
+        public List<TimeLineMechineDetail> DETAIL { get; set; } = new();
+    }
+
+    public class TimeLineMechineDetail
+    {
+        public string TIME_SERVICE { get; set; } = string.Empty;
+        public List<TimeService> ITEMS { get; set; } = new();
+    }
+
+    public class TimeService
+    {
+        public string MACHINE_CODE { get; set; } = string.Empty;
+        public string DOC_TYPE { get; set; } = string.Empty;
+        public string SALETOTAL { get; set; } = string.Empty;
+        public string AMOUNT { get; set; } = string.Empty;
+        public string STATUS_MANUAL { get; set; } = string.Empty;
+    }
+
     public class TimeLineData : Time
     {
         public string? ORGANIZATION_CODE { get; set; }

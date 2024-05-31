@@ -45,7 +45,7 @@
     <script src="lib/dayjs/dayjs.min.js"></script>
     @* <script src="js/site.js"></script> *@
     <script>
-        window.InitDragAndDrop = ()=> {
+        window.InitDragAndDrop = () => {
             const tbody = document.getElementsByTagName("tbody")[0];
             let rows = tbody.rows;
             console.log(tbody)
@@ -70,7 +70,25 @@
                 })
             }
 
-        }
+        };
+        window.showPopup = (elementID, x, y) => {
+            var popup = document.getElementById(elementID)
+            popup.style.display = 'block'
+            popup.style.left = x + 'px'
+            popup.style.top = y + 'px'
+        };
+
+        window.hidePopup = (elementID) => {
+            var popup = document.getElementById(elementID)
+            popup.style.display = 'none'
+        };
+
+        window.getScreenResolution = () => {
+            return {
+                width: window.innerWidth,
+                heigth: window.innerHeight
+            }
+        };
     </script>
 </body>
 

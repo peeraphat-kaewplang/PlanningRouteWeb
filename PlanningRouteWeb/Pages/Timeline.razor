@@ -242,12 +242,12 @@
         }
         else
         {
-            timeline.Data.TimelineList = timeline.Data.TimelineList.Select(x =>
+            timeline.Data.LISTITEM1.TimelineList = timeline.Data.LISTITEM1.TimelineList.Select(x =>
             {
                 x.ORGANIZATION_NAME = optionsOrg.SingleOrDefault(o => o.ORGANIZATION_CODE == x.ORGANIZATION_CODE) == null ? x.ORGANIZATION_CODE : optionsOrg.SingleOrDefault(o => o.ORGANIZATION_CODE == x.ORGANIZATION_CODE)!.ORGANIZATION_NAME;
                 return x;
             }).ToList();
-            timelineData = timeline.Data;
+            timelineData = timeline.Data.LISTITEM1;
         }
     }
     public string calValueProgress(double val1, double val2)

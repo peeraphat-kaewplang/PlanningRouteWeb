@@ -16,7 +16,7 @@
 
             </div>
 
-            <article class=" px-1 pt-2" style="width: 85rem">
+            <article class=" px-1 pt-2" style="width: @(screenWidth > 1500 ? "85.7%" : "85rem");">
                 @Body
             </article>
 
@@ -35,4 +35,27 @@
 <RadzenDialog />
 <RadzenTooltip />
 
+
+@code {
+    private int screenWidth;
+    private int screenHeigth;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetScreenResolution();
+    }
+
+    private async Task GetScreenResolution()
+    {
+        var screenResolution = await JSRuntime.InvokeAsync<ScreenResolution>("getScreenResolution");
+        screenWidth = screenResolution.Width;
+        screenHeigth = screenResolution.Heigth;
+    }
+
+    public class ScreenResolution
+    {
+        public int Width { get; set; }
+        public int Heigth { get; set; }
+    }
+}
 
