@@ -434,14 +434,14 @@
     }
 </RadzenStack>
 
-    @code {
+@code {
     #region Parameter
     [Parameter]
     public ChangeProductRequest Item { get; set; } = new();
     [Parameter]
     public bool IsCurrent { get; set; }
     [Parameter]
-    public ChangeProductHeader Header { get; set; } = new();
+    public Models.ChangeProductHeader Header { get; set; } = new();
     [Parameter]
     public List<ChangeProductGroup>? Data { get; set; } 
     [Parameter]

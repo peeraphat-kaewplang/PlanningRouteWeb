@@ -1,0 +1,346 @@
+﻿@inject IChangeProductService ChangeProductService
+@if (TypeMeter != "1")
+{
+    #region ตู้ 1:1
+    <RadzenDataGrid @ref="changeGrid" AllowVirtualization="false" Style="min-height:100px;max-height:450px;" IsLoading=@IsLoading AllowFiltering="false" AllowColumnResize="true" AllowAlternatingRows="false" AllowSorting="false" AllowPaging="false"
+                    Data="@Data" TItem="ChangeProductDetailView" ColumnWidth="450px" EditMode="DataGridEditMode.Single" GridLines="DataGridGridLines.Both" Density="Density.Compact">
+        <Columns>
+            <RadzenDataGridColumn Property="SLOT_NO" Title="SLOT" Width="@(ModeAction == "view" ? "15px" : "30px")" TextAlign="TextAlign.Center" Frozen=@selectedRow />
+            <RadzenDataGridColumn Property="PRODUCT_CODE" Title="รหัส" Width="@(ModeAction == "view" ? "30px" : "30px")" TextAlign="TextAlign.Center" Frozen=@selectedRow />
+            <RadzenDataGridColumn Property="PRODUCT_NAME" Title="ชื่อสินค้า" Width="@(ModeAction == "view" ? "180px" : "250px")" Frozen=@selectedRow >
+                <Template Context="item">
+                    @(item.PRODUCT_NAME)
+                </Template>
+                <EditTemplate Context="item">
+                    <div class="gab-1">
+                        <RadzenDropDown class="fw-bold w-25"
+                                        TValue="string"
+                                        Data=@RawProduct
+                                        TextProperty="RAWPRODUCTNAME"
+                                        ValueProperty="RAWPRODUCTCODE"
+                                        @bind-Value=@item.RAWPRODUCTCODE
+                                        Change="@(args => SelectRawProduct(args))" 
+                                        />
+
+                        <RadzenDropDown class="fw-bold"
+                                            FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                            FilterOperator="StringFilterOperator.StartsWith"
+                                            AllowFiltering="true"
+                                            Data=@products
+                                            Style="width:74%;"
+                                            TValue="string"
+                                            TextProperty="PRODUCTNAME"
+                                            ValueProperty="PRODUCTCODE" 
+                                            @bind-Value=@item.PRODUCT_CODE
+                                            Change="@(args => SelectProduct(args,item))" />
+                    </div>
+                </EditTemplate>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Property="LOADIN" Title="โหลด" Width="@(!selectedRow ? "20px" : "50px")" TextAlign="TextAlign.Right">
+                <EditTemplate Context="item">
+                    <RadzenNumeric Placeholder="0" Step="1" @bind-Value=@item.LOADIN Style="width:100%" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})" />
+                </EditTemplate>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Property="S_COSTPRICE" Title="ต้นทุน" Width="@(!selectedRow ? "35px" : "65px")" TextAlign="TextAlign.Right">
+                <Template Context="item">
+                    @(item.S_COSTPRICE.ToStringNumberFormat3())
+                </Template>
+                <EditTemplate Context="item">
+                    <RadzenNumeric Placeholder="0.0" Step="0.5" @bind-Value=@item.S_COSTPRICE Style="width:100%" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})" />
+                </EditTemplate>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Property="SLOT_REALPRICE" Title="ราคาขาย" Width="@(!selectedRow ? "30px" : "50px")" TextAlign="TextAlign.Right">
+                <EditTemplate Context="item">
+                    <RadzenNumeric Placeholder="0.0" Step="0.5" @bind-Value=@item.SLOT_REALPRICE Style="width:100%" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})" />
+                </EditTemplate>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Property="SLOT_INSTALLPRICE" Title="ราคาเรียกเก็บ" Width="@(!selectedRow ? "30px" : "50px")" TextAlign="TextAlign.Right">
+                <EditTemplate Context="item">
+                    <RadzenNumeric Placeholder="0.0" Step="0.5" @bind-Value=@item.SLOT_INSTALLPRICE Style="width:100%" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})" />
+                </EditTemplate>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Property="SLOT_CONTRACT_PRICE" Title="ราคาตามสัญญา" Width="@(!selectedRow ? "30px" : "50px")" TextAlign="TextAlign.Right">
+                <EditTemplate Context="item">
+                    <RadzenNumeric Placeholder="0.0" Step="0.5" @bind-Value=@item.SLOT_CONTRACT_PRICE Style="width:100%" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})" />
+                </EditTemplate>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Property="GP" Title="GP" Width="@(!selectedRow ? "30px" : "30px")" TextAlign="TextAlign.Right">
+                    <Template Context="item">
+                    @if (ModeAction != "view")
+                    {
+                        @if(!item.S_COSTPRICE.Equals(0))
+                        {
+                            var gp = (item.SLOT_INSTALLPRICE - item.S_COSTPRICE) / item.S_COSTPRICE * 100;
+                            @(gp.ToStringNumberFormat3())
+                        }
+                        else
+                        {
+                            var gp = (item.SLOT_INSTALLPRICE - item.S_COSTPRICE) / item.SLOT_INSTALLPRICE * 100;
+                            @(gp.ToStringNumberFormat3())
+                        }
+                    }
+                    else
+                    {
+                        @item.GP.ToStringNumberFormat3()
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+            @if (ModeAction != "view")
+            {
+                var lastItem = Data.Last();
+                var lastIndex = Data.FindLastIndex(x => x.SLOT_NO == lastItem.SLOT_NO && x.PRODUCT_CODE == lastItem.PRODUCT_CODE);
+
+                <RadzenDataGridColumn Context="item" Filterable="false" Sortable="false" TextAlign="TextAlign.Left" Width="50px" >
+                    <Template Context="item">
+                        @{
+                            var index = Data.FindIndex(x => x.SLOT_NO == item.SLOT_NO && x.PRODUCT_CODE == item.PRODUCT_CODE);
+                        }
+                       
+                        <RadzenButton Icon="change_circle" Disabled=@(!item.SLOTSTATUS) ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" Click="@(args => EditRow(item))">
+                        </RadzenButton>
+                        @if (item.SLOTSTATUS)
+                        {
+                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Text="OFF" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.ExtraSmall" Click="@(args => OnSLotStatusChange(item))" class="my-1 ms-1">
+                            </RadzenButton>
+                        }
+                        else
+                        {
+                            <RadzenButton ButtonStyle="ButtonStyle.Success" Text="ON" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.ExtraSmall" Click="@(args => OnSLotStatusChange(item))" class="my-1 ms-1">
+                            </RadzenButton>
+                        }
+
+                        @if (index == lastIndex || Data[index + 1].SLOT_NO - item.SLOT_NO > 1)
+                        {
+                            <RadzenButton 
+                                          Icon="add"
+                                          ButtonStyle="ButtonStyle.Primary"
+                            Size="ButtonSize.ExtraSmall" />
+                        }
+                      
+                    </Template>
+                    <EditTemplate Context="item">
+                        <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" aria-label="Save" Click="@(args => SaveRow(item))"/>
+                        <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" class="my-1 ms-1" aria-label="Cancel" Click="@(args => CancelEdit(item))" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>  
+            }
+        </Columns>
+    </RadzenDataGrid>
+    #endregion
+}
+else
+{
+    #region ตู้กลุ่ม
+    <RadzenDataGrid @ref="changeGrid" AllowVirtualization="true" Style="min-height:100px;max-height:450px;" IsLoading=@IsLoading AllowFiltering="false" AllowColumnResize="true" AllowAlternatingRows="false" AllowSorting="false" AllowPaging="false"
+                    Data="@Data" TItem="ChangeProductDetailView" ColumnWidth="450px" EditMode="DataGridEditMode.Single" GridLines="DataGridGridLines.Both" Density="Density.Compact">
+        <Columns>
+            <RadzenDataGridColumn Property="SLOT_NO" Title="SLOT" Width="@(ModeAction == "view" ? "15px" : "30px")" TextAlign="TextAlign.Center" Frozen=@selectedRow />
+            <RadzenDataGridColumn Property="PRODUCT_CODE" Title="รหัส" Width="@(ModeAction == "view" ? "30px" : "30px")" TextAlign="TextAlign.Center" Frozen=@selectedRow />
+            <RadzenDataGridColumn Property="PRODUCT_NAME" Title="ชื่อสินค้า" Width="@(ModeAction == "view" ? "180px" : "250px")" Frozen=@selectedRow>
+                <Template Context="item">
+                    @(item.PRODUCT_NAME)
+                </Template>
+                <EditTemplate Context="item">
+                    <div class="gab-1">           
+                        <RadzenDropDown class="fw-bold w-25"
+                                        TValue="string"
+                                        Data=@RawProduct
+                                        TextProperty="RAWPRODUCTNAME"
+                                        ValueProperty="RAWPRODUCTCODE"
+                                        @bind-Value=@item.RAWPRODUCTCODE
+                                        Change="@(args => SelectRawProduct(args))" />
+                        <RadzenDropDown class="fw-bold"
+                                        FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                        FilterOperator="StringFilterOperator.StartsWith"
+                                        AllowFiltering="true"
+                                        Data=@products
+                                        Style="width:74%;"
+                                        TValue="string"
+                                        TextProperty="PRODUCTNAME"
+                                        ValueProperty="PRODUCTCODE"
+                                        @bind-Value=@item.PRODUCT_CODE
+                                        Change="@(args => SelectProduct(args,item))" />
+                    </div>
+                </EditTemplate>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Property="LOADIN" Title="โหลด" Width="@(!selectedRow ? "20px" : "50px")" TextAlign="TextAlign.Right">
+                <EditTemplate Context="item">
+                    <RadzenNumeric Placeholder="0" Step="1" @bind-Value=@item.LOADIN Style="width:100%" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})" />
+                </EditTemplate>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Property="S_COSTPRICE" Title="ต้นทุน" Width="@(!selectedRow ? "35px" : "65px")" TextAlign="TextAlign.Right">
+                <Template Context="item">
+                    @(item.S_COSTPRICE.ToStringNumberFormat3())
+                </Template>
+                <EditTemplate Context="item">
+                    <RadzenNumeric Placeholder="0.0" Step="0.5" @bind-Value=@item.S_COSTPRICE Style="width:100%" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})" />
+                </EditTemplate>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Property="SLOT_REALPRICE" Title="ราคาขาย" Width="@(!selectedRow ? "30px" : "50px")" TextAlign="TextAlign.Right">
+                <EditTemplate Context="item">
+                    <RadzenNumeric Placeholder="0.0" Step="0.5" @bind-Value=@item.SLOT_REALPRICE Style="width:100%" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})" />
+                </EditTemplate>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Property="SLOT_INSTALLPRICE" Title="ราคาเรียกเก็บ" Width="@(!selectedRow ? "30px" : "50px")" TextAlign="TextAlign.Right">
+                <EditTemplate Context="item">
+                    <RadzenNumeric Placeholder="0.0" Step="0.5" @bind-Value=@item.SLOT_INSTALLPRICE Style="width:100%" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})" />
+                </EditTemplate>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Property="SLOT_CONTRACT_PRICE" Title="ราคาตามสัญญา" Width="@(!selectedRow ? "30px" : "50px")" TextAlign="TextAlign.Right">
+                <EditTemplate Context="item">
+                    <RadzenNumeric Placeholder="0.0" Step="0.5" @bind-Value=@item.SLOT_CONTRACT_PRICE Style="width:100%" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})" />
+                </EditTemplate>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Property="GP" Title="GP" Width="@(!selectedRow ? "30px" : "30px")" TextAlign="TextAlign.Right">
+                <Template Context="item">
+                    @if (ModeAction != "view")
+                    {
+                        @if (!item.S_COSTPRICE.Equals(0))
+                        {
+                            var gp = (item.SLOT_INSTALLPRICE - item.S_COSTPRICE) / item.S_COSTPRICE * 100;
+                            @(gp.ToStringNumberFormat3())
+                        }
+                        else
+                        {
+                            var gp = (item.SLOT_INSTALLPRICE - item.S_COSTPRICE) / item.SLOT_INSTALLPRICE * 100;
+                            @(gp.ToStringNumberFormat3())
+                        }
+                    }
+                    else
+                    {
+                        @item.GP.ToStringNumberFormat3()
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+            @if (ModeAction != "view")
+            {
+                <RadzenDataGridColumn Context="item" Filterable="false" Sortable="false" TextAlign="TextAlign.Left" Width="50px">
+                    <Template Context="item">
+                        <RadzenButton Icon="change_circle" Disabled=@(!item.SLOTSTATUS) ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" Click="@(args => EditRow(item))">
+                        </RadzenButton>
+                        @if (item.SLOTSTATUS)
+                        {
+                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Text="OFF" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.ExtraSmall" Click="@(args => OnSLotStatusChange(item))" class="my-1 ms-1">
+                            </RadzenButton>
+                        }
+                        else
+                        {
+                            <RadzenButton ButtonStyle="ButtonStyle.Success" Text="ON" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.ExtraSmall" Click="@(args => OnSLotStatusChange(item))" class="my-1 ms-1">
+                            </RadzenButton>
+                        }
+                    </Template>
+                    <EditTemplate Context="item">
+                        <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" aria-label="Save" Click="@(args => SaveRow(item))" />
+                        <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" class="my-1 ms-1" aria-label="Cancel" Click="@(args => CancelEdit(item))" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+            }
+        </Columns>
+    </RadzenDataGrid>
+    #endregion
+}
+@code {
+    [Parameter]
+    public bool IsLoading { get; set; }
+
+    [Parameter]
+    public string TypeMeter { get; set; } = string.Empty;
+
+    [Parameter]
+    public List<ChangeProductDetailView> Data { get; set; } = new();
+
+    [Parameter]
+    public List<ChangeProductDetailView> ReloadData { get; set; } = new();
+
+    [Parameter]
+    public string ModeAction { get; set; } = "view";
+
+    [Parameter]
+    public List<Rawproduct> RawProduct { get; set; } = new();
+
+    [Parameter]
+    public ChangeProductRequest Item { get; set; } = new();
+
+    [Parameter]
+    public EventCallback<ChangeProductDetailView> ChangeProductCallback { get; set; }
+
+    [Parameter]
+    public EventCallback<ChangeProductDetailView> ChangeSLotStatusChangeCallback { get; set; }
+
+    [Parameter]
+    public EventCallback ReloadDataCallback { get; set; }
+
+   
+
+    bool selectedRow { get; set; }
+
+    RadzenDataGrid<ChangeProductDetailView> changeGrid = new();
+
+    public List<RawproductDetail2> products = new();
+
+    private async Task<List<RawproductDetail2>> LoadProductDetail(string code)
+    {
+        var body = new RawproductDetail2Request
+            {
+                RawProductCode = code,
+                ORG = Item.ORG,
+                Location = Item.Location,
+                Machine = Item.Machine
+            };
+        var res = await ChangeProductService.GetRawproductDetail2(body);
+
+        return res.Data;
+    }
+
+    void Reset()
+    {
+        selectedRow = false;
+    }
+
+    async Task EditRow(ChangeProductDetailView item)
+    {
+        selectedRow = true;
+        await changeGrid.EditRow(item);
+        products = await LoadProductDetail(item.RAWPRODUCTCODE);
+
+        StateHasChanged();
+    }
+
+    async Task OnSLotStatusChange(ChangeProductDetailView item)
+    {
+        item.SLOTSTATUS = !item.SLOTSTATUS;
+        await changeGrid.UpdateRow(item);
+
+        await ChangeSLotStatusChangeCallback.InvokeAsync(item);
+    }
+
+    async Task SaveRow(ChangeProductDetailView item)
+    {
+        await changeGrid.UpdateRow(item);
+        await ChangeProductCallback.InvokeAsync(item);
+    }
+
+    async Task CancelEdit(ChangeProductDetailView item)
+    {
+        changeGrid.CancelEditRow(item);
+        await  ReloadDataCallback.InvokeAsync();
+    }
+
+    async Task SelectRawProduct(object args)
+    {
+        products = await LoadProductDetail($"{args}");
+    }
+
+    void SelectProduct(object args , ChangeProductDetailView item)
+    {
+        var prdCode = $"{args}";
+
+        var product = products.Find(p => p.PRODUCTCODE == prdCode);
+
+        item.S_COSTPRICE = Double.Parse(product!.COSTPRICE);
+        item.SLOT_CONTRACT_PRICE = 0;
+        item.SLOT_INSTALLPRICE = 0;
+        item.PRODUCT_NAME = product.PRODUCTNAME;
+        item.S_SALEPRICE =  Convert.ToDouble(product.SALEPRICE);
+    }
+}

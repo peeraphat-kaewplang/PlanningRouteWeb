@@ -1,5 +1,4 @@
-﻿@inject TooltipService TooltipService
-@inject StateContainer StateContainer
+﻿
 @{
     var date = StateContainer.DateCurrent;
     var total = SelectMonth.Number == "01" ? "ธ.ค." : GetDatetimeClass.monthObjects.Single(x => x.Number == (int.Parse(SelectMonth.Number) - 1).ToString("D2")).ShortName;
@@ -7,41 +6,43 @@
     var colSpan = (Columns.Count() * 3) + ((Columns.Count() / 7) * 2);
 }
 <tr>
-    <th class="sticky-col first-col" rowspan="4" style="font-size: 8px;width:2rem;">ลูกค้า</th>
-    <th class="sticky-col second-col" rowspan="4" style="font-size: 8px;width:2rem;">ตู้ปัจจุบัน</th>
-    @* <th class="sticky-col last-col" rowspan="4" style="font-size: 12px;">MODEL</th> *@
-    @* <th rowspan="4" style="width: 4rem;font-size: 12px;">ค่าธรรมเนียม</th> *@
-    <th rowspan="4" class="text-center sticky-col thired-col" style="width: 3rem;font-size: 8px;">
-       GP
+    <th class="" rowspan="4" style="font-size: 8px;width:2rem;">ลูกค้า</th>
+    <th class="" rowspan="4" style="font-size: 8px;width:2rem;">ตู้ปัจจุบัน</th>
+    <th rowspan="4" class="text-center " style="width: 3rem;font-size: 8px;">
+        <p class="m-0">GP</p>
+        <p class="m-0">@SelectMonth.ShortName</p>
     </th>
 
-    <th rowspan="4" class="text-center sticky-col four-col" style="width: 3rem;font-size: 8px;">
-        GP ยอดขาย
+    <th rowspan="4" class="text-center " style="width: 3rem;font-size: 8px;">
+        <p class="m-0">GP</p>
+        <p class="m-0">@mdtBefore</p>
     </th>
 
-    <th rowspan="4" class="text-center sticky-col five-col" style="width: 2rem;font-size: 8px;width:2rem;">
-       สถานะ
+    <th rowspan="4" class="text-center " style="width: 2rem;font-size: 8px;width:2rem;">
+        <p class="m-0">SKU</p>
+        <p class="m-0">%</p>
     </th>
 
-    @* <th class="text-center sticky-col six-col" rowspan="4" style="width: 2rem;font-size: 8px;"> *@
+    <th rowspan="4" class="text-center " style="width: 2rem;font-size: 8px;width:3.5rem;">
+        <p class="m-0">SKU</p>
+        <p class="m-0">คงเหลือ</p>
+    </th>
+
     <th class="text-center" rowspan="4" style="width: 2rem;font-size: 8px;">
         <p class="m-0">TOTAL</p>
         <p class="m-0">@total</p>
     </th>
-    @* <th class="text-center sticky-col sevent-col" rowspan="4" style="width: 2rem;font-size: 8px;"> *@
     <th class="text-center" rowspan="4" style="width: 2rem;font-size: 8px;">
         <p class="m-0">MTD</p>
         <p class="m-0">@mdtBefore</p>
     </th>
-    @* <th class="text-center sticky-col eight-col" rowspan="4" style="width: 2rem;font-size: 8px;"> *@
     <th class="text-center" rowspan="4" style="width: 2rem;font-size: 8px;">
         <p class="m-0">MTD</p>
         <p class="m-0">@SelectMonth.ShortName</p>
     </th>
     @if (!HideMaster)
     {
-        @* <th colspan="9" class="text-center p-1 sticky-col nine-col"> *@
-        <th colspan="9" class="text-center p-1 sticky-col nine-col">
+        <th colspan="9" class="text-center p-1 ">
             <RadzenButton Text="บันทึกค่ามาตรฐาน"
                           ButtonStyle="ButtonStyle.Secondary"
                           Style="width: 100%;text-transform: none;font-size: 10px;"
@@ -53,18 +54,10 @@
         </th>
     }
 
-@*     <th rowspan="4" style="width: 3.5rem;font-size: 12px; padding-left:4px; padding-right:0px;">
-        <p class="m-0">Sale</p>
-        <p class="m-0">Last</p>
-        <p class="m-0">Week</p>
-    </th> *@
     <th rowspan="4" style="width: 1.5rem;font-size: 8px; padding-left:4px; padding-right:0px;">
         <p class="m-0">Drop</p>
         <p class="m-0">Month</p>
     </th>
-   @*  <th colspan="@colSpan" class="text-center" style="font-size: 1px;">
-        แพลนเดือน @SelectMonth.Name
-    </th> *@
     @foreach (var (obj, index) in Columns.WithIndex())
     {
         if ((index + 1) % 7 == 0)
@@ -176,32 +169,22 @@
     @if (!HideMaster)
     {
         @* ค่ามาตรฐาน *@
-        <th rowspan="3" class="text-center sticky-col nine-col" style="width: 1.25rem;font-size: 10px;">จ</th>
-        @* <th rowspan="3" class="text-center" style="width: 1.25rem;font-size: 10px;">จ</th> *@
-        <th rowspan="3" class="text-center sticky-col ten-col" style="width: 1.25rem;font-size: 10px;">อ</th>
-        @* <th rowspan="3" class="text-center" style="width: 1.25rem;font-size: 10px;">อ</th> *@
-        <th rowspan="3" class="text-center sticky-col eleven-col" style="width: 1.25rem;font-size: 10px;">พ</th>
-        @* <th rowspan="3" class="text-center" style="width: 1.25rem;font-size: 10px;">พ</th> *@
-        <th rowspan="3" class="text-center sticky-col twelve-col" style="width: 1.25rem;font-size: 10px;">พฤ</th>
-        @* <th rowspan="3" class="text-center" style="width: 1.25rem;font-size: 10px;">พฤ</th> *@
-        <th rowspan="3" class="text-center sticky-col thirteen-col" style="width: 1.25rem;font-size: 10px;">ศ</th>
-        @* <th rowspan="3" class="text-center" style="width: 1.25rem;font-size: 10px;">ศ</th> *@
-        <th rowspan="3" class="text-center sticky-col fourteen-col" style="width: 1.25rem;font-size: 10px;">ส</th>
-        @* <th rowspan="3" class="text-center" style="width: 1.25rem;font-size: 10px;">ส</th> *@
-        <th rowspan="3" class="px-1 text-center sticky-col fifteen-col" style="width: 1.25rem;font-size: 10px;">อา</th>
-        @* <th rowspan="3" class="px-1 text-center" style="width: 1.25rem;font-size: 10px;">อา</th> *@
-        <th rowspan="3" class="px-2 sticky-col sixteen-col" style="width: 1rem;font-size: 8px;">
+        <th rowspan="3" class="text-center " style="width: 1.25rem;font-size: 10px;">จ</th>
+        <th rowspan="3" class="text-center " style="width: 1.25rem;font-size: 10px;">อ</th>
+        <th rowspan="3" class="text-center " style="width: 1.25rem;font-size: 10px;">พ</th>
+        <th rowspan="3" class="text-center " style="width: 1.25rem;font-size: 10px;">พฤ</th>
+        <th rowspan="3" class="text-center " style="width: 1.25rem;font-size: 10px;">ศ</th>
+        <th rowspan="3" class="text-center " style="width: 1.25rem;font-size: 10px;">ส</th>
+        <th rowspan="3" class="px-1 text-center " style="width: 1.25rem;font-size: 10px;">อา</th>
+        <th rowspan="3" class="px-2 " style="width: 1rem;font-size: 8px;">
             <p class="m-0">Drop</p>
             <p class="m-0">Week</p>
         </th>
-        <th rowspan="3" class="px-3 text-center sticky-col seventeen-col" style="width: 3.15rem;font-size: 8px;">
-        @* <th rowspan="3" class="px-3 text-center" style="width: 3.15rem;font-size: 8px;"> *@
+        <th rowspan="3" class="px-3 text-center" style="width: 3.15rem;font-size: 8px;">
             Drop Day
         </th>
-        @* <th rowspan="2" style="width: 12.5rem;font-size: 12px;">Remark</th> *@
     }
 </tr>
-
 
 <tr>
     @foreach (var (obj, index) in Columns.WithIndex())
@@ -215,18 +198,6 @@
 </tr>
 
 <tr>
-    @* @if (!HideMaster)
-    {
-        <th colspan="10" class="text-center" style="padding: 5px;">
-            <div>
-                <RadzenButton Text="บันทึกค่ามาตรฐาน"
-                              ButtonStyle="ButtonStyle.Secondary"
-                              Style="width: 100%;text-transform: none;"
-                              Size="Radzen.ButtonSize.Small"
-                              Click="@(() => OnClickSavePlanCallback.InvokeAsync())" />
-            </div>
-        </th>
-    } *@
     @foreach (var (obj, index) in Columns.WithIndex())
     {
         var errorRank = ActionButton.Date.Find(x => x.Date == obj.Key && x.Error) != null ? "rank-error" : null;
@@ -243,13 +214,13 @@
         <th class="@obj.Value.ClassColor color text-center" style="width: 2rem; font-size: 8px;">
             <div style="width:100%">
                 @obj.Value.FieldRankName
-                @* <RadzenIcon Icon="find_replace" style="font-weight: 700;font-size: 16px;" @onclick="()=>SortRankCallback.InvokeAsync()" /> *@
             </div>
         </th>
     }
 </tr>
 @implements IDisposable
 @inject StateContainer StateContainer
+@inject TooltipService TooltipService
 @code {
     [Parameter]
     public MonthObject SelectMonth { get; set; } = new();

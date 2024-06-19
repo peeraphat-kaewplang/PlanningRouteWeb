@@ -4,14 +4,15 @@
     FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" 
     FilterOperator="StringFilterOperator.StartsWith" 
     AllowFiltering="true"
-    class="dropdown-sm fw-bold"
-    Style="width: 100%;"
+    class="fw-bold"
+    Style="width:74%;"
     TValue="string"
     TextProperty="PRODUCTNAME"
     ValueProperty="PRODUCTCODE" 
     @bind-Value=@ProductCode
-    Change="@(args => Change(args))"
-    Data=@options />
+    Data=@options
+    Change="@(args => SelectProduct(args))" 
+    />
 
 @inject IChangeProductService ChangeProductService
 @code {
@@ -19,23 +20,31 @@
     public string RawProductCode { get; set; } = string.Empty;
     [Parameter]
     public string ProductCode { get; set; } = string.Empty;
-    [Parameter]
-    public int index { get; set; }
+    // [Parameter]
+    // public int index { get; set; }
     [Parameter]
     public ChangeProductRequest ItemModal { get; set; } = new();
 
     [Parameter]
-    public EventCallback<(RawproductDetail2, int)> SelectDetailCallback { get; set; }
+    public EventCallback<RawproductDetail2> SelectProductCallback { get; set; }
 
     public List<RawproductDetail2> options = new();
 
+    public string _rawProductCode { get; set; } = string.Empty;
+
     RadzenDropDown<string>? radzenDropDown;
 
-   
+    protected override async Task OnInitializedAsync()
+    {
+        options = await LoadProductDetail();
+        _rawProductCode = RawProductCode;
+
+    }
 
     protected override async Task OnParametersSetAsync()
     {
-        options = await LoadProductDetail();
+        if (_rawProductCode != RawProductCode)
+            options = await LoadProductDetail();
         StateHasChanged();
     }
 
@@ -51,9 +60,15 @@
         return res.Data;
     }
 
-    private async Task Change(object args)
+    async Task SelectProduct(object args)
     {
         var item = options.Find(x => x.PRODUCTCODE == $"{args}");
-        await SelectDetailCallback.InvokeAsync((item!, index));
+        await SelectProductCallback.InvokeAsync(item);
     }
+
+    // private async Task Change(object args)
+    // {
+    //     var item = options.Find(x => x.PRODUCTCODE == $"{args}");
+    //     await SelectDetailCallback.InvokeAsync((item!, index));
+    // }
 }

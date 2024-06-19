@@ -110,7 +110,7 @@
                                             Data=@product
                                             TextProperty="RAWPRODUCTNAME"
                                             ValueProperty="RAWPRODUCTCODE"
-                            @bind-Value=@i.RAWPRODUCTCODE
+                                            @bind-Value=@i.RAWPRODUCTCODE
                                             Change="@(args => actionButton = false)" />
                         </td>
                         <td style="width:20rem;">
@@ -118,7 +118,7 @@
                                                ItemModal="@Item"
                                                RawProductCode="@i.RAWPRODUCTCODE"
                                                ProductCode="@i.PRODUCT_CODE"
-                                               SelectDetailCallback="@((args) => SelectDetail(i,args.Item1, idx))" />
+                                              />
                         </td>
 
                         <td class="text-end" style="font-size: 12px;width:3rem;">@i.COSTSALEPRICE</td>
@@ -441,7 +441,7 @@
     [Parameter]
     public bool IsCurrent { get; set; }
     [Parameter]
-    public ChangeProductHeader Header { get; set; } = new();
+    public Models.ChangeProductHeader Header { get; set; } = new();
     [Parameter]
     public List<ChangeProductDetail2> Data { get; set; } = new();
     [Parameter]

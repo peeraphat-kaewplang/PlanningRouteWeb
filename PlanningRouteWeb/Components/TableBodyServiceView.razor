@@ -5,51 +5,46 @@
     var countDropMonth = item.GETPLAN_DETAIL.Count(x => x.STATUS_MANUAL);
     var styleMachine = item.CHANGE_ACTION == "C" ? "change-machine" : item.CHANGE_ACTION == "R" ? "return-machine" : item.CHANGE_ACTION == "N" ? "new-machine" : null;
     <tr>
-        <td class="sticky-col first-col">
+        <td class="">
             <RadzenText MouseEnter="@(args => ShowTooltip(args , item) )" class="mb-0" Style="font-size: 12px; cursor : pointer;width:4rem;">
                 <div class="d-inline-block text-truncate" style="width:4rem">@item.CUSTOMER_NAME</div>
             </RadzenText>
         </td>
-       @*  <td class="sticky-col second-col">
-            <RadzenText MouseEnter="@(args => ShowTooltip(args , item.LOCATION_NAME) )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
-                <div class="d-inline-block text-truncate" style="width: 5rem;">@item.LOCATION_NAME</div>
-            </RadzenText>
-        </td> *@
-        <td class="@styleMachine fw-bold sticky-col second-col" style="font-size: 8px;">
+        <td class="@styleMachine fw-bold" style="font-size: 8px;">
             @item.MACHINE_CODE
-            @*<div class="d-inline-block text-truncate" style="width: 3rem;">
-            </div> *@
         </td>
-        <td class="sticky-col thired-col text-center" style="font-size: 12px;">
-            @($"{item.GP}%")
-        </td>
-
-        <td class="sticky-col four-col  text-center" style="font-size: 12px;">
-            @($"{item.GP}%")
+        <td class="" style="font-size: 12px;">
+            @item.MACHINE_MODEL
+            1%
         </td>
 
-        <td class="sticky-col five-col" style="font-size: 12px;">
+        <td class="" style="font-size: 12px;">
+           2%
+        </td>
+
+        <td class="" style="font-size: 12px;">
+            0%
+        </td>
+
+        <td class="" style="font-size: 12px;">
+            <div class="d-flex justify-content-around">
+                <div>2</div>
+                <div>/</div>
+                <div>10</div>
+            </div>
+        </td>
+
+       @*  <td class="" style="font-size: 12px;">
             @{
                 var style = item.ISONLINE == "1" ? "color:green;" : "color:gray";
             }
             <div class="d-flex">
-
-              @*   @if (item.ISONLINE == "1")
-                {
-                    <RadzenIcon Icon="radio_button_checked" Style="color:green;" />
-                }
-                else
-                {
-                    <RadzenIcon Icon="radio_button_unchecked" Style="color:gray;" />
-                } *@
-               
-
                 @if (item.ISONLINE == "1" && item.IS_LOW_QTY == "1")
                 {
                     <RadzenIcon Icon="warning" Style="color:red;cursor:pointer;" @onclick="() => ShowdialogProductLowQtyCallback.InvokeAsync(item.MACHINE_CODE)" />
                 }
             </div>
-        </td>
+        </td> *@
       @*   <td class="sticky-col last-col" style="font-size: 12px;">
             <RadzenText MouseEnter="@(args => ShowTooltip(args , item.MACHINE_MODEL) )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
                 <div class="d-inline-block text-truncate" style="width: 3rem;">
@@ -89,55 +84,55 @@
         @* ค่ามาตรฐาน *@
         @if (!HideMaster)
         {
-            <td class="px-1 text-center sticky-col nine-col">
+            <td class="px-1 text-center ">
             @* <td class="px-1 text-center"> *@
                 <div>
                     <RadzenCheckBox @bind-Value=@item.MONDAY @onclick="()=>OnChangeMasterCallback.InvokeAsync(item)" />
                 </div>
             </td>
-            <td class="px-1 text-center sticky-col ten-col">
+            <td class="px-1 text-center ">
             @* <td class="px-1 text-center"> *@
                 <div>
                     <RadzenCheckBox @bind-Value=@item.TUESDAY @onclick="()=>OnChangeMasterCallback.InvokeAsync(item)" />
                 </div>
             </td>
-            <td class="px-1 text-center sticky-col eleven-col">
+            <td class="px-1 text-center ">
             @* <td class="px-1 text-center"> *@
                 <div>
                     <RadzenCheckBox @bind-Value=@item.WEDNESDAY @onclick="()=>OnChangeMasterCallback.InvokeAsync(item)" />
                 </div>
             </td>
-            <td class="px-1 text-center sticky-col twelve-col">
+            <td class="px-1 text-center ">
             @* <td class="px-1 text-center"> *@
                 <div>
                     <RadzenCheckBox @bind-Value=@item.THURSDAY @onclick="()=>OnChangeMasterCallback.InvokeAsync(item)" />
                 </div>
             </td>
-            <td class="px-1 text-center sticky-col thirteen-col">
+            <td class="px-1 text-center ">
             @* <td class="px-1 text-center"> *@
                 <div>
                     <RadzenCheckBox @bind-Value=@item.FRIDAY @onclick="()=>OnChangeMasterCallback.InvokeAsync(item)" />
                 </div>
             </td>
-            <td class="px-1 text-center sticky-col fourteen-col">
+            <td class="px-1 text-center ">
             @* <td class="px-1 text-center"> *@
                 <div>
                     <RadzenCheckBox @bind-Value=@item.SATURDAY @onclick="()=>OnChangeMasterCallback.InvokeAsync(item)" />
                 </div>
             </td>
-            <td class="px-1 text-center sticky-col fifteen-col">
+            <td class="px-1 text-center ">
             @* <td class="px-1 text-center"> *@
                 <div>
                     <RadzenCheckBox @bind-Value=@item.SUNDAY @onclick="()=>OnChangeMasterCallback.InvokeAsync(item)" />
                 </div>
             </td>
-            <td class="px-1 text-center sticky-col sixteen-col">
+            <td class="px-1 text-center ">
             @* <td class="px-1 text-center"> *@
                 <div style="font-size: 12px;">
                     @item.DROPWEEK
                 </div>
             </td>
-            <td class="px-1 sticky-col seventeen-col" style="font-size: 12px;">
+            <td class="px-1 " style="font-size: 12px;">
             @* <td class="px-1" style="font-size: 12px;"> *@
                     @if (item.GroupData.Count() == 1)
                     {

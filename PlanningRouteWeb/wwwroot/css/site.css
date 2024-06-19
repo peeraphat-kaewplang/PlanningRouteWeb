@@ -612,3 +612,11 @@ table thead th {
     color:#000;
 }
 
+/* 
+    Tab Radzen
+*/
+/*.tab-gp .rz-tabview-panels .rz-tabview-panel {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    padding-bottom: 1px !important;
+}*/

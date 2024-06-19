@@ -89,6 +89,25 @@
                 heigth: window.innerHeight
             }
         };
+
+        // window.togglePanel = (id) => {
+        //     var panel = document.querySelector(`#${id} > .rz-panel-content-wrapper`)
+           
+        //     if (panel.style.display === 'none')
+        //         panel.style.display = 'block'
+        //     else {
+        //         console.log(panel)
+        //         panel.style.display = 'none'
+        //     }
+                
+        // }
+        window.scrollToElementId = (elementId) => {
+            var element = document.getElementById(elementId);
+            if (!element) {
+                console.warn('element was not found', elementId);
+            }
+            element.scrollIntoView({ block: 'end', behavior: 'smooth' });
+        }
     </script>
 </body>
 

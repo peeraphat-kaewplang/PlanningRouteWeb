@@ -100,6 +100,13 @@ namespace PlanningRouteWeb.Services
                 }
 
                 var plannings = JsonSerializer.Deserialize<PanningMasterResponse>(content, _options);
+
+                //if(plannings!.Errorcode != "0000")
+                //{
+                //    throw new ApplicationException($"Error exception : {plannings!.ErrorMessage}");
+                //}
+
+
                 var dataPlan = plannings!.Data.Plan.Where(p => p.GETPLAN_DETAIL.Count() > 30).ToList();
 
                 var j = JsonSerializer.Serialize(dataPlan.Take(0).Skip(1));

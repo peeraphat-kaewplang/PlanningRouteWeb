@@ -36,5 +36,6 @@
         public string PRODUCTNAME { get; set; } = string.Empty;
         public string SALEPRICE { get; set; } = string.Empty;
         public string SALETOTAL { get; set; } = string.Empty;
+        public string COSTPRICE { get; set; } = string.Empty;
     }
 }
