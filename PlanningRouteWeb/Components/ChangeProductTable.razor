@@ -1,6 +1,28 @@
 ﻿@inject IChangeProductService ChangeProductService
+@inject IJSRuntime JSRuntime;
+@using Radzen
+<style>
+    .my-class td {
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+    }
+    .rz-group-row {
+        background-color: var(--rz-primary-darker);
+    }
+    .rz-group-row td .rz-cell-data {
+        color:var(--rz-base-100);
+        font-weight: bold;
+    }
+    th.rz-col-icon {
+       width: 0px !important;
+    }
+</style>
+
+
 @if (TypeMeter != "1")
 {
+    @if (Data.Count() != 0)
+    {
     #region ตู้ 1:1
     <RadzenDataGrid @ref="changeGrid" AllowVirtualization="false" Style="min-height:100px;max-height:450px;" IsLoading=@IsLoading AllowFiltering="false" AllowColumnResize="true" AllowAlternatingRows="false" AllowSorting="false" AllowPaging="false"
                     Data="@Data" TItem="ChangeProductDetailView" ColumnWidth="450px" EditMode="DataGridEditMode.Single" GridLines="DataGridGridLines.Both" Density="Density.Compact">
@@ -90,7 +112,7 @@
                 var lastItem = Data.Last();
                 var lastIndex = Data.FindLastIndex(x => x.SLOT_NO == lastItem.SLOT_NO && x.PRODUCT_CODE == lastItem.PRODUCT_CODE);
 
-                <RadzenDataGridColumn Context="item" Filterable="false" Sortable="false" TextAlign="TextAlign.Left" Width="50px" >
+                <RadzenDataGridColumn Context="item" Filterable="false" Sortable="false" TextAlign="TextAlign.Left" Width="60px" >
                     <Template Context="item">
                         @{
                             var index = Data.FindIndex(x => x.SLOT_NO == item.SLOT_NO && x.PRODUCT_CODE == item.PRODUCT_CODE);
@@ -98,25 +120,17 @@
                        
                         <RadzenButton Icon="change_circle" Disabled=@(!item.SLOTSTATUS) ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" Click="@(args => EditRow(item))">
                         </RadzenButton>
-                        @if (item.SLOTSTATUS)
-                        {
-                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Text="OFF" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.ExtraSmall" Click="@(args => OnSLotStatusChange(item))" class="my-1 ms-1">
-                            </RadzenButton>
-                        }
-                        else
-                        {
-                            <RadzenButton ButtonStyle="ButtonStyle.Success" Text="ON" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.ExtraSmall" Click="@(args => OnSLotStatusChange(item))" class="my-1 ms-1">
-                            </RadzenButton>
-                        }
+                        <RadzenButton ButtonStyle="@(item.SLOTSTATUS ? ButtonStyle.Danger : ButtonStyle.Success)" Text="@(item.SLOTSTATUS ? "OFF" : "ON")" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.ExtraSmall" Click="@(args => OnSLotStatusChange(item))" class="my-1 ms-1">
+                        </RadzenButton>
 
-                        @if (index == lastIndex || Data[index + 1].SLOT_NO - item.SLOT_NO > 1)
+                        @if (index == lastIndex || (index != lastIndex && Data[index + 1].SLOT_NO - item.SLOT_NO != 1))
                         {
-                            <RadzenButton 
-                                          Icon="add"
-                                          ButtonStyle="ButtonStyle.Primary"
-                            Size="ButtonSize.ExtraSmall" />
+                            <RadzenButton Click="@(args => AddSlot(item , index))"
+                                            Icon="add"
+                                            ButtonStyle="ButtonStyle.Primary"
+                                            Size="ButtonSize.ExtraSmall" 
+                                            />
                         }
-                      
                     </Template>
                     <EditTemplate Context="item">
                         <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" aria-label="Save" Click="@(args => SaveRow(item))"/>
@@ -127,16 +141,51 @@
         </Columns>
     </RadzenDataGrid>
     #endregion
+    }
 }
 else
 {
     #region ตู้กลุ่ม
-    <RadzenDataGrid @ref="changeGrid" AllowVirtualization="true" Style="min-height:100px;max-height:450px;" IsLoading=@IsLoading AllowFiltering="false" AllowColumnResize="true" AllowAlternatingRows="false" AllowSorting="false" AllowPaging="false"
-                    Data="@Data" TItem="ChangeProductDetailView" ColumnWidth="450px" EditMode="DataGridEditMode.Single" GridLines="DataGridGridLines.Both" Density="Density.Compact">
-        <Columns>
-            <RadzenDataGridColumn Property="SLOT_NO" Title="SLOT" Width="@(ModeAction == "view" ? "15px" : "30px")" TextAlign="TextAlign.Center" Frozen=@selectedRow />
-            <RadzenDataGridColumn Property="PRODUCT_CODE" Title="รหัส" Width="@(ModeAction == "view" ? "30px" : "30px")" TextAlign="TextAlign.Center" Frozen=@selectedRow />
-            <RadzenDataGridColumn Property="PRODUCT_NAME" Title="ชื่อสินค้า" Width="@(ModeAction == "view" ? "180px" : "250px")" Frozen=@selectedRow>
+    var slot = Data.GroupBy(x => x.SLOT_NO).Select(g => g.Key).ToList();
+    <RadzenDataGrid @ref="changeGrid"  AllowVirtualization="true" Style="min-height:100px;max-height:450px;" IsLoading=@IsLoading AllowFiltering="false" AllowColumnResize="false" AllowAlternatingRows="false" AllowSorting="false" AllowPaging="false"
+                    Data="@Data" HideGroupedColumn="false" AllowGrouping="true" Render="@OnRender" GroupRowRender="OnGroupRowRender" TItem="ChangeProductDetailView" ColumnWidth="450px" EditMode="DataGridEditMode.Single" GridLines="DataGridGridLines.Both" Density="Density.Compact">
+                    <HeaderTemplate>
+                        @if (ModeAction != "view")
+                        {
+                            <RadzenButton Text="เพิ่มกลุ่ม"
+                                      Click="@InsertGroup"
+                                      ButtonStyle="ButtonStyle.Primary"
+                                      Size="ButtonSize.ExtraSmall"
+                                      Style="text-transform: none;width:4.5rem;" />
+                        }
+                    </HeaderTemplate>
+                    <GroupHeaderTemplate>
+                        @{
+                            var key = (int)context.Data.Key;
+                            var price = context.Data.Items.Cast<ChangeProductDetailView>().Where(x => x.SLOT_NO == key).FirstOrDefault()!.SLOT_REALPRICE;
+                        }
+                        @context.GroupDescriptor.GetTitle(): @(context.Data.Key ?? "")
+                        @("กลุ่มราคาขาย : " + price)
+                        @if (ModeAction != "view")
+                        {
+                            <RadzenButton ButtonStyle="ButtonStyle.Success" Text="ON" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" />
+                            <RadzenButton 
+                                      Text="เพิ่มสินค้า"
+                                      ButtonStyle="ButtonStyle.Secondary"
+                                      Size="ButtonSize.ExtraSmall"
+                                      Style="text-transform: none;width:4.5rem;"
+                                        Click="@(()=> InsertNewProduct(key , price))" />
+                            <RadzenDropDown class="dropdown-sm fw-bold"
+                                            Style="width:8rem;"
+                                            Placeholder="ย้ายกลุ่มสินค้า"
+                                            Data="@slot.Where(s => s != key)"
+                                            TValue="int"
+                                            />
+                        }
+                    </GroupHeaderTemplate>
+                    <Columns>
+            <RadzenDataGridColumn Property="PRODUCT_CODE" Title="รหัส" Width="@(ModeAction == "view" ? "30px" : "30px")" TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn Property="PRODUCT_NAME" Title="ชื่อสินค้า" Width="@(ModeAction == "view" ? "180px" : "240px")">
                 <Template Context="item">
                     @(item.PRODUCT_NAME)
                 </Template>
@@ -161,12 +210,37 @@ else
                                         @bind-Value=@item.PRODUCT_CODE
                                         Change="@(args => SelectProduct(args,item))" />
                     </div>
+                    <div class="d-flex" style="gap:4px">
+                        @if (string.IsNullOrEmpty(item.RAWPRODUCTCODE))
+                        {
+                            <RadzenAlert class="w-25" ShowIcon="false" Variant="@Variant.Filled" AlertStyle="@AlertStyle.Danger" Size="@AlertSize.ExtraSmall" Shade="Shade.Darker" AllowClose=false>
+                                เลือกกลุ่มสินค้า
+                            </RadzenAlert>
+                        }else
+                        {
+                            <div class="w-25"></div>
+                        }
+
+                        @if (string.IsNullOrEmpty(item.PRODUCT_CODE))
+                        {
+                            <RadzenAlert class="w-75" ShowIcon="false" Variant="@Variant.Filled" AlertStyle="@AlertStyle.Danger" Size="@AlertSize.ExtraSmall" Shade="Shade.Darker" AllowClose=false>
+                                เลือกสินค้า
+                            </RadzenAlert>                            
+                        }
+                    </div>
                 </EditTemplate>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn Property="LOADIN" Title="โหลด" Width="@(!selectedRow ? "20px" : "50px")" TextAlign="TextAlign.Right">
+            <RadzenDataGridColumn Property="LOADIN" Title="โหลด" Width="@(!selectedRow ? "35px" : "50px")" TextAlign="TextAlign.Right">
                 <EditTemplate Context="item">
-                    <RadzenNumeric Placeholder="0" Step="1" @bind-Value=@item.LOADIN Style="width:100%" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})" />
-                </EditTemplate>
+                    <RadzenNumeric Placeholder="0" Step="1" Name="LOADIN" @bind-Value=@item.LOADIN Style="width:100%" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})" />
+                        @if(item.LOADIN < 1)
+                    {
+                        <RadzenAlert ShowIcon="false" Variant="@Variant.Filled" AlertStyle="@AlertStyle.Danger" Size="@AlertSize.ExtraSmall" Shade="Shade.Darker" AllowClose=false>
+                            ระบุจำนวน
+                        </RadzenAlert>
+                    }
+                    <RadzenNumericRangeValidator Component="LOADIN" Min="1" Max="null" />
+                </EditTemplate> 
             </RadzenDataGridColumn>
             <RadzenDataGridColumn Property="S_COSTPRICE" Title="ต้นทุน" Width="@(!selectedRow ? "35px" : "65px")" TextAlign="TextAlign.Right">
                 <Template Context="item">
@@ -191,7 +265,7 @@ else
                     <RadzenNumeric Placeholder="0.0" Step="0.5" @bind-Value=@item.SLOT_CONTRACT_PRICE Style="width:100%" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})" />
                 </EditTemplate>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn Property="GP" Title="GP" Width="@(!selectedRow ? "30px" : "30px")" TextAlign="TextAlign.Right">
+            <RadzenDataGridColumn Property="GP" Title="GP" Width="@(!selectedRow ? "30px" : "50px")" TextAlign="TextAlign.Right">
                 <Template Context="item">
                     @if (ModeAction != "view")
                     {
@@ -202,8 +276,15 @@ else
                         }
                         else
                         {
-                            var gp = (item.SLOT_INSTALLPRICE - item.S_COSTPRICE) / item.SLOT_INSTALLPRICE * 100;
-                            @(gp.ToStringNumberFormat3())
+                            if (!item.SLOT_INSTALLPRICE.Equals(0))
+                            {
+                                var gp = (item.SLOT_INSTALLPRICE - item.S_COSTPRICE) / item.SLOT_INSTALLPRICE * 100;
+                                @(gp.ToStringNumberFormat3())
+                            }
+                            else
+                            {
+                                @("0")
+                            }
                         }
                     }
                     else
@@ -214,10 +295,8 @@ else
             </RadzenDataGridColumn>
             @if (ModeAction != "view")
             {
-                <RadzenDataGridColumn Context="item" Filterable="false" Sortable="false" TextAlign="TextAlign.Left" Width="50px">
+                <RadzenDataGridColumn Context="item" Filterable="false" Sortable="false" TextAlign="TextAlign.Left" Width="70px">
                     <Template Context="item">
-                        <RadzenButton Icon="change_circle" Disabled=@(!item.SLOTSTATUS) ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" Click="@(args => EditRow(item))">
-                        </RadzenButton>
                         @if (item.SLOTSTATUS)
                         {
                             <RadzenButton ButtonStyle="ButtonStyle.Danger" Text="OFF" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.ExtraSmall" Click="@(args => OnSLotStatusChange(item))" class="my-1 ms-1">
@@ -228,6 +307,11 @@ else
                             <RadzenButton ButtonStyle="ButtonStyle.Success" Text="ON" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.ExtraSmall" Click="@(args => OnSLotStatusChange(item))" class="my-1 ms-1">
                             </RadzenButton>
                         }
+                        <RadzenDropDown class="dropdown-sm fw-bold"
+                                        Style="width:7rem;"
+                                        Placeholder="ย้ายกลุ่มสินค้า"
+                                        TValue="int"
+                                        Data="@slot.Where(s => s != item.SLOT_NO)" />
                     </Template>
                     <EditTemplate Context="item">
                         <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" aria-label="Save" Click="@(args => SaveRow(item))" />
@@ -270,13 +354,19 @@ else
     [Parameter]
     public EventCallback ReloadDataCallback { get; set; }
 
-   
+
+    ChangeProductDetailView draggedItem { get; set; } = new();
 
     bool selectedRow { get; set; }
 
     RadzenDataGrid<ChangeProductDetailView> changeGrid = new();
 
     public List<RawproductDetail2> products = new();
+
+    bool ValidateNewEmail()
+    {
+        return false;
+    }
 
     private async Task<List<RawproductDetail2>> LoadProductDetail(string code)
     {
@@ -343,4 +433,87 @@ else
         item.PRODUCT_NAME = product.PRODUCTNAME;
         item.S_SALEPRICE =  Convert.ToDouble(product.SALEPRICE);
     }
+
+    void AddSlot(ChangeProductDetailView item, int index)
+    {
+        var i = new ChangeProductDetailView
+            {
+                MACHINE_CODE = item.MACHINE_CODE,
+                RAWPRODUCTCODE = item.RAWPRODUCTCODE,
+                PRODUCT_CODE = item.PRODUCT_CODE,
+                PRODUCT_NAME = item.PRODUCT_NAME,
+                SLOT_NO = item.SLOT_NO + 1,
+                SLOT_INSTALLPRICE = item.SLOT_INSTALLPRICE,
+                SLOT_REALPRICE = item.SLOT_REALPRICE,
+                SLOT_CONTRACT_PRICE = item.SLOT_CONTRACT_PRICE,
+                SLOTSTATUS = item.SLOTSTATUS,
+                LOADIN = item.LOADIN,
+                STATUSCHANGE = item.STATUSCHANGE,
+                S_COSTPRICE = item.S_COSTPRICE,
+                S_SALEPRICE = item.S_SALEPRICE,
+                GP = item.GP,
+                QTY = item.QTY
+            };
+        Data.Insert(index + 1, i);
+
+        changeGrid.Reset(true);
+    }
+
+
+    void OnRender(DataGridRenderEventArgs<ChangeProductDetailView> args)
+    {
+        if (args.FirstRender)
+        {
+            args.Grid.Groups.Add(new GroupDescriptor() { Title = "ช่องสินค้า", Property = "SLOT_NO" });
+            StateHasChanged();
+        }
+    }
+
+    void OnGroupRowRender(GroupRowRenderEventArgs args)
+    {
+        args.Expanded = true;
+    }
+
+    void InsertGroup()
+    {
+        var item = new ChangeProductDetailView();
+        item.SLOT_NO = 0;
+
+        Data.Insert(0, item);
+        changeGrid.Reset(true);
+    }
+
+    async Task InsertNewProduct(int slot, double price)
+    {
+        var item = new ChangeProductDetailView();
+        item.SLOT_NO = slot;
+        item.SLOT_REALPRICE = price;
+        item.SLOTSTATUS = true;
+        Data.Add(item);
+        await changeGrid.EditRow(item);
+    }
+
+
+    // void RowRender(RowRenderEventArgs<ChangeProductDetailView> args)
+    // {
+    //     args.Attributes.Add("title", "Drag row to reorder");
+    //     args.Attributes.Add("style", "cursor:grab");
+    //     args.Attributes.Add("draggable", "true");
+    //     args.Attributes.Add("ondragover", "event.preventDefault();event.target.closest('.rz-data-row').classList.add('my-class')");
+    //     args.Attributes.Add("ondragleave", "event.target.closest('.rz-data-row').classList.remove('my-class')");
+    //     args.Attributes.Add("ondragstart", EventCallback.Factory.Create<DragEventArgs>(this, () => draggedItem = args.Data));
+    //     args.Attributes.Add("ondrop", EventCallback.Factory.Create<DragEventArgs>(this, () =>
+    //     {
+    //         var draggedIndex = Data.IndexOf(draggedItem);
+    //         var droppedIndex = Data.IndexOf(args.Data);
+    //         Data.Remove(draggedItem);
+
+    //         draggedItem.SLOT_NO = args.Data.SLOT_NO;
+    //         Data.Insert(droppedIndex++, draggedItem);
+
+    //         JSRuntime.InvokeVoidAsync("eval", $"document.querySelector('.my-class').classList.remove('my-class')");
+    //     }));
+    // }
+
+    
 }

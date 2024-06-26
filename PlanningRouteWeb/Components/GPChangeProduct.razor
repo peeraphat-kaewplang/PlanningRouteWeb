@@ -38,7 +38,7 @@
                 <HeaderTemplate>
                     <RadzenText TextStyle="TextStyle.H6" Class="rz-display-flex rz-align-items-center rz-m-0 gap-1 mb-1">
                         <b>รายการเปลี่ยนสินค้า</b>
-                        <RadzenDatePicker @bind-Value="@timeChage" DateFormat="MM/dd/yyyy" Name="DatePickerChangeProduct" />
+                        <RadzenDatePicker @bind-Value="@timeChage" DateFormat="dd/MM/yyyy" Name="DatePickerChangeProduct" />
                     </RadzenText>
                 </HeaderTemplate>
                 <ChildContent>
@@ -74,7 +74,7 @@
                 <HeaderTemplate>
                     <RadzenText TextStyle="TextStyle.H6" Class="rz-display-flex rz-align-items-center rz-m-0 gap-1 mb-1">
                         <b>รายการเปลี่ยนสินค้า</b>
-                        <RadzenDatePicker @bind-Value="@timeChage" DateFormat="MM/dd/yyyy" Name="DatePickerChangeProduct" />
+                        <RadzenDatePicker @bind-Value="@timeChage" DateFormat="dd/MM/yyyy" Name="DatePickerChangeProduct" />
                     </RadzenText>
                 </HeaderTemplate>
                 <ChildContent>
@@ -392,49 +392,56 @@
         de.QTY = de.QTY - de.QTYSLOT;
         // de.QTYTOTAL = de.QTYTOTAL - de.QTYSLOT; 
 
-        dataEditRowGP[index] = GPModelDataView.ConvertCalModel(de);
+        var aa = GPModelDataView.ConvertCalModel(de);
+        var sumProfit = dataEditRowGP.Sum(x => x.PROFIT);
+        dataEditRowGP[index] = GPModelDataView.CalWeightGP(aa, sumProfit);
         dataGP = dataEditRowGP;
+
+        weightGP2 = CalWeightGP(dataGP);
+        SumCalWeightGP();
 
         selectedItemGP.Add(dataEditRowGP[index]);
         GridGP.Reset(true);
+
+        StateHasChanged();
     }
 
     void OnChangeProduct(ChangeProductDetailView item)
     {
-            dataEditRowPrd = dataEditRowPrd
-            .Select(p =>
+        dataEditRowPrd = dataEditRowPrd
+        .Select(p =>
+        {
+            if (p.PRODUCT_CODE.Equals(item.PRODUCT_CODE))
             {
-                if (p.PRODUCT_CODE.Equals(item.PRODUCT_CODE))
+                var gp = dataEditRowGP.Find(g => g.PRODUCT_CODE.Equals(item.PRODUCT_CODE));
+                if (gp != null)
                 {
-                    var gp = dataEditRowGP.Find(g => g.PRODUCT_CODE.Equals(item.PRODUCT_CODE));
-                    if (gp != null)
-                    {
-                        p.S_SALEPRICE = gp.S_SALEPRICE;
-                        
+                    p.S_SALEPRICE = gp.S_SALEPRICE;
 
-                        if (p.LOADIN == 0)
-                        {
-                            p.QTY = gp.QTY / gp.SLOT;
-                        }
-                    }
-                    p.QTY = item.LOADIN;
-                    p.SLOT_INSTALLPRICE = item.SLOT_INSTALLPRICE;
-                }
-                else
-                {
-                    var gp = dataEditRowGP.Find(g => g.PRODUCT_CODE.Equals(p.PRODUCT_CODE));
-                    if (gp != null)
+
+                    if (p.LOADIN == 0)
                     {
-                        p.S_SALEPRICE = gp.S_SALEPRICE;
                         p.QTY = gp.QTY / gp.SLOT;
                     }
                 }
-                return p;
-            })
-            .ToList();
-            // SetReloadData(item);
-            var gp = dataEditRowPrd.GroupBy(dp => new { dp.PRODUCT_CODE, dp.PRODUCT_NAME, dp.S_COSTPRICE, dp.SLOT_INSTALLPRICE, dp.S_SALEPRICE })
-                 .Select(g => new GPModelDataView
+                p.QTY = item.LOADIN;
+                p.SLOT_INSTALLPRICE = item.SLOT_INSTALLPRICE;
+            }
+            else
+            {
+                var gp = dataEditRowGP.Find(g => g.PRODUCT_CODE.Equals(p.PRODUCT_CODE));
+                if (gp != null)
+                {
+                    p.S_SALEPRICE = gp.S_SALEPRICE;
+                    p.QTY = gp.QTY / gp.SLOT;
+                }
+            }
+            return p;
+        })
+        .ToList();
+        // SetReloadData(item);
+        var gp = dataEditRowPrd.GroupBy(dp => new { dp.PRODUCT_CODE, dp.PRODUCT_NAME, dp.S_COSTPRICE, dp.SLOT_INSTALLPRICE, dp.S_SALEPRICE })
+             .Select(g => new GPModelDataView
                      {
                          PRODUCT_CODE = g.Key.PRODUCT_CODE,
                          PRODUCT_NAME = g.Key.PRODUCT_NAME,
@@ -444,20 +451,18 @@
                          QTY = g.Sum(s => s.QTY),
                          SLOT = g.Count()
                      })
-                 .Select(g => GPModelDataView.ConvertCalModel(g)).ToList();
+             .Select(g => GPModelDataView.ConvertCalModel(g)).ToList();
 
-            var sumProfit = gp.Sum(x => x.PROFIT);
-            dataGP = gp.Select(g => GPModelDataView.CalWeightGP(g, sumProfit)).ToList();
+        var sumProfit = gp.Sum(x => x.PROFIT);
+        dataGP = gp.Select(g => GPModelDataView.CalWeightGP(g, sumProfit)).ToList();
 
         weightGP2 = CalWeightGP(dataGP);
         SumCalWeightGP();
-        
+
         GridGP.Reset(true);
 
         StateHasChanged();
     }
-
-    
 
     void SetReloadData(ChangeProductDetailView item)
     {
@@ -484,6 +489,17 @@
             })
             .Select(g => GPModelDataView.ConvertCalModel(g));
         return dataGP.ToList();
+    }
+
+    void AddSlot(ChangeProductDetailView item, int index)
+    {
+        var i = new ChangeProductDetailView
+            {
+                SLOT_NO = 2
+            };
+        dataEditRowPrd.Insert(index + 1, i);
+
+        StateHasChanged();
     }
 }
     

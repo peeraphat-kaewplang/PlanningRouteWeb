@@ -109,7 +109,7 @@ namespace PlanningRouteWeb.Services
 
                 var dataPlan = plannings!.Data.Plan.Where(p => p.GETPLAN_DETAIL.Count() > 30).ToList();
 
-                var j = JsonSerializer.Serialize(dataPlan.Take(0).Skip(1));
+                var j = JsonSerializer.Serialize(dataPlan.Take(2).Skip(0));
 
                 var target = ConvertModel.TargetModelToTarget2Model(plannings!.Data.Target);
                 if (dataPlan.Count() != 0)
@@ -199,6 +199,7 @@ namespace PlanningRouteWeb.Services
                     .OrderBy(x => x.LOCATION_CODE)
                     .ThenBy(x => int.Parse(x.MSORT))
                     .ToList();
+                    
                     return Tuple.Create(new columnSet { column = columns, Week = col }, data, target);
                 }
                 else

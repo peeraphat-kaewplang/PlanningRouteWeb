@@ -35,8 +35,8 @@
             Style="width: 100%; max-width: 150px;position: sticky;left: 870px;text-transform: none;" Click="@(args => OnClickChangeHideMaster())" />
         <RadzenButton Text="ตั้งค่าเริ่มต้น" ButtonStyle="ButtonStyle.Info"
             Style="position: sticky;left: 1020px;text-transform: none;" Click=@ShowInlineDialog />
-             <RadzenButton Text="export excel" ButtonStyle="ButtonStyle.Info"
-            Style="position: sticky;left: 1130px;text-transform: none;" Click=@LoadExcel />
+       @*       <RadzenButton Text="export excel" ButtonStyle="ButtonStyle.Info"
+            Style="position: sticky;left: 1130px;text-transform: none;" Click=@LoadExcel /> *@
 </div>
 
     @if (data.Count() != 0)
@@ -810,12 +810,6 @@
         @<RadzenStack Gap="1.5rem">
             <RadzenFormField Text="จำนวนการเข้าเติมสินค้าต่อวัน" Variant="@variant">
                 <RadzenNumeric ShowUpDown="false" TValue="int"@bind-Value=@target.DROP_PER_DAY/>
-            </RadzenFormField>
-            <RadzenFormField Text="เป้ายอดขายต่อวัน" Variant="@variant">
-                <RadzenNumeric ShowUpDown="false" TValue="int"@bind-Value=@target.VALUE_PER_DAY/>
-            </RadzenFormField>
-            <RadzenFormField Text="เป้ายอดขายต่อเดือน" Variant="@variant">
-                <RadzenNumeric ShowUpDown="false" TValue="int"@bind-Value=@target.VALUE_PER_MONTH/>
             </RadzenFormField>
             <RadzenStack Gap="0.5rem" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
                 <RadzenLabel Text="ระบบตระกร้า" />

@@ -12,12 +12,19 @@
         </td>
         <td class="@styleMachine fw-bold" style="font-size: 8px;">
             @item.MACHINE_CODE
+            @item.LOCATION_CODE
         </td>
-        <td class="" style="font-size: 12px;">
+        <td class="fw-bold" style="font-size: 8px;">
             @item.MACHINE_MODEL
+        </td>
+        <td class="" style="font-size: 12px; cursor: pointer;" 
+        @onclick="() => ShowdialogChangeProductCallback.InvokeAsync((new ChangeProductRequest{
+        ChangeDate = DateTime.Now.ToStringDate() ,
+        Location = item.LOCATION_CODE ,
+        Machine = item.MACHINE_CODE ,
+        ORG = item.ORGANIZATION_CODE } , true))">
             1%
         </td>
-
         <td class="" style="font-size: 12px;">
            2%
         </td>
@@ -26,7 +33,7 @@
             0%
         </td>
 
-        <td class="" style="font-size: 12px;">
+        <td class="" style="font-size: 12px; cursor:pointer;" @onclick="() => ShowdialogProductLowQtyCallback.InvokeAsync(item.MACHINE_CODE)">
             <div class="d-flex justify-content-around">
                 <div>2</div>
                 <div>/</div>
@@ -65,7 +72,7 @@
         @* <td class="text-end fw-bold sticky-col six-col" style="font-size: 8px;"> *@
         <td class="text-end fw-bold" style="font-size: 8px;">
             <div class="d-inline-block" style="width:99%">
-                @(!string.IsNullOrWhiteSpace(item.BEFORE_SALE) ? double.Parse(item.BEFORE_SALE).ToString("0,0.00", CultureInfo.InvariantCulture) : item.BEFORE_SALE)
+                @(!string.IsNullOrWhiteSpace(item.BEFORE_SALE) ? double.Parse(item.BEFORE_SALE).ToString("0,0", CultureInfo.InvariantCulture) : item.BEFORE_SALE)
             </div>
         </td>
         @* <td class="text-end fw-bold sticky-col sevent-col" style="font-size: 8px;"> *@
@@ -274,7 +281,7 @@
                             <div class=@($"{flex}")>
                                 @if (!ActionChangeProduct)
                                 {
-                                    if (i.REQUISITION != "1")
+                                    @if (i.REQUISITION != "1")
                                     {
                                         <RadzenIcon @onclick="() => ShowdialogChangeProductCallback.InvokeAsync((new ChangeProductRequest{
                                         ChangeDate = i.CALENDAR_DATE ,
@@ -370,6 +377,7 @@
             else
             {
                 <td class=@($"{today} {stylePlan} text-center") >
+
                     @if (i.STATUS_MANUAL)
                     {
                         <RadzenIcon Icon="done" class="nomal-chk" style="font-weight: 700;font-size: 16px;" />
@@ -377,17 +385,8 @@
                 </td>
 
                 <td class=@($"{today} {stylePlan} text-end fw-bold p-0 ") >
-                    @if (i.SALETOTAL != 0)
-                    {
-                        <div style="font-size:8px">
-                            @i.SALETOTAL.ToString("0,0", CultureInfo.InvariantCulture)
-                        </div>
-                        <div class="text-secondary" style="font-size:7px">
-                            @i.AMOUNT.ToStringNumberFormat(false)
-                        </div>
-                    }
-                   
-                   @*  <div class=@(i.CHANGEPRODUCT == "1" ? "d-flex justify-content-between" : "d-flex justify-content-end") style="font-size: 8px;">
+                    <div class=@(i.CHANGEPRODUCT == "1" ? "d-flex justify-content-between" : "d-flex justify-content-end") style="font-size: 8px;">
+                        
                         @if (i.CHANGEPRODUCT == "1")
                         {
                             <RadzenIcon @onclick="() => ShowdialogChangeProductCallback.InvokeAsync((new ChangeProductRequest{
@@ -401,14 +400,21 @@
 
                         @if (i.SALETOTAL != 0)
                         {
-        <RadzenText MouseEnter="@(args => ShowTooltipValue(args ,i.AMOUNT.ToString("0,0", CultureInfo.InvariantCulture)) )" class=@($"m-0 fw-bold {color}") style="font-size: 8px;cursor : pointer;">
-        @i.SALETOTAL.ToString("0,0", CultureInfo.InvariantCulture)
-        </RadzenText>
+                            @*  <RadzenText MouseEnter="@(args => ShowTooltipValue(args ,i.AMOUNT.ToString("0,0", CultureInfo.InvariantCulture)) )" class=@($"m-0 fw-bold {color}") style="font-size: 8px;cursor : pointer;">
+                                @i.SALETOTAL.ToString("0,0", CultureInfo.InvariantCulture)
+                            </RadzenText> *@
+                            <div>
+                                <div style="font-size:8px">
+                                    @i.SALETOTAL.ToString("0,0", CultureInfo.InvariantCulture)
+                                </div>
+                                <div class="text-secondary" style="font-size:7px">
+                                    @i.AMOUNT.ToStringNumberFormat(false)
+                                </div>
+                            </div>
                         }
-                    </div> *@
+                    </div>
                 </td>
                 <td class=@($"{today} text-center fw-bold p-0") style="font-size: 8px;">
-               
                     @if (item.GroupData.Count() == 1)
                     {
                         <div class="d-flex align-items-center justify-content-center" style="height: 2rem;">

@@ -233,11 +233,11 @@
         }
         catch (Exception ex)
         {
-            await JSModule!.InvokeVoidAsync("JsFunction.toastTrigger", new ToastModel
-                {
-                    action = "error",
-                    messang = ex.Message.ToString()
-                });
+            // await JSModule!.InvokeVoidAsync("JsFunction.toastTrigger", new ToastModel
+            //     {
+            //         action = "error",
+            //         messang = ex.Message.ToString()
+            //     });
         }
     }
 
