@@ -1,4 +1,5 @@
-﻿@page "/"
+﻿@page "/Planning"
+@layout PlanningLayout
 @using Microsoft.AspNetCore.WebUtilities;
 
 @inject IPlanningService PlanningService
@@ -7,13 +8,20 @@
 @inject TooltipService TooltipService
 @inject NavigationManager NavManager
 @inject StateContainer StateContainer
+@inject IJSRuntime JSRuntime
+@inject ICommonService CommonService 
+@implements IAsyncDisposable
 
 @{  
     var styleWidth = !hideMaster ? "widht-show-master" : "widht-hide-master";
 }
 
 <div class=@($"width-screen {styleWidth} command-wrapper")>
-        <RadzenDropDown TValue="string"  Style="width: 100%; max-width: 200px; position: sticky;left: 0px;" TextProperty="ORGANIZATION_NAME"
+         <button @onclick="@(()=> Goback())" class="btn btn-primary btn-sm btn-icon" style="position: sticky;left: 0px;" data-bs-toggle="tooltip"
+                data-bs-placement="right" title="ย้อนกลับ">
+            <i class="fa-solid fa-arrow-left fa-xs"></i>
+        </button>
+        <RadzenDropDown  TValue="string"  Style="width: 100%; max-width: 200px; position: sticky;left: 27px;" TextProperty="ORGANIZATION_NAME"
             ValueProperty="ORGANIZATION_CODE" @bind-Value=@selectOrg Data=@optionsOrg Change="@(args => ChangeOrg(args))" />
         <RadzenDropDown TValue="string" TextProperty="ROUTE_NAME" ValueProperty="ROUTE_CODE"
             Style="width: 100%; max-width: 270px;position: sticky;left: 200px;" @bind-Value=@selectRoute Data=@optionsRoute />
@@ -27,6 +35,8 @@
             Style="width: 100%; max-width: 150px;position: sticky;left: 870px;text-transform: none;" Click="@(args => OnClickChangeHideMaster())" />
         <RadzenButton Text="ตั้งค่าเริ่มต้น" ButtonStyle="ButtonStyle.Info"
             Style="position: sticky;left: 1020px;text-transform: none;" Click=@ShowInlineDialog />
+       @*       <RadzenButton Text="export excel" ButtonStyle="ButtonStyle.Info"
+            Style="position: sticky;left: 1130px;text-transform: none;" Click=@LoadExcel /> *@
 </div>
 
     @if (data.Count() != 0)
@@ -57,17 +67,18 @@
                     OnChangeMasterCallback="@OnChangeMater"
                     OnChageRankCallback="@((args) => OnChageRank( args.Item2))"
                     ShowdialogChangeProductCallback="@((args) => ShowdialogChangeProduct(args.Item1 , args.Item2))"
+                    ShowdialogProductLowQtyCallback="@ShowdialogProductLowQty"
                     ShowdialogBestProductCallback="@ShowdialogBestProduct"/>
                     
             </tbody>
-            <tfoot>
+          @*   <tfoot>
                 <TableFooterView 
                     Data="data" 
                     Columns="columns" 
                     DropMonth="dropMonth" 
                     Target="target.DROP_PER_DAY"
                     HideMaster="hideMaster"/>
-            </tfoot>
+            </tfoot> *@
         </table>
    @*  </div>
     </div> *@
@@ -76,6 +87,330 @@
     {
         <p>Data is empty!</P>
     }
+
+   @*  <div style="display:none">
+        @{
+            var total = selectMonth.Number == "01" ? "ธ.ค." : GetDatetimeClass.monthObjects.Single(x => x.Number == (int.Parse(selectMonth.Number) - 1).ToString("D2")).ShortName;
+            var mdtBefore = selectMonth.Number == "01" ? "ธ.ค." : GetDatetimeClass.monthObjects.Single(x => x.Number == (int.Parse(selectMonth.Number) - 1).ToString("D2")).ShortName;
+            var colSpan = (columns.Count() * 3) + ((columns.Count() / 7) * 2);
+
+             var grpData = LoadFooter();
+        }
+        <table id="table-export-excel" class="table table-sm">
+            <thead>
+                <tr>
+                    <th rowspan="4" style="font-size: 12px;">ลูกค้า</th>
+                    <th rowspan="4" style="font-size: 12px;">จุดตั้ง</th>
+                    <th rowspan="4" style="font-size: 12px;">ตู้ปัจจุบัน</th>
+                    <th rowspan="4" style="font-size: 12px;">MODEL</th>
+                    <th rowspan="4" style="width: 4rem;font-size: 12px;">ค่าธรรมเนียม</th>
+                    <th rowspan="4" style="width: 3rem;font-size: 12px;">
+                        <p class="m-0">TOTAL</p>
+                        <p class="m-0">@total</p>
+                    </th>
+                    <th rowspan="4" style="width: 3.5rem;font-size: 12px;">
+                        <p class="m-0">MTD</p>
+                        <p class="m-0">@mdtBefore</p>
+                    </th>
+                    <th rowspan="4" style="width: 3.5rem;font-size: 12px;">
+                        <p class="m-0">MTD</p>
+                        <p class="m-0">@selectMonth.ShortName</p>
+                    </th>
+                        <th colspan="10" class="text-center" style="font-size: 12px;">
+                            ค่ามาตรฐาน
+                        </th>
+                    <th rowspan="4" style="width: 3.5rem;font-size: 12px; padding-left:4px; padding-right:0px;">
+                        <p class="m-0">Sale</p>
+                        <p class="m-0">Last</p>
+                        <p class="m-0">Week</p>
+                    </th>
+                    <th rowspan="4" style="width: 3.5rem;font-size: 12px; padding-left:4px; padding-right:0px;">
+                        <p class="m-0">Drop</p>
+                        <p class="m-0">Month</p>
+                    </th>
+                    <th colspan="@colSpan" class="text-center" style="font-size: 12px;">
+                        แพลนเดือน @selectMonth.Name
+                    </th>
+                </tr>
+                <tr>
+                    <th rowspan="3" class="text-center" style="width: 1.25rem;font-size: 12px;">จ</th>
+                    <th rowspan="3" class="text-center" style="width: 1.25rem;font-size: 12px;">อ</th>
+                    <th rowspan="3" class="text-center" style="width: 1.25rem;font-size: 12px;">พ</th>
+                    <th rowspan="3" class="text-center" style="width: 1.25rem;font-size: 12px;">พฤ</th>
+                    <th rowspan="3" class="text-center" style="width: 1.25rem;font-size: 12px;">ศ</th>
+                    <th rowspan="3" class="text-center" style="width: 1.25rem;font-size: 12px;">ส</th>
+                    <th rowspan="3" class="text-center" style="width: 1.25rem;font-size: 12px;">อ</th>
+                    <th rowspan="3" style="width: 2rem;font-size: 12px;">
+                        <p class="m-0">Drop</p>
+                        <p class="m-0">Week</p>
+                    </th>
+                    <th rowspan="3" style="width: 3.15rem;font-size: 12px;">
+                        <p class="m-0">Drop</p>
+                        <p class="m-0">Day</p>
+                    </th>
+                    <th rowspan="3" style="width: 12.5rem;font-size: 12px;">Remark</th>
+                     @foreach (var (obj, index) in columns.WithIndex())
+                     { 
+                        if ((index + 1) % 7 == 0)
+                        {
+                            <th colspan="21" class="p-0"></th>
+                            <th rowspan="3" colspan="1" class="text-center" style="width:4rem; font-size:12px;">
+                                <div class="w-100 text-end">
+                                    <p class="m-0">Sale</p>
+                                    <p class="m-0">Week</p>
+                                </div>
+                             </th>
+                            <th rowspan="3" colspan="1" class="text-center" style="width:4rem; font-size:12px;">
+                                <div class="w-100 text-end">
+                                    Diff
+                                </div>
+                            </th>
+                        }
+                  
+                     }
+                </tr>
+                <tr>
+                @foreach (var (obj, index) in columns.WithIndex())
+                {
+                    <th colspan="3"
+                        style="font-size: 12px; text-align: center;">
+                        @obj.Value.FieldDateName
+                    </th>
+                }
+                </tr>
+                <tr>
+                     @foreach (var (obj, index) in columns.WithIndex())
+                    {
+                         <th  style="width: 3rem; font-size: 12px;text-align: center;">
+                            <div style="width:100%">
+                                @obj.Value.FieldDate
+                            </div>
+                        </th>
+                        <th  style="width: 6rem; font-size: 12px; text-align: center;">
+                            <div style="width:100%">
+                                @obj.Value.FieldValueName
+                            </div>
+                        </th>
+                        <th  style="width: 3rem; font-size: 12px;">
+                            <div class="d-flex" style="width:100%">
+                                <div class="mx-1">
+                                    @obj.Value.FieldRankName
+                                </div>
+                            </div>
+                        </th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var (item, index) in dataExel.WithIndex())
+                {
+                    var countDropMonth = item.GETPLAN_DETAIL.Count(x => x.STATUS_MANUAL);
+
+                    <tr>
+                         <td>
+                             @item.CUSTOMER_NAME
+                         </td>
+                         <td>
+                             @item.LOCATION_NAME
+                         </td>
+                         <td>
+                             @item.MACHINE_CODE
+                         </td>
+                         <td>
+                             @item.MACHINE_MODEL
+                         </td>
+                         <td>
+                             @(
+                                !string.IsNullOrWhiteSpace(item.TOTAL_FEE) ?
+                                double.Parse(item.TOTAL_FEE) == 0 ? item.TOTAL_FEE :
+                                double.Parse(item.TOTAL_FEE).ToString("0,0.00", CultureInfo.InvariantCulture) :
+                                item.TOTAL_FEE
+                              )
+                         </td>
+                         <td>
+                             @(!string.IsNullOrWhiteSpace(item.BEFORE_SALE) ? double.Parse(item.BEFORE_SALE).ToString("0,0", CultureInfo.InvariantCulture) : item.BEFORE_SALE)
+                         </td>
+                         <td>
+                             @(!string.IsNullOrWhiteSpace(item.BEFORE_MTD) ? double.Parse(item.BEFORE_MTD).ToString("0,0", CultureInfo.InvariantCulture) : item.BEFORE_MTD)
+                         </td>
+                          <td>
+                             @(!string.IsNullOrWhiteSpace(item.CURRENT_MTD) ? double.Parse(item.CURRENT_MTD).ToString("0,0", CultureInfo.InvariantCulture) : item.CURRENT_MTD)
+                         </td>
+                         <td class="text-center">
+                             @(item.MONDAY ? "Y" : "")
+                         </td>
+                        <td class="text-center">
+                           @(item.TUESDAY ? "Y" : "")
+                        </td>
+                        <td class="text-center">
+                            @(item.WEDNESDAY ? "Y" : "")
+                        </td>
+                        <td class="text-center">
+                            @(item.THURSDAY ? "Y" : "")
+                        </td>
+                        <td class="text-center">
+                            @(item.FRIDAY ? "Y" : "")
+                        </td>
+                        <td class="text-center">
+                            @(item.SATURDAY ? "Y" : "")
+                        </td>
+                        <td class="text-center">
+                            @(item.SUNDAY ? "Y" : "")
+                        </td>
+                        <td class="text-center">
+                            @item.DROPWEEK
+                        </td>
+                        <td class="p-0" style="font-size: 12px;">
+                            @item.MSORT
+                        </td>
+                        <td class="text-center">
+                            @item.REMARK
+                        </td>
+                         <td class="text-end">
+                            <div style="font-size: 12px;width: 100%">
+                                @item.SALE_LAST_WEEK
+                            </div>
+                         </td>
+                         <td class="text-end" style="font-size: 12px;">
+                            <div style="font-size: 12px;width: 100%">
+                                @countDropMonth
+                            </div>
+                        </td>
+
+                        @foreach (var (i, idx) in item.GETPLAN_DETAIL.WithIndex())
+                        {
+                            <td>
+                                @(i.STATUS_MANUAL ? "Y" : "")
+                            </td>
+                             <td>
+                                  <p class="m-0">
+                                        @(i.SALETOTAL == 0 ? i.AMOUNT == 0 ? i.AMOUNT : i.AMOUNT.ToString("0,0", CultureInfo.InvariantCulture) : i.SALETOTAL.ToString("0,0", CultureInfo.InvariantCulture))
+                                   </p>
+                            </td>
+                            <td class="text-center p-0">
+                                @i.RANK
+                            </td>
+
+                            if ((idx + 1) % 7 == 0)
+                            {
+                                var saleWeek = CalSaleWeek(item.GETPLAN_DETAIL, idx + 1);
+                                var diff = CalSaleWeek(item.GETPLAN_DETAIL, idx + 1, item);
+                                <td class="text-end  fw-bold" style="width: 20px; font-size: 12px;">
+                                    @(saleWeek == 0 ? saleWeek : saleWeek.ToString("0,0", CultureInfo.InvariantCulture))
+                                </td>
+                                <td class="text-end fw-bold" style="width: 20px; font-size: 12px;">
+                                    @(diff == 0 ? diff : diff.ToString("0,0", CultureInfo.InvariantCulture))
+                                </td>
+                            }
+                        }
+                     </tr>
+                    }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td rowspan="2" colspan="4" style="z-index:20;"></td>
+                    <td></td>
+                    <td class="text-end fw-bold" style="font-size: 12px;">
+                        @(beforeSale == 0 ? beforeSale : beforeSale.ToString("0,0", CultureInfo.InvariantCulture))
+                    </td>
+                    <td class="text-end fw-bold" style="font-size: 12px;">
+                        @(beforeMTD == 0 ? beforeMTD : beforeMTD.ToString("0,0", CultureInfo.InvariantCulture))
+                    </td>
+                    <td class="text-end fw-bold" style="font-size: 12px;">
+                        @(currentMTD == 0 ? currentMTD : currentMTD.ToString("0,0", CultureInfo.InvariantCulture))
+                    </td>
+                     <td class="text-center fw-bold" style="font-size: 12px;">@dataExel.Count(c => c.MONDAY == true)</td>
+                    <td class="text-center fw-bold" style="font-size: 12px;">@dataExel.Count(c => c.TUESDAY == true)</td>
+                    <td class="text-center fw-bold" style="font-size: 12px;">@dataExel.Count(c => c.WEDNESDAY == true)</td>
+                    <td class="text-center fw-bold" style="font-size: 12px;">@dataExel.Count(c => c.THURSDAY == true)</td>
+                    <td class="text-center fw-bold" style="font-size: 12px;">@dataExel.Count(c => c.FRIDAY == true)</td>
+                    <td class="text-center fw-bold" style="font-size: 12px;">@dataExel.Count(c => c.SATURDAY == true)</td>
+                    <td class="text-center fw-bold" style="font-size: 12px;">@dataExel.Count(c => c.SUNDAY == true)</td>
+                    <td colspan="4" rowspan="2"></td>
+                    <td rowspan="2" class="text-end fw-bold" style="font-size: 12px;">
+                        @dataExel.Sum(x => x.SALE_LAST_WEEK).ToString("0,0", CultureInfo.InvariantCulture)
+                    </td>
+                    <td rowspan="2" class="text-end fw-bold" style="font-size: 12px;">
+                        @dropMonth.Sum(x =>x)
+                    </td>
+                    @foreach (var (obj, index) in grpData.WithIndex())
+                    {
+                        <td class="text-center fw-bold" >
+                           @obj.COUNT_STATUS_MANUAL
+                        </td>
+                        <td rowspan="1" class="text-end">
+                            @if(obj.SUM_SALETOTAL == 0)
+                            {
+                                @obj.SUM_SALETOTAL
+                            }
+                            else
+                            {
+                                @obj.SUM_SALETOTAL.ToString("0,0", CultureInfo.InvariantCulture)
+                            }
+                        </td>
+                        <td rowspan="2" style="font-size: 12px;"></td>
+                        if ((index + 1) % 7 == 0)
+                        {
+                            var SaleWeek = CalSumSaleWeek(grpData, index);
+                            var diff = CalSumSaleWeekDiff(grpData, index);
+                            <td rowspan="2" class="text-end fw-bold" style="font-size: 12px;">
+                                @if (SaleWeek == 0)
+                                {
+                                    @SaleWeek
+                                }else
+                                {
+                                    @SaleWeek.ToString("0,0", CultureInfo.InvariantCulture)
+                                }
+                            </td>
+                        }
+                }
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                @{
+                    var before = beforeMTD -beforeSale;
+                }
+                <td class="text-end fw-bold" style="font-size: 12px;">
+                    @if (before == 0)
+                    {
+                        @before
+                    }
+                    else
+                    {
+                        @(before.ToString("0,0", CultureInfo.InvariantCulture))
+                    }
+                </td>
+                <td class="text-end fw-bold" style="font-size: 12px;">
+                    @((currentMTD - beforeMTD) == 0 ? (currentMTD - beforeMTD) : (currentMTD - beforeMTD).ToString("0,0", CultureInfo.InvariantCulture))
+                </td>
+                <td class="text-center fw-bold" style="font-size: 12px;">@(target.DROP_PER_DAY - dataExel.Count(c => c.MONDAY == true))</td>
+                <td class="text-center fw-bold" style="font-size: 12px;">@(target.DROP_PER_DAY - dataExel.Count(c => c.TUESDAY == true))</td>
+                <td class="text-center fw-bold" style="font-size: 12px;">@(target.DROP_PER_DAY - dataExel.Count(c => c.WEDNESDAY == true))</td>
+                <td class="text-center fw-bold" style="font-size: 12px;">@(target.DROP_PER_DAY - dataExel.Count(c => c.THURSDAY == true))</td>
+                <td class="text-center fw-bold" style="font-size: 12px;">@(target.DROP_PER_DAY - dataExel.Count(c => c.FRIDAY == true))</td>
+                <td class="text-center fw-bold" style="font-size: 12px;">@(target.DROP_PER_DAY - dataExel.Count(c => c.SATURDAY == true))</td>
+                <td class="text-center fw-bold" style="font-size: 12px;">@(target.DROP_PER_DAY - dataExel.Count(c => c.SUNDAY == true))</td>
+                @foreach (var (obj, index) in grpData.WithIndex())
+                {
+                    <td class="text-center fw-bold">
+                        @obj.MAX_DROP
+                    </td>
+                    <td class="text-end" style="cursor : pointer;">
+                        @if(obj.SUM_SALETOTAL_TOTAL == 0)
+                        {
+                            @obj.SUM_SALETOTAL_TOTAL
+                        }
+                        else
+                        {
+                            @obj.SUM_SALETOTAL_TOTAL.ToString("0,0", CultureInfo.InvariantCulture)
+                        }
+                    </td>
+                }
+            </tr>
+            </tfoot>
+        </table>
+    </div> *@
 @code {
     [Parameter]
     [SupplyParameterFromQuery]
@@ -85,7 +420,15 @@
     [SupplyParameterFromQuery]
     public string? ROUTE { get; set; }
 
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string? MONTH { get; set; }
 
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string? YEAR { get; set; }
+
+    private IJSObjectReference? JSModule;
     Variant variant = Variant.Outlined;
     public bool hideMaster = false;
     public string selectOrg = "";
@@ -110,9 +453,10 @@
 
     protected override async Task OnInitializedAsync() 
     {
+        StateContainer.IsLoading = true;
         selectOrg = ORG!;
         selectRoute = ROUTE!;
-        year = StateContainer.DateCurrent.Year;
+        year = YEAR != null ? int.Parse(YEAR) : StateContainer.DateCurrent.Year;
         var y = year - StateContainer.defultYear;
         
         if(y > 0)
@@ -135,7 +479,18 @@
         await LoadRoute();
 
         if(ROUTE == null) selectRoute = optionsRoute.First().ROUTE_CODE;
-        // await ShowBusyDialog();
+        await LoadMaster();
+
+        StateContainer.IsLoading = false;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        JSModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/site.js");
+    }
+    public async Task LoadExcel()
+    {
+        await JSModule!.InvokeVoidAsync("JsFunction.exportExcel");
     }
 
     public async Task LoadOrg(string org ="")
@@ -160,8 +515,13 @@
             ORG = $"{selectOrg}", 
             Route = $"{selectRoute}" 
         };
+
+
         var (column, record , targets ) = await PlanningService.PlanningGetMaster(req);
-        columns = column;
+
+        // dataExel = await PlanningService.PlanningExportExcel(req);
+
+        columns = column.column;
         data = record;
         target = new Target2
         {
@@ -170,8 +530,15 @@
             VALUE_PER_MONTH = !string.IsNullOrWhiteSpace(targets.VALUE_PER_MONTH) ? int.Parse(targets.VALUE_PER_MONTH) : 0,
         };
 
+
+        // beforeSale = dataExel.Sum(x => !string.IsNullOrWhiteSpace(x.BEFORE_SALE) ? int.Parse(x.BEFORE_SALE) : 0);
+        // beforeMTD = dataExel.Sum(x => !string.IsNullOrWhiteSpace(x.BEFORE_MTD) ? int.Parse(x.BEFORE_MTD) : 0);
+        // currentMTD = dataExel.Sum(x => !string.IsNullOrWhiteSpace(x.CURRENT_MTD) ? int.Parse(x.CURRENT_MTD) : 0);
+
         CalDropMonth();
         FindRankEmpty(record);
+
+        if (!target.SYSTEMCART) actionButton = new();
 
         StateHasChanged();
     }
@@ -258,11 +625,15 @@
 
     public async void OnClickSearch() 
     {
+        StateContainer.IsLoading = true;
+
         StateContainer._dateTime = DateTime.Now;
 
         actionButton = new();
-        await ShowBusyDialog();
+        await LoadMaster();
         StateHasChanged();
+
+        StateContainer.IsLoading = false;
     }
 
     private void OnChangeMater(PlanningMasterData2 item)
@@ -284,8 +655,9 @@
         return value;
     }
 
-    private async Task OnClickSavePlan(DialogService ds)
+    private async Task OnClickSavePlan(DialogService ds, string start , string end)
     {
+        StateContainer.IsLoading = true;
         var dataSave = new List<PlanningMasterData2>();
         foreach( var (item,index) in data.WithIndex())
         {
@@ -293,7 +665,6 @@
 
                 var save = ConvertModel.PlanningMasterData2ViewModel(item.GroupData[idx]);
                 var record = ConvertModel.Group2ModelToPlanningMasterData2(row);
-
                 record.REMARK = item.GroupData[idx].REMARK;
                 record.GETPLAN_DETAIL = item.GroupData[idx].GETPLAN_DETAIL;
                 record.YEARMONTH = save.YEARMONTH;
@@ -322,31 +693,34 @@
                 record.SUNDAY = item.SUNDAY;
                 record.IS_DUPLICATE = save.IS_DUPLICATE;
                 record.SALE_LAST_WEEK = save.SALE_LAST_WEEK;
-
                 dataSave.Add(record);
             }
-
         }
+
         var recordData = dataSave.Select(x => ConvertModel.PlanningMasterData2ModeltoSave(x)).ToList();
+
+        if(!target.SYSTEMCART && !string.IsNullOrEmpty(start) && !string.IsNullOrEmpty(end))
+        {
+            recordData = PlanningService.PlanningSetModelCartSystem(start,end, recordData);
+        } 
 
         var response = await PlanningService.PlanningSavePlan(recordData);
 
         if(response.ErrorMessage == "success")
         {
-            var Task = InvokeAsync(async () => {
                 actionButton = new();
                 await LoadMaster();
-                DialogServiceCustom.DialogClose();
                 ds.Close(false);
-            });
-            await DialogServiceCustom.BusyDialog("กำลังบันทึกข้อมูล...");
         }
         else
         {
+            ds.Close(false);
             await DialogService.Alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล!", "เเจ้งเตือน", new AlertOptions() { OkButtonText = "ปิด" });
         }
-      
+
         StateHasChanged();
+
+        StateContainer.IsLoading = false;
     }
     //   private async Task OnClickSavePlan(DialogService ds)
     // {
@@ -512,33 +886,33 @@
             <RadzenFormField Text="จำนวนการเข้าเติมสินค้าต่อวัน" Variant="@variant">
                 <RadzenNumeric ShowUpDown="false" TValue="int"@bind-Value=@target.DROP_PER_DAY/>
             </RadzenFormField>
-            <RadzenFormField Text="เป้ายอดขายต่อวัน" Variant="@variant">
-                <RadzenNumeric ShowUpDown="false" TValue="int"@bind-Value=@target.VALUE_PER_DAY/>
-            </RadzenFormField>
-            <RadzenFormField Text="เป้ายอดขายต่อเดือน" Variant="@variant">
-                <RadzenNumeric ShowUpDown="false" TValue="int"@bind-Value=@target.VALUE_PER_MONTH/>
-            </RadzenFormField>
+            <RadzenStack Gap="0.5rem" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                <RadzenLabel Text="ระบบตระกร้า" />
+                <RadzenSwitch  @bind-Value=@target.SYSTEMCART/>
+            </RadzenStack>
             <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
                 <RadzenStack Orientation="Orientation.Horizontal">
                     <RadzenButton Text="บันทึก" Click="() => SaveTarget(ds)"  Style="width: 80px;" />
                     <RadzenButton Text="ยกเลิก" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" />
                 </RadzenStack>
             </RadzenStack>
-        </RadzenStack>);
+        </RadzenStack>
+    );
     }
 
     private async Task ShowDialogSave()
     {
+       
         var result = await DialogService.OpenAsync("ยืนยันการบันทึกข้อมูล", ds =>
-        @<RadzenStack Gap="1.5rem">
-            <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End">
-                <RadzenStack Orientation="Orientation.Horizontal">
-                    <RadzenButton Text="บันทึก" Click="() => OnClickSavePlan(ds)"  Style="width: 80px;" />
-                    <RadzenButton Text="ยกเลิก" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" />
+            @<RadzenStack Gap="1.5rem">
+                <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End">
+                    <RadzenStack Orientation="Orientation.Horizontal">
+                        <RadzenButton Text="บันทึก" Click="() => OnClickSavePlan(ds , start , end)"  Style="width: 80px;" />
+                        <RadzenButton Text="ยกเลิก" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" />
+                    </RadzenStack>
                 </RadzenStack>
             </RadzenStack>
-        </RadzenStack>
-    );
+        );
     }
 
     private async Task ShowDialogCalPlan(string start , string end , string action)
@@ -562,9 +936,15 @@
     }
 
     private async Task ShowdialogChangeProduct(ChangeProductRequest item , bool isCurrent) {
-        var result = await DialogService.OpenAsync("เปลี่ยนสินค้า", ds =>
-        @<ModalChangeProduct Item="item" IsCurrent="isCurrent" Dialog="ds" ShowdialogBestProductCallback="@ShowdialogBestProduct"/>,new DialogOptions() { Width = "80%", Height = "90%" });
-        await ShowBusyDialog();
+        // var result = await DialogService.OpenAsync("เปลี่ยนสินค้า", ds =>
+        // @<ModalChangeProduct Item="item" IsCurrent="isCurrent" Dialog="ds" ShowdialogBestProductCallback="@ShowdialogBestProduct"/>,new DialogOptions() { Width = "90%", Height = "95%" });
+        var result = await DialogService.OpenAsync("เปลี่ยนสินค้า", ds => @<GPChangeProduct Item="item"/>,new DialogOptions() { Width = "100%", Height = "100%" });
+    }
+
+    private async Task ShowdialogProductLowQty(string mc)
+    {
+       await DialogService.OpenAsync($"สิ้นค้าน้อยว่าที่กำหนด ตู้ : {mc}", ds =>
+        @<ModalProductLowQty McCode="@mc"/>,new DialogOptions() { Width = "80%", Height = "90%" });
     }
 
     private async Task ShowdialogBestProduct(BestProductRequest item)
@@ -586,13 +966,21 @@
 
         if(response.ErrorMessage == "success")
         {
+            if (!target.SYSTEMCART)
+            {
+                actionButton = new();
+            }
+            else
+            {
+                await LoadMaster();
+            }
             ds.Close(true);
         }
     }
 
     private async Task OnCalPlanning(string start , string end ,DialogService? ds = null)
     {
-        
+        StateContainer.IsLoading = true;
         var body = new CalPlanning
         {
             YEARMONTH = $"{StateContainer.DateCurrent.ToStringDate("yyyy")}{selectMonth.Number}",
@@ -605,16 +993,17 @@
         var response = await PlanningService.PlanningCalPlan(body);
         if(response.ErrorMessage == "success")
         {
-            await ShowBusyDialog();
-            
-        
+          
+            await LoadMaster();
+            actionButton = new();
         }
         else
         {
             await DialogService.Alert($"Error : {response.ErrorMessage}", $"เเจ้งเตือน { response.Status }", new AlertOptions() { OkButtonText = "ปิด" ,ShowClose = false });
         }
-
+            
         if(ds!= null) ds.Close(true);
+        StateContainer.IsLoading = false;
     }
 
     public class ChkRank
@@ -652,10 +1041,15 @@
         }
     }
 
+    public async Task Goback()
+    {
+        await JSRuntime.InvokeVoidAsync("history.back");
+    }
+
     private void OnChageRank(string date)
     {
         var detail = new List<DeatilRank>();
-        if(data.Count() != 0 )
+        if(data.Count() != 0 && target.SYSTEMCART)
         {
             foreach(var i in data)
             {
@@ -737,7 +1131,6 @@
                     actionButton = new();
                     actionButton.Action = "create";
                 }
-               
             }
         }
     }
@@ -751,11 +1144,105 @@
 
     public async Task ShowBusyDialog()
     {
-        var Task = InvokeAsync(async () => {
-            actionButton = new();
-            await LoadMaster();
-            DialogServiceCustom.DialogClose();
-        });
-        await DialogServiceCustom.BusyDialog("กำลังโหลดข้อมูล...");
+        StateContainer.IsLoading = true;
+        actionButton = new();
+        await LoadMaster();
+        StateContainer.IsLoading = false;
+    }
+
+    private double CalSaleWeek(List<PlanningDetail2> row, int index, PlanningMasterData2? plan = null)
+    {
+        var task = 7;
+        var skip = index - task;
+        if (plan == null)
+        {
+            var sum = row.Skip(skip).Take(task).Sum(s => !s.IsCurrent && string.IsNullOrWhiteSpace(s.DOC_TYPE) ? 0 : s.SALETOTAL);
+            return sum;
+        }
+        else
+        {
+            double sum = 0;
+            if (index == task)
+            {
+                var totalWeek = row.Skip(skip).Take(task).Sum(s => !s.IsCurrent && string.IsNullOrWhiteSpace(s.DOC_TYPE) ? 0 : s.SALETOTAL);
+                sum = totalWeek - plan.SALE_LAST_WEEK;
+                return sum;
+            }
+            else
+            {
+                var totalWeek = row.Skip(skip).Take(task).Sum(s => !s.IsCurrent && string.IsNullOrWhiteSpace(s.DOC_TYPE) ? 0 : s.SALETOTAL);
+                var lastWeek = row.Skip(skip - task).Take(task).Sum(s => !s.IsCurrent && string.IsNullOrWhiteSpace(s.DOC_TYPE) ? 0 : s.SALETOTAL);
+                sum = totalWeek - lastWeek;
+                return sum;
+            }
+        }
+    }
+
+    private List<ColumnFooter> LoadFooter()
+    {
+        var planDetail = new List<PlanningDetail2>();
+        var planDrop = new List<PlanningDetail2>();
+        var planDrop2 = new List<PlanningDetail2>();
+        foreach (var x in dataExel)
+        {
+            foreach (var d in x.GETPLAN_DETAIL)
+            {
+                if (d.RANK != null)
+                {
+                    planDrop.Add(d);
+                }
+                planDrop2.Add(d);
+            }
+            planDetail.AddRange(x.GETPLAN_DETAIL);
+        }
+
+        return planDetail.GroupBy(a => a.CALENDAR_DATE, (key, grp) => new ColumnFooter
+        {
+            FieldDate = key,
+            COUNT_STATUS_MANUAL = grp.FirstOrDefault()!.IsCurrent ? planDrop2.Where(x => x.CALENDAR_DATE == key && x.STATUS_MANUAL).Count() :  planDrop.Where(x => x.CALENDAR_DATE == key && x.DOC_TYPE == "1").Count(),
+            MAX_DROP = !string.IsNullOrWhiteSpace(grp.FirstOrDefault()!.MAX_DROP) ? int.Parse(grp.FirstOrDefault()!.MAX_DROP) : 0,
+            IsCurrent = grp.FirstOrDefault()!.IsCurrent,
+            SUM_SALETOTAL = StateContainer.DateCurrent.ToContainsDate(key) ?
+            grp.Sum(x => x.STATUS_MANUAL && !string.IsNullOrWhiteSpace(x.DOC_TYPE) || x.IsCurrent ? x.SALETOTAL : 0):
+            grp.Sum(x => !string.IsNullOrWhiteSpace(x.DOC_TYPE) ? x.SALETOTAL : 0),
+            SUM_SALETOTAL_TOTAL = grp.Where(x => x.STATUS_MANUAL).Sum(x => string.IsNullOrWhiteSpace(x.DOC_TYPE) ? x.SALETOTAL : x.AMOUNT),
+        }).ToList();
+    }
+
+    private double CalSumSaleWeek(List<ColumnFooter> row ,int index)
+    {
+        var task = 7;
+        var skip = index - task;
+        var sum = row.Skip(skip).Take(task).Sum(s => s.SUM_SALETOTAL);
+        return sum;
+    }
+     private double CalSumSaleWeekDiff(List<ColumnFooter> row, int index)
+    {
+        var task = 7;
+        var skip = index - task;
+        var last = dataExel.Sum(x => x.SALE_LAST_WEEK_END);
+
+        double sum = 0;
+        if (index == task)
+        {
+            var totalWeek = row.Skip(skip).Take(task).Sum(s => s.SUM_SALETOTAL);
+            sum = last - totalWeek;
+            return sum;
+        }
+        else
+        {
+            var totalWeek = row.Skip(skip).Take(task).Sum(s => s.SUM_SALETOTAL);
+            var lastWeek = row.Skip(skip - task).Take(task).Sum(s => s.SUM_SALETOTAL);
+            sum = lastWeek - totalWeek;
+            return sum;
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (JSModule is not null )
+        {
+            await JSModule.DisposeAsync();
+        }
     }
 }

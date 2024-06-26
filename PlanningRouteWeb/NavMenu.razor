@@ -1,0 +1,98 @@
+﻿@*@inject IJSRuntime JSRuntime
+ @implements IAsyncDisposable
+@implements IDisposable
+@inject NavigationManager NavigationManager *@
+@inject IConfiguration Configuration
+<div class="top-row navbar">
+    <div class="container-fluid">
+        <a class="navbar-brand" href=""></a>
+    </div>
+</div>
+<div class="nav-scrollable">
+    <nav class="flex-column">
+        @foreach (var path in RoutePath.SetPath())
+        {
+            var url = $"{Configuration.GetValue<string>("Configs:UrlRoute")}{path.Url}";
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="@url">
+                    <i class=@($"fa-solid {path.Icon}")></i>
+                </NavLink>
+            </div>  
+        }
+    </nav>
+</div>
+
+
+@code {
+    // private IJSObjectReference? JSModule;
+    // public List<RoutePath> routePaths { get; set; } = new();
+
+    // public string? active { get; set; }
+
+    // public class ObjSystem
+    // {
+    //     public string? Code { get; set; }
+    //     public string? Name { get; set; }
+    // }
+
+    // private IDisposable? registration;
+
+    // protected override async Task OnAfterRenderAsync(bool firstRender)
+    // {
+    //     if (firstRender)
+    //     {
+    //         routePaths = RoutePath.SetPath();
+
+    //         JSModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/site.js");
+
+    //         var date = DateTime.Now;
+    //         var month = date.Month.ToString("D2");
+    //         var year = date.Year;
+
+    //         var systems = await JSModule!.InvokeAsync<List<string>>("JsFunction.getSystems");
+    //         active = NavigationManager.Uri.Substring(NavigationManager.BaseUri.Length - 1); 
+    //         registration =
+    //            NavigationManager.RegisterLocationChangingHandler(OnLocationChanging);
+    //         if (systems.Count() == 1)
+    //         {
+
+    //             var s = await JSModule!.InvokeAsync<ObjSystem>("JsFunction.getSystems2");
+    //             routePaths = routePaths.Select(x =>
+    //             {
+    //                 if (x.Name == "Dashboard")
+    //                 {
+    //                     x.Url = $"{x.Child.First().Url}?ORG={s.Code}&ORGName={s.Name}&Month={month}&Year={year}";
+    //                 }
+    //                 else if (x.Name == "Timeline")
+    //                 {
+    //                     x.Url = $"{x.Child.First().Url}?ORG={s.Code}";
+    //                 }
+    //                 return x;
+    //             }).ToList();
+    //         }
+    //         StateHasChanged();
+    //     }
+    // }
+
+    // public void OnClick(string url)
+    // {
+    //     NavigationManager.NavigateTo($"/{url}");
+    // }
+
+    // private ValueTask OnLocationChanging(LocationChangingContext context)
+    // {
+
+    //     active = context.TargetLocation;
+    //     return ValueTask.CompletedTask;
+    // }
+
+    // public async ValueTask DisposeAsync()
+    // {
+    //     if (JSModule is not null)
+    //     {
+    //         await JSModule.DisposeAsync();
+    //     }
+    // }
+
+    // public void Dispose() => registration?.Dispose();
+}

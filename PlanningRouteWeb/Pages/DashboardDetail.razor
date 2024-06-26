@@ -1,0 +1,431 @@
+﻿@page "/Dashboard/Detail"
+@using static PlanningRouteWeb.Pages.TimelineRoute
+
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+@inject StateContainer StateContainer
+@inject IDashboardService DashboardService
+@inject ISetDatetimeService SetDatetimeService
+@inject IPlanningService PlanningService
+@inject ICommonService CommonService
+@inject TooltipService TooltipService
+@inject DialogService DialogService
+@implements IAsyncDisposable
+
+<div class="d-flex gap-2 pb-2 w-50">
+    @if (!hideGoback)
+    {
+        <button @onclick="@(()=> Goback())" class="btn btn-primary btn-sm btn-icon" data-bs-toggle="tooltip"
+                data-bs-placement="right" title="ย้อนกลับ">
+            <i class="fa-solid fa-arrow-left fa-xs"></i>
+        </button>
+    }
+    <button @onclick="@(() => OnChangeBackwardForward("backward"))" type="button" class="btn btn-primary btn-sm">
+        <i class="fa-solid fa-backward fa-xs"></i>
+    </button>
+    <select value="@selectedMonth" @onchange="OnChangeMonth" class="w-25 form-select form-select-sm">
+        @foreach (var month in GetDatetimeClass.monthObjects)
+        {
+            <option value="@month.Number">@month.Name</option>
+        }
+    </select>
+    <button @onclick="@(() => OnChangeBackwardForward("forward"))" type="button" class="btn btn-primary btn-sm">
+        <i class="fa-solid fa-forward fa-xs"></i>
+    </button>
+    <select value="@selectYear" @onchange="OnChangeYear" class="w-25 form-select form-select-sm">
+        @foreach (var year in yearOptions)
+        {
+            <option value="@year">@year</option>
+        }
+    </select>
+    <button @onclick="@(()=> OnSearch())" class="btn btn-primary btn-sm" data-bs-toggle="tooltip"
+            data-bs-placement="right" title="ค้าหา">
+        <i class="fa-solid fa-magnifying-glass fa-xs"></i>
+    </button>
+</div>
+
+<div class="table-wraper">
+    <table class="table table-sm table-striped table-hover table-dashboard align-middle border-start border-end mb-0">
+        <thead>
+            @{
+                var previous = selectedMonth.Contains("01") ? "12" : (int.Parse(selectedMonth) - 1).ToString("D2");
+            }
+            <tr>
+                <th scope="col" rowspan="3" class="">Route</th>
+                <th scope="col" colspan="7" class="text-center">
+                    เดือน @(GetDatetimeClass.monthObjects.Find(x =>
+                    x.Number.Contains(previous))!.Name)
+                </th>
+                <th scope="col" colspan="7" class="text-center">
+                    เดือน @(GetDatetimeClass.monthObjects.Find(x =>
+                    x.Number.Contains(selectedMonth))!.Name) (ปัจจุบัน)
+                </th>
+                <th scope="col" rowspan="3" style="width:3rem" class=""></th>
+            </tr>
+            <tr class="th-border">
+                @* <th scope="col" class="">@ORGName</th> *@
+                <th scope="col" colspan="4" class="text-center">ยอดขาย</th>
+                <th scope="col" colspan="3" class="text-center">Drop</th>
+                <th scope="col" colspan="4" class="text-center">ยอดขาย</th>
+                <th scope="col" colspan="3" class="text-center">Drop</th>
+            </tr>
+            <tr class="th-border">
+                @* <th class="">Route</th> *@
+                <th class="text-end">เป้า</th>
+                <th class="text-end">ยอดประมาณการ</th>
+                <th class="text-end">ยอดขาย</th>
+                <th class="text-end">ขาย-เป้า</th>
+                <th class="text-end">เป้า</th>
+                <th class="text-end">service</th>
+                <th class="text-end">service-เป้า</th>
+                <th class="text-end">เป้า</th>
+                <th class="text-end">ยอดประมาณการ</th>
+                <th class="text-end">ยอดขาย</th>
+                <th class="text-end">ขาย-เป้า</th>
+                <th class="text-end">เป้า</th>
+                <th class="text-end">service</th>
+                <th class="text-end">service-เป้า</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var model in dashboards.Data)
+            {
+                <tr>
+                    <td class="fw-bold">@model.RouteCode</td>
+                    <td class="fw-bold">@model.BeforeTarget.ToStringNumberFormat()</td>
+                    <td class="fw-bold">@model.BeforeEstimate.ToStringNumberFormat()</td>
+                    <td class="fw-bold">@model.BeforeSales.ToStringNumberFormat()</td>
+                    <td class="@(model.BeforeSumSales <= 0 ? "fw-bold value-error" : "fw-bold value-success")">
+                        @model.BeforeSumSales.ToStringNumberFormat()
+                    </td>
+                    <td class="fw-bold">@model.BeforeTargetDrop.ToStringNumberFormat()</td>
+                    <td class="fw-bold">@model.BeforeService.ToStringNumberFormat()</td>
+                    <td class="@(model.BeforeSumDropService <= 0 ? "fw-bold value-error" : "fw-bold value-success")">
+                        @model.BeforeSumDropService.ToStringNumberFormat(false)
+                    </td>
+                    <td class="fw-bold">@model.Target.ToStringNumberFormat()</td>
+                    <td class="fw-bold">@model.Estimate.ToStringNumberFormat()</td>
+                    <td class="fw-bold">@model.Sales.ToStringNumberFormat()</td>
+                    <td class="@(model.SumSales <= 0 ? "fw-bold value-error" : "fw-bold value-success")">
+                        @model.SumSales.ToStringNumberFormat()
+                    </td>
+                    <td class="fw-bold">@model.TargetDrop.ToStringNumberFormat(false)</td>
+                    <td class="fw-bold">@model.Service.ToStringNumberFormat(false)</td>
+                    <td class="@(model.SumDropService <= 0 ? "fw-bold value-error" : "fw-bold value-success")">
+                        @model.SumDropService.ToStringNumberFormat(false)
+                    </td>
+                    <td class="d-flex justify-content-around">
+                        <RadzenText MouseEnter="@(args => ShowTooltip(args , "แก้ไขค่าเริ่มต้น") )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
+                            <i class="fa-solid fa-pen-to-square text-warning" style="cursor:pointer" @onclick="@(()=> ShowInlineDialog(model.RouteCode!))"></i>
+                        </RadzenText>
+                        <RadzenText MouseEnter="@(args => ShowTooltip(args , "ไปหน้า Planning") )" class="mb-0" Style="font-size: 12px; cursor : pointer;">
+                            <i class="fa-solid fa-eye text-primary" style="cursor:pointer" @onclick="@(() => NavigationManager.NavigateTo($"Planning?ORG={ORG}&ROUTE={model.RouteCode}&MONTH={selectedMonth}&YEAR={selectYear}"))"></i>
+                        </RadzenText>
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            @{
+                var summery = dashboards.Summary.Summarys;
+                var average = dashboards.Summary.Averages;
+            }
+            <tr>
+                <td class="fw-bold">Summary</td>
+                <td class="fw-bold text-end">@summery.SumBeforeTarget.ToStringNumberFormat()</td>
+                <td class="fw-bold text-end">@summery.SumBeforeEstimate.ToStringNumberFormat()</td>
+                <td class="fw-bold text-end">@summery.SumBeforeSales.ToStringNumberFormat()</td>
+                <td class="@(summery.SumBeforeSumSales <= 0 ? "fw-bold value-error text-end" : "fw-bold value-success text-end")">
+                    @summery.SumBeforeSumSales.ToStringNumberFormat()
+                </td>
+                <td class="fw-bold text-end">@summery.SumBeforeTargetDrop.ToStringNumberFormat(false)</td>
+                <td class="fw-bold text-end">@summery.SumBeforeService.ToStringNumberFormat(false)</td>
+                <td class="@(summery.SumBeforeSumDropService <= 0 ? "fw-bold value-error text-end" : "fw-bold value-success text-end")">
+                    @summery.SumBeforeSumDropService.ToStringNumberFormat(false)
+                </td>
+                <td class="fw-bold text-end">@summery.SumTarget.ToStringNumberFormat()</td>
+                <td class="fw-bold text-end">@summery.SumEstimate.ToStringNumberFormat()</td>
+                <td class="fw-bold text-end">@summery.SumSales.ToStringNumberFormat()</td>
+                <td class="@(summery.SumSumSales <= 0 ? "fw-bold value-error text-end" : "fw-bold value-success text-end")">
+                    @summery.SumSumSales.ToStringNumberFormat()
+                </td>
+                <td class="fw-bold text-end">@summery.SumTargetDrop.ToStringNumberFormat(false)</td>
+                <td class="fw-bold text-end">@summery.SumService.ToStringNumberFormat(false)</td>
+                <td class="@(summery.SumSumDropService <= 0 ? "fw-bold value-error text-end" : "fw-bold value-success text-end")">
+                    @summery.SumSumDropService.ToStringNumberFormat(false)
+                </td>
+                <td rowspan="2" class="text-end"></td>
+            </tr>
+            <tr>
+                <td class="fw-bold">Average</td>
+                <td class="fw-bold text-end">@average.SumBeforeTarget.ToStringNumberFormat()</td>
+                <td class="fw-bold text-end">@average.SumBeforeEstimate.ToStringNumberFormat()</td>
+                <td class="fw-bold text-end">@average.SumBeforeSales.ToStringNumberFormat()</td>
+                <td class="@(average.SumBeforeSumSales <= 0 ? "fw-bold value-error text-end" : "fw-bold value-success text-end")">
+                    @average.SumBeforeSumSales.ToStringNumberFormat()
+                </td>
+                <td class="fw-bold text-end">@average.SumBeforeTargetDrop.ToStringNumberFormat(false)</td>
+                <td class="fw-bold text-end">@average.SumBeforeService.ToStringNumberFormat(false)</td>
+                <td class="@(average.SumBeforeSumDropService <= 0 ? "fw-bold value-error text-end" : "fw-bold value-success text-end")">
+                    @average.SumBeforeSumDropService.ToStringNumberFormat(false)
+                </td>
+                <td class="fw-bold text-end">@average.SumTarget.ToStringNumberFormat()</td>
+                <td class="fw-bold text-end">@average.SumEstimate.ToStringNumberFormat()</td>
+                <td class="fw-bold text-end">@average.SumSales.ToStringNumberFormat()</td>
+                <td class="@(average.SumSumSales <= 0 ? "fw-bold value-error text-end" : "fw-bold value-success text-end")">
+                    @average.SumSumSales.ToStringNumberFormat()
+                </td>
+                <td class="fw-bold text-end">@average.SumTargetDrop.ToStringNumberFormat(false)</td>
+                <td class="fw-bold text-end">@average.SumService.ToStringNumberFormat(false)</td>
+                <td class="@(average.SumSumDropService <= 0 ? "fw-bold value-error text-end" : "fw-bold value-success text-end")">
+                    @average.SumSumDropService.ToStringNumberFormat(false)
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<script>
+    (function () {
+        let params = (new URL(document.location)).searchParams;
+        let name = params.get("ORGName");
+
+        document.getElementById("routeName").innerHTML = "สาขา : " + name;
+    })();
+</script>
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "ORG")]
+    public string? ORG { get; set; }
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "ORGName")]
+    public string? ORGName { get; set; }
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "Month")]
+    public string? Month { get; set; }
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "Year")]
+    public string? Year { get; set; }
+
+    private IJSObjectReference? JSModule;
+    public string? selectedMonth { get; set; }
+    public int selectYear { get; set; }
+    public DashboardDetailViewModel dashboards { get; set; } = new();
+    public List<int> yearOptions = new();
+    public Target2 target = new();
+    public bool hideGoback { get; set; }
+    Variant variant = Variant.Outlined;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // JSModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/site.js");
+            selectedMonth = Month;
+            selectYear = int.Parse(Year!);
+            yearOptions = SetDatetimeService.SetYear();
+            StateContainer.IsLoading = true;
+
+            await LoadData();
+            StateHasChanged();
+            StateContainer.IsLoading = false;
+        }
+        catch (Exception ex)
+        {
+            // await JSModule!.InvokeVoidAsync("JsFunction.toastTrigger", new ToastModel
+            //     {
+            //         action = "error",
+            //         messang = ex.Message.ToString()
+            //     });
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await Task.Delay(500);
+        if (firstRender)
+        {
+            JSModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/site.js");
+            var systems = await JSModule!.InvokeAsync<List<string>>("JsFunction.getSystems");
+            if (systems.Count() == 1)
+            {
+                hideGoback = true;
+                StateHasChanged();
+            }
+        }
+    }
+    // public async Task GoToPlanning(string route)
+    // {
+    //     var date = await JSModule!.InvokeAsync<ResulteDatepicker>("JsFunction.getValueDatepicker");
+
+    //     NavigationManager.NavigateTo($"Planning?ORG={ORG}&ROUTE={route}&MONTH={selectedMonth}&YEAR={selectYearr}");
+    // }
+    private void ShowTooltip(ElementReference elementReference, string text, TooltipOptions? options = null) => TooltipService.Open(elementReference, $"{text}", new TooltipOptions { Duration = 500, Style = "font-size: 14px", Position = TooltipPosition.Left });
+
+    public async Task OnChangeBackwardForward(string action)
+    {
+        StateContainer.IsLoading = true;
+        if (action.Contains("forward"))
+        {
+            selectedMonth = (int.Parse(selectedMonth!) + 1).ToString("D2");
+        }
+        else
+        {
+            selectedMonth = (int.Parse(selectedMonth!) - 1).ToString("D2");
+        }
+        await LoadData();
+        StateContainer.IsLoading = false;
+    }
+
+    public async Task LoadData()
+    {
+        var date = await SetDateRequest();
+        var model = new DashboardBody
+            {
+                ORG = ORG,
+                yearmonth = $"{selectYear}{selectedMonth}",
+                DATE_CUR_START = date.DATE_CUR_START,
+                DATE_CUR_END = date.DATE_CUR_END,
+                DATE_BEF_START = date.DATE_BEF_START,
+                DATE_BEF_END = date.DATE_BEF_END
+            };
+        var (error, dashboardDetail) = await DashboardService.GetDashboardDetailList(model);
+        if (error.Error)
+        {
+            await JSModule!.InvokeVoidAsync("JsFunction.toastTrigger", new ToastModel
+                {
+                    action = "error",
+                    messang = error.ErrorMessage
+                });
+        }
+        else
+        {
+            dashboards = dashboardDetail;
+        }
+    }
+
+    private async Task ShowInlineDialog(string route)
+    {
+        StateContainer.IsLoading = true;
+
+        var req = new PanningMasterRequest
+                {
+                    YEARMONTH = $"{selectYear}{selectedMonth}",
+                    ORG = $"{ORG}",
+                    Route = $"{route}"
+                };
+        // target = await PlanningService.PlanningGetTarget(req);
+        StateContainer.IsLoading = false;
+        var result = await DialogService.OpenAsync("ตั้งค่าเริ่มต้น", ds =>
+        @<RadzenStack Gap="1.5rem">
+            <RadzenFormField Text="จำนวนการเข้าเติมสินค้าต่อวัน" Variant="@variant">
+                <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value=@target.DROP_PER_DAY />
+            </RadzenFormField>
+            <RadzenFormField Text="เป้ายอดขายต่อวัน" Variant="@variant">
+                <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value=@target.VALUE_PER_DAY />
+            </RadzenFormField>
+            <RadzenFormField Text="เป้ายอดขายต่อเดือน" Variant="@variant">
+                <RadzenNumeric ShowUpDown="false" TValue="int" @bind-Value=@target.VALUE_PER_MONTH />
+            </RadzenFormField>
+            <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+                <RadzenStack Orientation="Orientation.Horizontal">
+                    <RadzenButton Text="บันทึก" Click="() => SaveTarget(ds , route)" Style="width: 80px;" />
+                    <RadzenButton Text="ยกเลิก" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" />
+                </RadzenStack>
+            </RadzenStack>
+        </RadzenStack>
+        );
+    }
+    private async Task SaveTarget(DialogService ds, string route = "")
+    {
+        StateContainer.IsLoading = true;
+        var req = new TargetSave
+            {
+                ORG = ORG!,
+                Route = route,
+                DROP_PER_DAY = target.DROP_PER_DAY.ToString(),
+                VALUE_PER_DAY = target.VALUE_PER_DAY.ToString(),
+                VALUE_PER_MONTH = target.VALUE_PER_MONTH.ToString(),
+                // BASKET_SYSTEM = target.SYSTEMCART ? "1" : "0"
+            };
+        var response = await PlanningService.PlanningSaveTarget(req);
+
+        if (response.ErrorMessage == "success")
+        {
+            await LoadData();
+            ds.Close(true);
+            StateContainer.IsLoading = false;
+            StateHasChanged();
+        }
+    }
+    public async Task OnSearch()
+    {
+        StateContainer.IsLoading = true;
+        await LoadData();
+        StateContainer.IsLoading = false;
+    }
+
+    public async Task Goback()
+    {
+        await JSRuntime.InvokeVoidAsync("history.back");
+    }
+
+
+    public async Task<DateRequest> SetDateRequest()
+    {
+        try
+        {
+            CultureInfo provider = CultureInfo.InvariantCulture;
+            var dateCur = $"{selectYear}-{selectedMonth}-01";
+            DateTime dateTimeCur = DateTime.ParseExact(dateCur, "yyyy-MM-dd", provider);
+            DateTime lastDateCur = new DateTime(dateTimeCur.Year, dateTimeCur.Month, DateTime.DaysInMonth(dateTimeCur.Year, dateTimeCur.Month));
+
+            var dateBef = $"{(selectedMonth == "01" ? selectYear - 1 : selectYear)}-{(selectedMonth != "01" ? (int.Parse(selectedMonth!) - 1).ToString("D2") : "12")}-01";
+            DateTime dateTimeBef = DateTime.ParseExact(dateBef, "yyyy-MM-dd", provider);
+            DateTime lastDateBef = new DateTime(dateTimeBef.Year, dateTimeBef.Month, DateTime.DaysInMonth(dateTimeBef.Year, dateTimeBef.Month));
+
+            return new DateRequest
+                {
+                    DATE_CUR_START = dateCur,
+                    DATE_CUR_END = lastDateCur.ToString("yyyy-MM-dd"),
+                    DATE_BEF_START = dateBef,
+                    DATE_BEF_END = lastDateBef.ToString("yyyy-MM-dd")
+                };
+        }
+        catch (Exception ex)
+        {
+            await JSModule!.InvokeVoidAsync("JsFunction.toastTrigger", new ToastModel
+                {
+                    action = "error",
+                    messang = ex.Message.ToString()
+                });
+            return new DateRequest { };
+        }
+    }
+
+    public async Task OnChangeMonth(ChangeEventArgs e)
+    {
+        StateContainer.IsLoading = true;
+        selectedMonth = e.Value!.ToString();
+        await LoadData();
+        StateContainer.IsLoading = false;
+    }
+
+    public async Task OnChangeYear(ChangeEventArgs e)
+    {
+        StateContainer.IsLoading = true;
+        selectYear = int.Parse(e.Value!.ToString()!);
+        await LoadData();
+        StateContainer.IsLoading = false;
+    }
+
+
+    public async ValueTask DisposeAsync()
+    {
+        if (JSModule is not null)
+        {
+            await JSModule.DisposeAsync();
+        }
+    }
+}

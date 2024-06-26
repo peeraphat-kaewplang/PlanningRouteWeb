@@ -1,0 +1,505 @@
+﻿@inject IGPService GPService
+@inject IJSRuntime JSRuntime
+@inject IChangeProductService ChangeProductService
+<style>
+    .panel-header {
+        padding: 0.25rem 0.5rem;
+        border-radius: var(--rz-button-border-radius);
+    }
+
+    .panel-header-primary {
+        background-color: var(--rz-primary);
+        color: var(--rz-on-primary);
+    }
+
+    .panel-header-success {
+        background-color: var(--rz-success);
+        color: var(--rz-on-success);
+    }
+
+    .rz-panel {
+        box-shadow: var(--rz-shadow-3) !important;
+    }
+
+    .rz-dialog-content {
+        padding-top: 1px !important;
+        padding-bottom: 1px !important;
+    }
+
+    .rz-composite-cell {
+        padding: 0px !important;
+    }
+</style>
+
+<RadzenTabs id="tab-gp" Change=@OnChangeTab TabPosition="@tabPosition" RenderMode="TabRenderMode.Client" class="tab-gp">
+    <Tabs>
+        <RadzenTabsItem Text="ปัจจุบัน">
+            <RadzenPanel id="panel-gp" class="pb-0 pt-2" AllowCollapse="false" >
+                <HeaderTemplate>
+                    <RadzenText TextStyle="TextStyle.H6" Class="rz-display-flex rz-align-items-center rz-m-0 gap-1 mb-1">
+                        <b>รายการเปลี่ยนสินค้า</b>
+                        <RadzenDatePicker @bind-Value="@timeChage" DateFormat="dd/MM/yyyy" Name="DatePickerChangeProduct" />
+                    </RadzenText>
+                </HeaderTemplate>
+                <ChildContent>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12 px-0 mb-3">
+                                <!-- Table เปลี่ยนสินค้า tap ปัจจุบัน -->
+                                <ChangeProductTable 
+                                    IsLoading="isLoading"
+                                    Data="dataChangeProduct"
+                                    TypeMeter="@dataHeader.TYPE_METER" />
+                                <!-- -->
+                            </div>
+                            <div class="col-md-8 px-0 mb-3">
+                                <div class="row">
+                                    <div class="col-md-3 text-end">ปัจจุบัน</div>
+                                    <div class="col-md-3">
+                                        <RadzenButton Text=@($"{weightGP1.ToStringNumberFormat3()}%") ButtonStyle="ButtonStyle.Primary" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" Click="@(args => ToggleGP("0" , true))" />
+                                    </div>
+                                    <div class="col-md-3 text-end">หลังปรับ</div>
+                                    <div class="col-md-3">
+                                        <RadzenButton Text=@($"{weightGP2.ToStringNumberFormat3()}%") ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" Click="@(args => ToggleGP("1" , true))" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ChildContent>
+            </RadzenPanel>
+        </RadzenTabsItem>
+        <RadzenTabsItem Text="เปลี่ยนสินค้า">
+            <RadzenPanel id="panel-gp" class="pb-0 pt-2" AllowCollapse="false">
+                <HeaderTemplate>
+                    <RadzenText TextStyle="TextStyle.H6" Class="rz-display-flex rz-align-items-center rz-m-0 gap-1 mb-1">
+                        <b>รายการเปลี่ยนสินค้า</b>
+                        <RadzenDatePicker @bind-Value="@timeChage" DateFormat="dd/MM/yyyy" Name="DatePickerChangeProduct" />
+                    </RadzenText>
+                </HeaderTemplate>
+                <ChildContent>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12 px-0 mb-3">
+                                    <!-- Table เปลี่ยนสินค้า tap เปลี่ยนสินค้า -->
+                                    <ChangeProductTable 
+                                        IsLoading="isLoading"
+                                        Data="dataEditRowPrd"
+                                        ReloadData="dataReloadRowPrd"
+                                        RawProduct="rawProduct"
+                                        Item="Item"
+                                        ModeAction="edit"
+                                        TypeMeter="@dataHeader.TYPE_METER"
+                                        ChangeProductCallback="@OnChangeProduct"
+                                        ChangeSLotStatusChangeCallback="@ChangeSLotStatusChange"
+                                        ReloadDataCallback="@OnReLoadData" />
+                                    <!--  -->
+                            </div>
+                            <div class="col-md-8 px-0 mb-3">
+                                <!-- Button เปลี่ยนการเเสดง Table GP -->
+                                <div class="row">
+                                    <div class="col-md-3 text-end">ปัจจุบัน</div>
+                                    <div class="col-md-3">
+                                        <RadzenButton Text=@($"{weightGP1.ToStringNumberFormat3()}%") ButtonStyle="ButtonStyle.Primary" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" Click="@(args => ToggleGP("0" , true))" />
+                                    </div>
+                                    <div class="col-md-3 text-end">หลังปรับ</div>
+                                    <div class="col-md-3">
+                                        <RadzenButton Text=@($"{weightGP2.ToStringNumberFormat3()}%") ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" Click="@(args => ToggleGP("1" , true))" />
+                                    </div>
+                                </div>
+                                <!--  -->
+                            </div>
+                        </div>
+                    </div>
+                </ChildContent>
+            </RadzenPanel>
+        </RadzenTabsItem>
+    </Tabs>
+</RadzenTabs>
+
+<div class="row" id="gp-wrapper">
+    <div class="col-md-12 ">
+        <RadzenPanel id="panel-gp" AllowCollapse="false" Visible="@panelVisible">
+            <HeaderTemplate>
+                @{
+                    var pHeader = panelCurrent == "0" ? "panel-header-primary" : "panel-header-success";
+                }
+                <RadzenText TextStyle="TextStyle.H6" Class=@($"rz-display-flex rz-align-items-center rz-m-0 w-100 panel-header {pHeader}")>
+                    <b>GP</b>
+                </RadzenText>
+                <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" class="my-1 ms-1" Click="@(args => HidePanel("tab-gp"))" />
+
+            </HeaderTemplate>
+            <ChildContent>
+                <!-- Table คำนวณ GP ด้านล่าง -->
+                <RadzenDataGrid @ref="GridGP" AllowVirtualization="true"
+                                Style="min-height:100px;max-height:500px;"
+                                IsLoading=@isLoading
+                                AllowFiltering="false"
+                                AllowColumnResize="false"
+                                AllowAlternatingRows="false"
+                                AllowSorting="false"
+                                AllowPaging="false"
+                                Density="Density.Compact"
+                                Data="@dataGP"
+                                TItem="GPModelDataView"
+                                ColumnWidth="300px"
+                                SelectionMode="DataGridSelectionMode.Multiple"
+                                @bind-Value=@selectedItemGP
+                                >
+                    <Columns>
+                        <RadzenDataGridColumn Property="PRODUCT_CODE" Title="รหัส" Width="50px" />
+                        <RadzenDataGridColumn Property="PRODUCT_NAME" Title="ชื่อสินค้า" Width="200px"/>
+                        <RadzenDataGridColumn Title="มาตรฐาน" Width="150px" TextAlign="TextAlign.Center">
+                            <Columns>
+                                <RadzenDataGridColumn Property="S_COSTPRICE" Title="ต้นทุน" TextAlign="TextAlign.Right" Width="50px" >
+                                    <Template Context="item">
+                                        @(item.S_COSTPRICE.ToStringNumberFormat3())
+                                    </Template>
+                                </RadzenDataGridColumn>
+                                <RadzenDataGridColumn Property="S_SALEPRICE" Title="ขาย" TextAlign="TextAlign.Right" Width="50px" />
+                                <RadzenDataGridColumn Property="S_GP" Title="GP" TextAlign="TextAlign.Right" Width="50px" >
+                                    <Template Context="item">
+                                        @(item.S_GP.ToStringNumberFormat3())
+                                    </Template>
+                                </RadzenDataGridColumn>
+                            </Columns>
+                        </RadzenDataGridColumn>
+                        <RadzenDataGridColumn Title="ขาย/ชิ้น" Width="100px" TextAlign="TextAlign.Center">
+                            <Columns>
+                                <RadzenDataGridColumn Property="SALEPRICE" TextAlign="TextAlign.Right" Title="ราคา" Width="50px" />
+                                <RadzenDataGridColumn Property="GP" TextAlign="TextAlign.Right" Title="GP" Width="50px" >
+                                    <Template Context="item">
+                                        @(item.GP.ToStringNumberFormat3())
+                                    </Template>
+                                </RadzenDataGridColumn>
+                            </Columns>
+                        </RadzenDataGridColumn>
+                        <RadzenDataGridColumn Title="จำนวน" Width="150px" TextAlign="TextAlign.Center">
+                            <Columns>
+                                <RadzenDataGridColumn Property="QTY" TextAlign="TextAlign.Right" Title="ชิ้นขาย" Width="50px" />
+                                <RadzenDataGridColumn Property="SLOT" TextAlign="TextAlign.Right" Title="ช่องขาย" Width="50px" />
+                                <RadzenDataGridColumn Property="QTYSLOT" TextAlign="TextAlign.Right" Title="ชิ้น/ช่อง" Width="50px">
+                                 
+                                    </RadzenDataGridColumn>
+                            </Columns>
+                        </RadzenDataGridColumn>
+                        <RadzenDataGridColumn Title="รวม" Width="300px" TextAlign="TextAlign.Center">
+                            <FooterTemplate>
+                            </FooterTemplate>
+                            <Columns>
+                               
+                                <RadzenDataGridColumn Property="QTYTOTAL" Title="ชิ้นขายรวม" TextAlign="TextAlign.Right" Width="50px" />
+                                <RadzenDataGridColumn Property="COSTTOTAL" Title="ต้นทุนขาย" TextAlign="TextAlign.Right" Width="50px" >
+                                    <Template Context="item">
+                                        @(item.COSTTOTAL.ToStringNumberFormat3())
+                                    </Template>
+                                </RadzenDataGridColumn>
+                                <RadzenDataGridColumn Property="SALETOTAL" Title="ยอดขาย" TextAlign="TextAlign.Right" Width="50px">
+                                    <Template Context="item">
+                                        @(item.SALETOTAL.ToStringNumberFormat3(false))
+                                    </Template>
+                                    <FooterTemplate>
+                                        <RadzenText class="m-0 p-1" TextStyle="TextStyle.Subtitle2"> @sealTotal.ToStringNumberFormat3(false)</RadzenText>
+                                    </FooterTemplate>
+                                </RadzenDataGridColumn>
+                                <RadzenDataGridColumn Property="PROFIT" Title="กำไร" TextAlign="TextAlign.Right" Width="110px">
+                                    <Template Context="item">
+                                        @(item.PROFIT.ToStringNumberFormat3())
+                                    </Template>
+                                    <FooterTemplate>
+                                        <RadzenText class="m-0 p-1" TextStyle="TextStyle.Subtitle2"> @profit.ToStringNumberFormat3()</RadzenText>
+                                    </FooterTemplate>
+                                </RadzenDataGridColumn>
+                                <RadzenDataGridColumn Property="WEIGHTGP" Title="น้ำหนัก GP" TextAlign="TextAlign.Right" Width="50px">
+                                    <Template Context="item">
+                                        @(item.WEIGHTGP.ToStringNumberFormat3())
+                                    </Template>
+                                    <FooterTemplate>
+                                        <RadzenText class="m-0 p-1" TextStyle="TextStyle.Subtitle2"> @weightGP.ToStringNumberFormat3()</RadzenText>
+                                    </FooterTemplate>
+                                </RadzenDataGridColumn>
+                            </Columns>
+                        </RadzenDataGridColumn>
+                    </Columns>
+                </RadzenDataGrid>
+                <!--  -->
+            </ChildContent>
+        </RadzenPanel>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public ChangeProductRequest Item { get; set; } = new();
+
+    TabPosition tabPosition = TabPosition.Top;
+
+    RadzenDataGrid<GPModelDataView> GridGP = new();
+    DateOnly timeChage = DateOnly.FromDateTime(DateTime.Now);
+
+    public bool isLoading { get; set; } = false;
+    public bool panelVisible { get; set; } = false;
+    public string panelCurrent { get; set; } ="0";
+    public string modeAction { get; set; } = "view";
+
+    public IList<GPModelDataView> selectedItemGP = new List<GPModelDataView>();
+
+    public List<ChangeProductDetailView> dataViewChangeProduct { get; set; } = new();
+    public List<GPModelDataView> dataViewRowGP { get; set; } = new();
+
+    public List<ChangeProductDetailView> dataEditRowPrd { get; set; } = new();
+    public List<ChangeProductDetailView> dataReloadRowPrd { get; set; } = new();
+    public List<GPModelDataView> dataEditRowGP { get; set; } = new();
+
+    public List<GPModelDataView> dataGP { get; set; } = new();
+    public List<ChangeProductDetailView> dataChangeProduct { get; set; } = new();
+
+    public Models.V2.ChangeProductHeader dataHeader { get; set; } = new();
+    public List<Rawproduct> rawProduct = new();
+
+    public double sealTotal { get; set; }
+    public double profit { get; set; }
+    public double weightGP { get; set; }
+
+    public double weightGP1 { get; set; }
+    public double weightGP2 { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        isLoading = true;
+        var body = new ParameterChangeProduct
+        {
+                ORG = Item.ORG,
+                Location =Item.Location,
+                Machine = Item.Machine,
+                ChangeDate = Item.ChangeDate
+        };
+
+        var (error, dataPrd, dataGPs ,headers) = await GPService.GetGPByProduct(body);
+
+        if (Item.ChangeDate != "")
+            timeChage = DateOnly.FromDateTime(Item.ChangeDate.StringToDateTime());
+
+        dataHeader = headers;
+        dataGP = dataGPs;
+        dataChangeProduct = dataPrd;
+
+        dataViewChangeProduct = dataPrd;
+        dataViewRowGP = dataGPs;
+
+        dataEditRowGP = dataViewRowGP.Select(g => GPModelDataView.ConvertCalModel(g)).ToList();
+        dataEditRowPrd = dataPrd.Select(p => ChangeProductDetailView.CopyModel(p)).ToList();
+        dataReloadRowPrd = dataPrd.Select(p => ChangeProductDetailView.CopyModel(p)).ToList();
+
+        weightGP1 = CalWeightGP(dataViewRowGP);
+        weightGP2 = CalWeightGP(dataGP);
+
+        SumCalWeightGP();
+        rawProduct = await GetRawProudctCode();
+
+        isLoading = false;
+        StateHasChanged();
+    }
+
+
+    async Task<List<Rawproduct>> GetRawProudctCode()
+    {
+        var body = new RawproductRequest { RawProductCode = "" };
+        var res = await ChangeProductService.GetRawproduct(body);
+
+        return res.Data;
+    }
+
+    double CalWeightGP(List<GPModelDataView> data)
+    {
+        var sealTotal = data.Sum(x => x.SALETOTAL);
+        var profit = data.Sum(x => x.PROFIT);
+        var weightGP = (1 - (profit / sealTotal)) * 100;
+
+        return weightGP;
+    }
+
+    void SumCalWeightGP()
+    {
+        sealTotal = dataGP.Sum(x => x.SALETOTAL);
+        profit = dataGP.Sum(x => x.PROFIT);
+        weightGP = (1 - (profit / sealTotal)) * 100;
+    }
+
+    void OnChangeTab(int index)
+    {
+        if (index == 1)
+        {
+            modeAction = "edit";
+            panelCurrent = "1";
+            panelVisible = true;
+            dataGP = dataEditRowGP;
+        }
+        else
+        {
+            modeAction = "view";
+            panelCurrent = "0";
+            dataGP = dataViewRowGP;
+        }
+        GridGP.Reset(true);
+        StateHasChanged();
+    }
+
+    async Task ToggleGP(string current , bool action)
+    {
+        isLoading = true;
+        panelVisible = action;
+        panelCurrent = current;
+
+        if(current == "0")
+        {
+            var sealTotal = dataViewRowGP.Sum(x => x.SALETOTAL);
+            dataGP = dataViewRowGP;
+        }
+        else
+        {
+            dataGP = dataEditRowGP;
+        }
+
+        await Task.Delay(100);
+        await ScrollToElementId("gp-wrapper");
+        isLoading = false;
+        StateHasChanged();
+    }
+
+    async Task ScrollToElementId(string id)
+    {
+        await JSRuntime.InvokeVoidAsync("scrollToElementId", id);
+    }
+
+    async Task HidePanel(string id)
+    {
+        await ScrollToElementId(id);
+        await Task.Delay(500);
+        panelVisible = false;
+        panelCurrent = "0";
+    }
+
+    void ChangeSLotStatusChange(ChangeProductDetailView item)
+    {
+        var index = dataEditRowGP.FindIndex(de => de.PRODUCT_CODE == item.PRODUCT_CODE);
+
+        var de = dataEditRowGP[index];
+        de.SLOT = de.SLOT - 1;
+        de.QTY = de.QTY - de.QTYSLOT;
+        // de.QTYTOTAL = de.QTYTOTAL - de.QTYSLOT; 
+
+        var aa = GPModelDataView.ConvertCalModel(de);
+        var sumProfit = dataEditRowGP.Sum(x => x.PROFIT);
+        dataEditRowGP[index] = GPModelDataView.CalWeightGP(aa, sumProfit);
+        dataGP = dataEditRowGP;
+
+        weightGP2 = CalWeightGP(dataGP);
+        SumCalWeightGP();
+
+        selectedItemGP.Add(dataEditRowGP[index]);
+        GridGP.Reset(true);
+
+        StateHasChanged();
+    }
+
+    void OnChangeProduct(ChangeProductDetailView item)
+    {
+        dataEditRowPrd = dataEditRowPrd
+        .Select(p =>
+        {
+            if (p.PRODUCT_CODE.Equals(item.PRODUCT_CODE))
+            {
+                var gp = dataEditRowGP.Find(g => g.PRODUCT_CODE.Equals(item.PRODUCT_CODE));
+                if (gp != null)
+                {
+                    p.S_SALEPRICE = gp.S_SALEPRICE;
+
+
+                    if (p.LOADIN == 0)
+                    {
+                        p.QTY = gp.QTY / gp.SLOT;
+                    }
+                }
+                p.QTY = item.LOADIN;
+                p.SLOT_INSTALLPRICE = item.SLOT_INSTALLPRICE;
+            }
+            else
+            {
+                var gp = dataEditRowGP.Find(g => g.PRODUCT_CODE.Equals(p.PRODUCT_CODE));
+                if (gp != null)
+                {
+                    p.S_SALEPRICE = gp.S_SALEPRICE;
+                    p.QTY = gp.QTY / gp.SLOT;
+                }
+            }
+            return p;
+        })
+        .ToList();
+        // SetReloadData(item);
+        var gp = dataEditRowPrd.GroupBy(dp => new { dp.PRODUCT_CODE, dp.PRODUCT_NAME, dp.S_COSTPRICE, dp.SLOT_INSTALLPRICE, dp.S_SALEPRICE })
+             .Select(g => new GPModelDataView
+                     {
+                         PRODUCT_CODE = g.Key.PRODUCT_CODE,
+                         PRODUCT_NAME = g.Key.PRODUCT_NAME,
+                         S_COSTPRICE = g.Key.S_COSTPRICE,
+                         S_SALEPRICE = g.Key.S_SALEPRICE,
+                         SALEPRICE = g.Key.SLOT_INSTALLPRICE,
+                         QTY = g.Sum(s => s.QTY),
+                         SLOT = g.Count()
+                     })
+             .Select(g => GPModelDataView.ConvertCalModel(g)).ToList();
+
+        var sumProfit = gp.Sum(x => x.PROFIT);
+        dataGP = gp.Select(g => GPModelDataView.CalWeightGP(g, sumProfit)).ToList();
+
+        weightGP2 = CalWeightGP(dataGP);
+        SumCalWeightGP();
+
+        GridGP.Reset(true);
+
+        StateHasChanged();
+    }
+
+    void SetReloadData(ChangeProductDetailView item)
+    {
+        var index = dataReloadRowPrd.FindIndex(p => p.SLOT_NO == item.SLOT_NO && p.PRODUCT_CODE == item.PRODUCT_CODE);
+        dataReloadRowPrd[index] = item;
+    }
+
+    void OnReLoadData() => dataEditRowPrd = dataReloadRowPrd;
+
+
+    List<GPModelDataView> ReCalDataGP(List<ChangeProductDetailView> items)
+    {
+        var dataGP = items
+            .GroupBy(dp => new { dp.PRODUCT_CODE , dp.PRODUCT_NAME ,dp.S_COSTPRICE ,dp.SLOT_INSTALLPRICE ,dp.S_SALEPRICE})
+            .Select(g => new GPModelDataView
+            {
+                PRODUCT_CODE = g.Key.PRODUCT_CODE,
+                PRODUCT_NAME = g.Key.PRODUCT_NAME,
+                S_COSTPRICE = g.Key.S_COSTPRICE,
+                S_SALEPRICE = g.Key.S_SALEPRICE,
+                SALEPRICE = g.Key.SLOT_INSTALLPRICE,
+                QTY = g.Sum(s => s.QTY),
+                SLOT = g.Count()
+            })
+            .Select(g => GPModelDataView.ConvertCalModel(g));
+        return dataGP.ToList();
+    }
+
+    void AddSlot(ChangeProductDetailView item, int index)
+    {
+        var i = new ChangeProductDetailView
+            {
+                SLOT_NO = 2
+            };
+        dataEditRowPrd.Insert(index + 1, i);
+
+        StateHasChanged();
+    }
+}
+    

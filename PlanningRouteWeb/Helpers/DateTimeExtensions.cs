@@ -36,6 +36,7 @@ namespace PlanningRouteWeb.Helpers
             => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
         public static bool CheckDateInCurrentWeek(this DateTime date, DateTime dateiIn, int addDay)
         {
+            //var config = _configuration.GetValue<List<DisableCart>>("ConfigGeneral:DisableCart")!;
             var currentDate = dateiIn.AddDays(addDay);
             var week = date.GetWeekNumberOfMonth();
             var currentWeek = currentDate.GetWeekNumberOfMonth();
@@ -46,7 +47,7 @@ namespace PlanningRouteWeb.Helpers
 
             if (week == currentWeek)
             {
-                if (date > currentDate)
+                if (date >= currentDate.Date)
                 {
                     return true;
                 }
@@ -66,4 +67,5 @@ namespace PlanningRouteWeb.Helpers
             return false;
         }
     }
+
 }

@@ -1,0 +1,105 @@
+﻿@inject TooltipService tooltipService
+
+<style>
+    .rz-composite-cell {
+        padding: 0px !important;
+    }
+</style>
+<RadzenDataGrid @ref="changeGrid" AllowVirtualization="true"
+                    Style="min-height:100px;max-height:500px;"
+                    IsLoading=@IsLoading
+                    AllowFiltering="false"
+                    AllowColumnResize="false"
+                    AllowAlternatingRows="false"
+                    AllowSorting="false"
+                    AllowPaging="false"
+                    Density="Density.Compact"
+                    Data="@Data"
+                    TItem="GPModelDataView"
+                    ColumnWidth="300px"
+                    SelectionMode="DataGridSelectionMode.Single"
+                    @bind-Value=@selectedItem>
+        <Columns>
+            <RadzenDataGridColumn Property="PRODUCT_NAME" Title="ชื่อสินค้า" Width="200px" />
+            <RadzenDataGridColumn Title="มาตรฐาน" Width="150px" TextAlign="TextAlign.Center">
+                <Columns>
+                    <RadzenDataGridColumn Property="S_COSTPRICE" Title="ต้นทุน" TextAlign="TextAlign.Right" Width="50px" />
+                    <RadzenDataGridColumn Property="S_SALEPRICE" Title="ขาย" TextAlign="TextAlign.Right" Width="50px" />
+                    <RadzenDataGridColumn Property="S_GP" Title="GP" TextAlign="TextAlign.Right" Width="50px" />
+                </Columns>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Title="ขาย/ชิ้น" Width="100px" TextAlign="TextAlign.Center">
+                <Columns>
+                    <RadzenDataGridColumn Property="SALEPRICE" TextAlign="TextAlign.Right" Title="ราคา" Width="50px" />
+                    <RadzenDataGridColumn Property="GP" TextAlign="TextAlign.Right" Title="GP" Width="50px" />
+                </Columns>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Title="จำนวน" Width="150px" TextAlign="TextAlign.Center" >
+              @*   <HeaderTemplate>
+                    <RadzenText class="m-0 p-1" TextStyle="TextStyle.Subtitle1" MouseEnter="@(args => ShowTooltip(args, new TooltipOptions(){ Position = TooltipPosition.Right }))"> aaaaa</RadzenText>
+                </HeaderTemplate> *@
+                <Columns>
+                    <RadzenDataGridColumn Property="QTY" TextAlign="TextAlign.Right" Title="ชิ้นขาย" Width="50px" />
+                    <RadzenDataGridColumn Property="SLOT" TextAlign="TextAlign.Right" Title="ช่องขาย" Width="50px" />
+                    <RadzenDataGridColumn Property="QTYSLOT" TextAlign="TextAlign.Right" Title="ชิ้น/ช่อง" Width="50px" />
+                </Columns>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Title="รวม" Width="250px" TextAlign="TextAlign.Center">
+                <FooterTemplate>
+                </FooterTemplate>
+                <Columns>
+                    @{
+                        var sealTotal = Data.Sum(x => x.SALETOTAL);
+                        var profit = Data.Sum(x => x.PROFIT);
+                        var weightGP = (1 - (profit / sealTotal)) * 100;
+                    }
+                    <RadzenDataGridColumn Property="QTYTOTAL" Title="ชิ้นขายรวม" TextAlign="TextAlign.Right" Width="50px" />
+                    <RadzenDataGridColumn Property="COSTTOTAL" Title="ต้นทุนขาย" TextAlign="TextAlign.Right" Width="50px" />
+                    <RadzenDataGridColumn Property="SALETOTAL" Title="ยอดขาย" TextAlign="TextAlign.Right" Width="50px">
+                        <FooterTemplate>
+                            <RadzenText class="m-0 p-1" TextStyle="TextStyle.Subtitle1"> @sealTotal</RadzenText>
+                        </FooterTemplate>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn Property="PROFIT" Title="กำไร" TextAlign="TextAlign.Right" Width="50px">
+                        <FooterTemplate>
+                            <RadzenText class="m-0 p-1" TextStyle="TextStyle.Subtitle1"> @profit</RadzenText>
+                        </FooterTemplate>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn Property="WEIGHTGP" Title="น้ำหนัก GP" TextAlign="TextAlign.Right" Width="50px">
+                        <FooterTemplate>
+                            <RadzenText class="m-0 p-1" TextStyle="TextStyle.Subtitle1"> @weightGP</RadzenText>
+                        </FooterTemplate>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+
+@code {
+    [Parameter]
+    public bool IsLoading { get; set; }
+
+    [Parameter]
+    public string ModeAction { get; set; } = "view";
+
+    [Parameter]
+    public List<GPModelDataView> Data { get; set; } = new();
+
+    RadzenDataGrid<GPModelDataView> changeGrid = new();
+
+    public IList<GPModelDataView> selectedItem = new List<GPModelDataView>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        selectedItem = Data.Take(1).ToList();
+    }
+
+    // protected override async Task OnParametersSetAsync()
+    // {
+    //     await base.OnParametersSetAsync();
+
+    //      changeGrid.Reset(true);
+    // }
+}

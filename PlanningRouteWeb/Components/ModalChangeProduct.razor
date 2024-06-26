@@ -22,7 +22,7 @@ else
     #endregion
 
     #region Data State
-    ChangeProductHeader header = new();
+    Models.ChangeProductHeader header = new();
     List<ChangeProductDetail2> detail = new();
     List<ChangeProductGroup> group = new();
     #endregion
@@ -54,15 +54,28 @@ else
             else
             {
                 group = res.Data.Detail.Select(x => ConvertModel.ChangeProductDetailModal(x, x.STATUSCHANGE == "0" ? false : true))
-                .GroupBy(x => new { x.SLOT_NO, x.SLOT_REALPRICE })
+                .GroupBy(x => new { x.SLOT_NO, x.SLOT_REALPRICE, x.SLOT_INSTALLPRICE })
                 .Select(g => new ChangeProductGroup
                     {
                         SLOT_NO = g.Key.SLOT_NO.ToString(),
                         SLOT_REALPRICE = g.Key.SLOT_REALPRICE,
+                        SLOT_INSTALLPRICE = g.Key.SLOT_INSTALLPRICE,
                         Products = g.ToList(),
                         IsEmptySlot = g.Count() == 1 ? string.IsNullOrWhiteSpace(g.FirstOrDefault()!.PRODUCT_CODE) : false
                     })
                 .ToList();
+
+
+                // var data = group!.Where(x => !x.IsEmptySlot).Select(x => new
+                // {
+                //     SumPrice = x.Products.Count() * x.SLOT_REALPRICE,
+                //     SumCost = x.Products.Sum(p => p.Cost)
+                // });
+
+                // var Price = data.Sum(x => x.SumPrice);
+                // var Cost = data.Sum(x => x.SumCost);
+                // var aa = 0;
+
             }
         }
 

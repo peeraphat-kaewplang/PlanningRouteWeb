@@ -10,17 +10,20 @@
     <meta charset="utf-8" />
     <base href="~/" />
     <link href="css/site.css" rel="stylesheet" />
+    <link href="css/loading.css" rel="stylesheet" />
+    <link href="css/table-dashboard.css" rel="stylesheet" />
+    <link href="css/table-timeline.css" rel="stylesheet" />
+    <link href="css/NavMenu.css" rel="stylesheet" />
+    <link href="css/PlanningLayout.css" rel="stylesheet" />
     <component type="typeof(HeadOutlet)" render-mode="Server" />
+    <link rel="stylesheet" href="lib/font-awesome/css/all.css" />
+    <link rel="stylesheet" href="lib/bootstrap-datepicker/css/bootstrap-datepicker.css" />
     <link rel="stylesheet" href="_content/Radzen.Blazor/css/material-base.css">
-    @* <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css"
-        rel="stylesheet" /> *@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
-   
     <component type="typeof(App)" render-mode="Server" />
-
     <div id="blazor-error-ui">
         <environment include="Staging,Production">
             An error has occurred. This application may no longer respond until reloaded.
@@ -36,18 +39,76 @@
     <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
     @* <script src="https://code.jquery.com/jquery-3.7.0.js"></script> *@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    @* <script>
-        window.getWindowDimensions = function () {
-            return {
-                width: window.innerWidth,
-                height: window.innerHeight
-            };
+    <script src="lib/jquery/jquery.min.js"></script>
+    <script src="lib/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script src="lib/bootstrap-datepicker/locales/bootstrap-datepicker.th.min.js" charset="UTF-8"></script>
+    <script src="lib/dayjs/dayjs.min.js"></script>
+    @* <script src="js/site.js"></script> *@
+    <script>
+        window.InitDragAndDrop = () => {
+            const tbody = document.getElementsByTagName("tbody")[0];
+            let rows = tbody.rows;
+            console.log(tbody)
+            for (i = 0; i < rows.length; i++) {
+                var row = rows[i];
+                row.setAttribute('draggable', true);
+
+                row.addEventListener('dragstart', (event) => {
+                    row = event.target;
+                });
+
+                row.addEventListener('dragover', (event) => {
+                    var e = event;
+                    e.preventDefault();
+
+                    let allRows = Array.from(rows);
+
+                    if (allRows.indexOf(e.target.parentNode) > allRows.indexOf(row))
+                        e.target.parentNode.after(row);
+                    else
+                        e.target.parentNode.before(row);
+                })
+            }
+
+        };
+        window.showPopup = (elementID, x, y) => {
+            var popup = document.getElementById(elementID)
+            popup.style.display = 'block'
+            popup.style.left = x + 'px'
+            popup.style.top = y + 'px'
         };
 
-        
+        window.hidePopup = (elementID) => {
+            var popup = document.getElementById(elementID)
+            popup.style.display = 'none'
+        };
+
+        window.getScreenResolution = () => {
+            return {
+                width: window.innerWidth,
+                heigth: window.innerHeight
+            }
+        };
+
+        // window.togglePanel = (id) => {
+        //     var panel = document.querySelector(`#${id} > .rz-panel-content-wrapper`)
+           
+        //     if (panel.style.display === 'none')
+        //         panel.style.display = 'block'
+        //     else {
+        //         console.log(panel)
+        //         panel.style.display = 'none'
+        //     }
+                
+        // }
+        window.scrollToElementId = (elementId) => {
+            var element = document.getElementById(elementId);
+            if (!element) {
+                console.warn('element was not found', elementId);
+            }
+            element.scrollIntoView({ block: 'end', behavior: 'smooth' });
+        }
     </script>
- *@
-   
 </body>
 
 </html>

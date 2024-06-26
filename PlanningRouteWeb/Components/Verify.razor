@@ -1,0 +1,34 @@
+﻿@inject IJSRuntime JSRuntime
+@inject StateContainer StateContainer
+@inject NavigationManager NavigationManager
+
+<Loading/>
+
+<h3>Verify</h3>
+@code {
+    [Parameter]
+    public Permission Permission { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        StateContainer.OnChange += StateHasChanged;
+
+        StateContainer.IsLoading = true;
+        StateContainer.TextLoading = "de";
+        // string json = JsonSerializer.Serialize(Permission);
+        // await JSRuntime.InvokeVoidAsync("sessionStorage.setItem", "permission", json);
+        await Task.Delay(1000);
+        // StateContainer.PermissionUser = Permission;
+        // if (Permission!.system!.OrganizationList.Count() > 1)
+        // {
+        //     NavigationManager.NavigateTo($"Dashboard");
+        // }
+        // else if (Permission!.system!.OrganizationList.Count() == 1 && Permission!.system!.OrganizationList.Count() != 0)
+        // {
+        //     var month = DateTime.Now.Month.ToString("D2");
+        //     var year = DateTime.Now.Year;
+        //     NavigationManager.NavigateTo($"Dashboard/Detail?ORG={Permission!.system!.OrganizationList[0].ORGANIZATION_CODE}&ORGName={Permission!.system!.OrganizationList[0].ORGANIZATION_NAME}&Month={month}&Year={year}");
+        // }
+    }
+
+}

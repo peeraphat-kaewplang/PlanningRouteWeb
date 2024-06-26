@@ -1,8 +1,61 @@
 ﻿@inherits LayoutComponentBase
+@inject IJSRuntime JSRuntime
+<Loading/>
+<Toast/>
+ <div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+        <main class="">
+            <div class="top-row px-4">
+                <div id="routeName"></div>
+                <div class="d-flex align-items-center ms-auto gap-1">
+                    <i class="fa-solid fa-circle-user fa-xl"></i>
+                    <span id="profile" class="navbar-text "></span>
+                </div>
 
-<main> @Body </main>
+            </div>
+
+            <article class=" px-1 pt-2" style="width: @(screenWidth > 1500 ? "85.7%" : "85rem");">
+                @Body
+            </article>
+
+            <div style="margin-left: 3.5rem;">
+            </div>
+        </main>
+</div> 
+<script>
+    (function () {
+        var sec = JSON.parse(sessionStorage.getItem("permission"))
+         document.getElementById("profile").innerHTML = sec.emp_detail.EMPLOYEE_NAME
+    })();
+</script>
+
 
 <RadzenDialog />
-<RadzenTooltip/>
-<RadzenContextMenu/>
-<RadzenNotification/>
+<RadzenTooltip />
+
+
+@code {
+    private int screenWidth;
+    private int screenHeigth;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetScreenResolution();
+    }
+
+    private async Task GetScreenResolution()
+    {
+        var screenResolution = await JSRuntime.InvokeAsync<ScreenResolution>("getScreenResolution");
+        screenWidth = screenResolution.Width;
+        screenHeigth = screenResolution.Heigth;
+    }
+
+    public class ScreenResolution
+    {
+        public int Width { get; set; }
+        public int Heigth { get; set; }
+    }
+}
+

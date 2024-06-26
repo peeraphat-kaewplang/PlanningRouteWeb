@@ -1,89 +1,109 @@
-﻿@{
+﻿
+@{
     var date = StateContainer.DateCurrent;
     var total = SelectMonth.Number == "01" ? "ธ.ค." : GetDatetimeClass.monthObjects.Single(x => x.Number == (int.Parse(SelectMonth.Number) - 1).ToString("D2")).ShortName;
     var mdtBefore = SelectMonth.Number == "01" ? "ธ.ค." : GetDatetimeClass.monthObjects.Single(x => x.Number == (int.Parse(SelectMonth.Number) - 1).ToString("D2")).ShortName;
     var colSpan = (Columns.Count() * 3) + ((Columns.Count() / 7) * 2);
 }
 <tr>
-    <th class="sticky-col first-col" rowspan="4" style="font-size: 12px;">ลูกค้า</th>
-    <th class="sticky-col second-col" rowspan="4" style="font-size: 12px;">จุดตั้ง</th>
-    <th class="sticky-col thired-col" rowspan="4" style="font-size: 12px;">ตู้ปัจจุบัน</th>
-    <th class="sticky-col last-col" rowspan="4" style="font-size: 12px;">MODEL</th>
-    <th rowspan="4" style="width: 4rem;font-size: 12px;">ค่าธรรมเนียม</th>
-    <th rowspan="4" style="width: 3rem;font-size: 12px;">
+    <th class="" rowspan="4" style="font-size: 8px;width:2rem;">ลูกค้า</th>
+    <th class="" rowspan="4" style="font-size: 8px;width:2rem;">ตู้ปัจจุบัน</th>
+    <th class="" rowspan="4" style="font-size: 8px;width:2rem;">model</th>
+    <th rowspan="4" class="text-center " style="width: 3rem;font-size: 8px;">
+        <p class="m-0">GP</p>
+        <p class="m-0">@SelectMonth.ShortName</p>
+    </th>
+
+    <th rowspan="4" class="text-center " style="width: 3rem;font-size: 8px;">
+        <p class="m-0">GP</p>
+        <p class="m-0">@mdtBefore</p>
+    </th>
+
+    <th rowspan="4" class="text-center " style="width: 2rem;font-size: 8px;width:2rem;">
+        <p class="m-0">SKU</p>
+        <p class="m-0">%</p>
+    </th>
+
+    <th rowspan="4" class="text-center " style="width: 2rem;font-size: 8px;width:3.5rem;">
+        <p class="m-0">SKU</p>
+        <p class="m-0">คงเหลือ</p>
+    </th>
+
+    <th class="text-center" rowspan="4" style="width: 2rem;font-size: 8px;">
         <p class="m-0">TOTAL</p>
         <p class="m-0">@total</p>
     </th>
-    <th rowspan="4" style="width: 3.5rem;font-size: 12px;">
+    <th class="text-center" rowspan="4" style="width: 2rem;font-size: 8px;">
         <p class="m-0">MTD</p>
         <p class="m-0">@mdtBefore</p>
     </th>
-    <th rowspan="4" style="width: 3.5rem;font-size: 12px;">
+    <th class="text-center" rowspan="4" style="width: 2rem;font-size: 8px;">
         <p class="m-0">MTD</p>
         <p class="m-0">@SelectMonth.ShortName</p>
     </th>
     @if (!HideMaster)
     {
-        <th colspan="10" class="text-center" style="font-size: 12px;">
-            ค่ามาตรฐาน
+        <th colspan="9" class="text-center p-1 ">
+            <RadzenButton Text="บันทึกค่ามาตรฐาน"
+                          ButtonStyle="ButtonStyle.Secondary"
+                          Style="width: 100%;text-transform: none;font-size: 10px;"
+                          Size="Radzen.ButtonSize.Small"
+                          Click="@(() => OnClickSavePlanCallback.InvokeAsync())" />
         </th>
-        <th rowspan="4" class="text-center" style="width:2rem;font-size: 12px;">
+        <th rowspan="4" class="text-center" style="width:2rem;font-size: 8px;">
             สินค้าขายดี
         </th>
     }
-  
-    <th rowspan="4" style="width: 3.5rem;font-size: 12px; padding-left:4px; padding-right:0px;">
-        <p class="m-0">Sale</p>
-        <p class="m-0">Last</p>
-        <p class="m-0">Week</p>
-    </th>
-    <th rowspan="4" style="width: 3.5rem;font-size: 12px; padding-left:4px; padding-right:0px;">
+
+    <th rowspan="4" style="width: 1.5rem;font-size: 8px; padding-left:4px; padding-right:0px;">
         <p class="m-0">Drop</p>
         <p class="m-0">Month</p>
     </th>
-    <th colspan="@colSpan" class="text-center" style="font-size: 12px;">
-         แพลนเดือน @SelectMonth.Name
-    </th>
-</tr>
-
-
-<tr>
-    @if (!HideMaster)
+    @foreach (var (obj, index) in Columns.WithIndex())
     {
-        @* ค่ามาตรฐาน *@
-        <th rowspan="2" class="text-center" style="width: 1.25rem;font-size: 12px;">จ</th>
-        <th rowspan="2" class="text-center" style="width: 1.25rem;font-size: 12px;">อ</th>
-        <th rowspan="2" class="text-center" style="width: 1.25rem;font-size: 12px;">พ</th>
-        <th rowspan="2" class="text-center" style="width: 1.25rem;font-size: 12px;">พฤ</th>
-        <th rowspan="2" class="text-center" style="width: 1.25rem;font-size: 12px;">ศ</th>
-        <th rowspan="2" class="text-center" style="width: 1.25rem;font-size: 12px;">ส</th>
-        <th rowspan="2" class="text-center" style="width: 1.25rem;font-size: 12px;">อ</th>
-        <th rowspan="2" style="width: 2rem;font-size: 12px;">
-            <p class="m-0">Drop</p>
-            <p class="m-0">Week</p>
-        </th>
-        <th rowspan="2" style="width: 3.15rem;font-size: 12px;">
-            <p class="m-0">Drop</p>
-            <p class="m-0">Day</p>
-        </th>
-        <th rowspan="2" style="width: 12.5rem;font-size: 12px;">Remark</th>
-    }
-        @* plan detail *@
-        @foreach (var (obj, index) in Columns.WithIndex())
+        if ((index + 1) % 7 == 0)
         {
-            if ((index + 1) % 7 == 0)
-            {    
-                var chk1 = obj.Value.IsCurrent;
-                var chk2 = date.GetWeekNumberOfMonth() == obj.Key.StringToDateTime("dd/MM/yyyy").GetWeekNumberOfMonth() - 1 || (ISOWeek.GetWeeksInYear(date.Year) == date.GetWeekNumberOfMonth() &&  obj.Key.StringToDateTime("dd/MM/yyyy").GetWeekNumberOfMonth() == 1);
-                var action = ActionButton.Date.FirstOrDefault(x => x.Date.StringToDateTime("dd/MM/yyyy").GetWeekNumberOfMonth() == obj.Key.StringToDateTime("dd/MM/yyyy").GetWeekNumberOfMonth());
-                var disable = ActionButton.Date.Count(x => x.Error);
-                if (chk1 || chk2)
-                {
-                    <th colspan="21" class="p-0">
-                        <div class="p-2 text-end">
-                        @if (action == null )
+            var chk1 = obj.Value.IsCurrent;
+            var chk2 = date.GetWeekNumberOfMonth() == obj.Key.StringToDateTime("dd/MM/yyyy").GetWeekNumberOfMonth() - 1 || (ISOWeek.GetWeeksInYear(date.Year) == date.GetWeekNumberOfMonth() && obj.Key.StringToDateTime("dd/MM/yyyy").GetWeekNumberOfMonth() == 1);
+            var action = ActionButton.Date.FirstOrDefault(x => x.Date.StringToDateTime("dd/MM/yyyy").GetWeekNumberOfMonth() == obj.Key.StringToDateTime("dd/MM/yyyy").GetWeekNumberOfMonth());
+            var disable = ActionButton.Date.Count(x => x.Error);
+
+            DateTime start;
+            DateTime end;
+            if (!chk2)
+            {
+                start = StateContainer.DateCurrent.AddDays(1 + StateContainer.BeforeConfig);
+                end = start.LastDayOfWeek();
+            }
+            else
+            {
+                start = StateContainer.DateCurrent.LastDayOfWeek().AddDays(1);
+                end = start.AddDays(6);
+            }
+
+            DateTime dateCurrent = DateTime.ParseExact(obj.Key, "dd/MM/yyyy", null);
+            int week = StateContainer.DateCurrent.GetWeekNumberOfMonth();
+            int currentWeek = dateCurrent.GetWeekNumberOfMonth();
+
+            if (chk1 || chk2)
+            {
+                <th colspan="21" class="p-0">
+                    <div class="p-1 text-end">
+
+                        @if (week == currentWeek)
+                        {
+                            if ((WeekValue.Week1 || !WeekValue.Week1) && WeekValue.Week1Value)
                             {
-                                <RadzenButton Text=@(ActionButton.Action == "create" ? "สร้าง" : ActionButton.Action == "recreate" ? "ล้างค่า สร้างใหม่" : "บันทึก")
+                                <RadzenButton Text="บันทึก"
+                                              ButtonStyle="ButtonStyle.Secondary"
+                                              Style="@($"{StyleHeaderButton(chk2)}text-transform: none;")"
+                                              Size="Radzen.ButtonSize.Small"
+                                              Click="@(() =>  OnClickSavePlanCallback.InvokeAsync((start.ToStringDate(), end.ToStringDate())))"
+                                              Disabled="@(Target.SYSTEMCART && disable > 0 ? true : false)" />
+                            }
+                            else
+                            {
+                                <RadzenButton Text="สร้าง"
                                               ButtonStyle="ButtonStyle.Secondary"
                                               Style="@($"{StyleHeaderButton(chk2)}text-transform: none;")"
                                               Size="Radzen.ButtonSize.Small"
@@ -95,89 +115,109 @@
                                               ButtonStyle="ButtonStyle.Secondary"
                                               Style="@($"{StyleHeaderButton(chk2)}text-transform: none;")"
                                               Size="Radzen.ButtonSize.Small"
-                                              Click="OnClickSavePlanCallback"
-                                              Disabled="@(disable > 0 ? true : false)" />
+                                              Click="@(() =>  OnClickSavePlanCallback.InvokeAsync((start.ToStringDate(), end.ToStringDate())))"
+                                              Disabled="@(Target.SYSTEMCART && disable > 0 ? true : false)" />
                             }
-                        </div>
-                    </th>
-                    <th rowspan="3" colspan="1" class="text-end" style="width:4rem;font-size:12px;">
+                            else
+                            {
+                                <RadzenButton Text="สร้าง"
+                                              ButtonStyle="ButtonStyle.Secondary"
+                                              Style="@($"{StyleHeaderButton(chk2)}text-transform: none;")"
+                                              Size="Radzen.ButtonSize.Small"
+                                              Click="@(args => CalPlaaning(chk2 ,  obj.Key , "create"))" />
+                            }
+                        }
+
+                        <RadzenButton MouseEnter="@(args => ShowTooltip(args , "โหลดใหม่") )"
+                                      Icon="autorenew"
+                                      Style="width: 1rem"
+                                      ButtonStyle="ButtonStyle.Secondary"
+                                      Size="Radzen.ButtonSize.Small"
+                                      Click="@(args => CalPlaaning(chk2 ,  obj.Key , ActionButton.Action))" />
+                    </div>
+                </th>
+                <th rowspan="4" class="text-end" style="width:1.5rem;font-size:8px;">
+                    <p class="m-0">Sale</p>
+                    <p class="m-0">Week</p>
+                </th>
+                <th rowspan="4" class="text-end" style="width:1.5rem;font-size:8px;">Diff</th>
+            }
+            else
+            {
+                <th colspan="21" class="p-0"></th>
+                <th rowspan="4"  class="text-center" style="width:1.5rem; font-size:8px;">
+                    <div class="w-100 text-end">
                         <p class="m-0">Sale</p>
                         <p class="m-0">Week</p>
-                    </th>
-                    <th rowspan="3" colspan="1" class="text-end" style="width:4rem;font-size:12px;">Diff</th>
-                }
-                else
-                {
-                    <th colspan="21" class="p-0"></th>
-                    <th rowspan="3" colspan="1" class="text-center" style="width:4rem; font-size:12px;">
-                        <div class="w-100 text-end">
-                            <p class="m-0">Sale</p>
-                            <p class="m-0">Week</p>
-                        </div>
-                    </th>
-                    <th rowspan="3" colspan="1" class="text-center" style="width:4rem; font-size:12px;">
-                        <div class="w-100 text-end">
-                            Diff
-                        </div>
-                    </th>
-                }
+                    </div>
+                </th>
+                <th rowspan="4" class="text-center" style="width:1.5rem; font-size:8px;">
+                    <div class="w-100 text-end">
+                        Diff
+                    </div>
+                </th>
             }
         }
- </tr>
+    }
+</tr>
 
+
+<tr>
+    @if (!HideMaster)
+    {
+        @* ค่ามาตรฐาน *@
+        <th rowspan="3" class="text-center " style="width: 1.25rem;font-size: 10px;">จ</th>
+        <th rowspan="3" class="text-center " style="width: 1.25rem;font-size: 10px;">อ</th>
+        <th rowspan="3" class="text-center " style="width: 1.25rem;font-size: 10px;">พ</th>
+        <th rowspan="3" class="text-center " style="width: 1.25rem;font-size: 10px;">พฤ</th>
+        <th rowspan="3" class="text-center " style="width: 1.25rem;font-size: 10px;">ศ</th>
+        <th rowspan="3" class="text-center " style="width: 1.25rem;font-size: 10px;">ส</th>
+        <th rowspan="3" class="px-1 text-center " style="width: 1.25rem;font-size: 10px;">อา</th>
+        <th rowspan="3" class="px-2 " style="width: 1rem;font-size: 8px;">
+            <p class="m-0">Drop</p>
+            <p class="m-0">Week</p>
+        </th>
+        <th rowspan="3" class="px-3 text-center" style="width: 3.15rem;font-size: 8px;">
+            Drop Day
+        </th>
+    }
+</tr>
 
 <tr>
     @foreach (var (obj, index) in Columns.WithIndex())
     {
         <th colspan="3"
             class="@(date.ToContainsDate(obj.Key) ? "today" : $"{obj.Value.ClassColor} color" )"
-            style="font-size: 12px; text-align: center;">
+            style="font-size: 10px; text-align: center;">
             @obj.Value.FieldDateName
-            @* @StateContainer.DateCurrent
-            @DateTime.ParseExact(obj.Key, "dd/MM/yyyy", null) *@
         </th>
     }
 </tr>
 
 <tr>
-    @if (!HideMaster)
-    {
-        <th colspan="10" class="text-center" style="padding: 5px;">
-            <div>
-                <RadzenButton Text="บันทึกค่ามาตรฐาน"
-                    ButtonStyle="ButtonStyle.Secondary"
-                    Style="width: 100%;text-transform: none;"
-                    Size="Radzen.ButtonSize.Small"
-                    Click="OnClickSavePlanCallback" />
-            </div>
-        </th>
-    }
     @foreach (var (obj, index) in Columns.WithIndex())
     {
         var errorRank = ActionButton.Date.Find(x => x.Date == obj.Key && x.Error) != null ? "rank-error" : null;
-        <th class="@($"{obj.Value.ClassColor} color")" style="width: 3rem; font-size: 12px;text-align: center;">
+        <th class="@obj.Value.ClassColor color" style="width: 1.5rem; font-size: 8px;text-align: center;">
             <div style="width:100%">
                 @obj.Value.FieldDate
             </div>
         </th>
-        <th class="@($"{obj.Value.ClassColor} color")" style="width: 6rem; font-size: 12px; text-align: center;">
+        <th class="@obj.Value.ClassColor color" style="width: 1.5rem; font-size: 8px; text-align: center;">
             <div style="width:100%">
                 @obj.Value.FieldValueName
             </div>
-         </th>
-
-        <th class="@($"{obj.Value.ClassColor} {errorRank} color")" style="width: 3rem; font-size: 12px;">
-            <div class="d-flex" style="width:100%">
-                <div class="mx-1">
-                    @obj.Value.FieldRankName
-                </div>
-                <RadzenIcon Icon="find_replace" style="font-weight: 700;font-size: 16px;" @onclick="()=>SortRankCallback.InvokeAsync()" />
+        </th>
+        <th class="@obj.Value.ClassColor color text-center" style="width: 2rem; font-size: 8px;">
+            <div style="width:100%">
+                @obj.Value.FieldRankName
             </div>
         </th>
     }
 </tr>
 @implements IDisposable
 @inject StateContainer StateContainer
+@inject TooltipService TooltipService
 @code {
     [Parameter]
     public MonthObject SelectMonth { get; set; } = new();
@@ -212,7 +252,7 @@
 
         if (chk)
         {
-            style = "width: 100%;";
+            style = "width: 94%;";
         }
         else
         {

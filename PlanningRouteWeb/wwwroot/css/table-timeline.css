@@ -1,0 +1,51 @@
+﻿table.table-timeline thead tr,
+table.table-timeline tbody tr,
+table.table-timeline tfoot tr {
+    font-size: 12px;
+}
+
+table.table-timeline tbody tr,
+table.table-timeline tfoot tr {
+    font-weight: bold;
+}
+
+.table.table-timeline {
+    width: 120rem;
+}
+.table.table-timeline-detail {
+    width: 110rem !important;
+}
+
+.table.table-timeline tbody td:first-child,
+.table.table-timeline th:first-child,
+.table.table-timeline tfoot td:first-child {
+    position: sticky;
+    left: 0;
+}
+
+.table.table-timeline tbody td:last-child,
+.table.table-timeline th:last-child,
+.table.table-timeline tfoot td:last-child {
+    position: sticky;
+    right: 0;
+}
+
+.table.table-timeline tbody td:last-child {
+    box-shadow: 24px 4px 0px -23px var(--table-border-color) inset;
+}
+
+
+.table.table-timeline tfoot td:first-child,
+.table.table-timeline tfoot td:last-child {
+    z-index: 10;
+}
+
+.bg-over {
+    background-color: var(--color-over) !important;
+}
+
+
+.bg-isValue {
+    background-color: #00800059 !important;
+    /*color: white !important;*/
+}

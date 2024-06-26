@@ -1,3 +1,12 @@
+:root {
+  --table-border-color: #dee2e6;
+  --table-font-md: 14px;
+  --table-font-sm: 12px;
+  --table-hover-color: #cfe2ff;
+  --color-error: red;
+  --colot-success: green;
+}
+
 #blazor-error-ui {
   background: lightyellow;
   bottom: 0;
@@ -51,11 +60,11 @@
 }
 
 .second-col {
-    left: 7.5rem;
+  left: 7.5rem;
 }
 
 .thired-col {
-    left: 13rem;
+  left: 13rem;
 }
 
 .last-col {
@@ -67,7 +76,7 @@ table thead tr th.sticky-col.first-col,
 table thead tr th.sticky-col.second-col,
 table thead tr th.sticky-col.thired-col,
 table thead tr th.sticky-col.last-col {
-    z-index: 20;
+  z-index: 20;
 }
 
 /*fix column body*/
@@ -75,7 +84,28 @@ table tbody tr td.sticky-col.first-col,
 table tbody tr td.sticky-col.second-col,
 table tbody tr td.sticky-col.thired-col,
 table tbody tr td.sticky-col.last-col {
-    z-index: 1;
+  z-index: 1;
+}
+
+table.width-screen tfoot tr td.sticky-col.first-col,
+table.width-screen tfoot tr td.sticky-col.second-col,
+table.width-screen tfoot tr td.sticky-col.thired-col,
+table.width-screen tfoot tr td.sticky-col.four-col,
+table.width-screen tfoot tr td.sticky-col.five-col,
+table.width-screen tfoot tr td.sticky-col.six-col,
+table.width-screen tfoot tr td.sticky-col.sevent-col,
+table.width-screen tfoot tr td.sticky-col.eight-col,
+table.width-screen tfoot tr td.sticky-col.nine-col,
+table.width-screen tfoot tr td.sticky-col.ten-col,
+table.width-screen tfoot tr td.sticky-col.eleven-col,
+table.width-screen tfoot tr td.sticky-col.twelve-col,
+table.width-screen tfoot tr td.sticky-col.thirteen-col,
+table.width-screen tfoot tr td.sticky-col.fourteen-col,
+table.width-screen tfoot tr td.sticky-col.fifteen-col,
+table.width-screen tfoot tr td.sticky-col.sixteen-col,
+table.width-screen tfoot tr td.sticky-col.seventeen-col,
+table.width-screen tfoot tr td.sticky-col.last-col {
+    z-index: 20;
 }
 
 /*tfoot th.sticky-col.first-col {
@@ -85,12 +115,12 @@ table tbody tr td.sticky-col.last-col {
     width: 600px;
 } */
 table {
-    /*width: 100%;*/
-    border-collapse: collapse;
+  /*width: 100%;*/
+  border-collapse: collapse;
 }
 
-table tr th,
-table tr td {
+table.width-screen tr th,
+table.width-screen tr td {
   border: 1px solid;
 }
 
@@ -108,9 +138,9 @@ table.width-screen thead {
 
 table thead,
 table thead {
-    position: -webkit-sticky;
-    position: sticky;
-    z-index: 10;
+  position: -webkit-sticky;
+  position: sticky;
+  z-index: 10;
 }
 
 table.width-screen tbody:nth-of-type(1) tr:nth-of-type(1) td {
@@ -130,7 +160,7 @@ table.width-screen thead th {
 }
 
 .widht-show-master {
-    width: 531.25rem !important;
+  width: 531.25rem !important;
 }
 
 .widht-hide-master {
@@ -148,62 +178,62 @@ table.width-screen thead th {
 }
 
 table > tbody > tr > td {
-    vertical-align: middle;
+  vertical-align: middle;
 }
 
 table thead th {
   background-clip: padding-box;
 }
 
-tfoot tr {
-  height: 30px;
+.width-screen tfoot tr {
+    height: 30px;
 }
 
 tfoot,
 tfoot th,
 tfoot td {
-    position: -webkit-sticky;
-    position: sticky;
-    bottom: 0;
-    z-index: 10;
-    /*background: #d9d9d9 !important;*/
+  position: -webkit-sticky;
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  /*background: #d9d9d9 !important;*/
 }
 
 tfoot td.sum-before-mtd {
-    background: #75c596 !important;
+  background: #75c596 !important;
 }
 
 tfoot td.sum-current-mtd {
-    background: #75c596 !important;
+  background: #75c596 !important;
 }
 
 tfoot td.sum-error-mtd {
-    background-color: #ffccc7 !important;
+  background-color: #ffccc7 !important;
 }
 
-tfoot td.error div, 
+tfoot td.error div,
 tfoot td.success div {
-    color:white;
+  color: white;
 }
 
 tfoot td {
-    border-top: none !important;
-    border-bottom: none !important;
-    border-right: none !important;
-    border-left: none !important;
-    box-shadow: inset 0.5px 0 0 #000000, inset 0 -0.5px 0 #000000 !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  border-right: none !important;
+  border-left: none !important;
+  box-shadow: inset 0.5px 0 0 #000000, inset 0 -0.5px 0 #000000 !important;
 }
 
 tfoot td.error {
-    background: red ;
+  background: red;
 }
 
 tfoot td.over {
-    background: orange;
+  background: orange;
 }
 
 tfoot td.success {
-    background: green !important;
+  background: green !important;
 }
 
 /*table change product*/
@@ -232,12 +262,17 @@ tfoot td.success {
     /*background-color: #a9e7ed !important;*/
 }
 
+.table-scroll table tbody tr {
+     vertical-align: middle;
+}
+
 .table-wrap {
     position: relative;
 }
 
-thead , tr {
-    border-style: none !important;
+thead,
+tr {
+  border-style: none !important;
 }
 
 .table-scroll tbody tr {
@@ -246,10 +281,10 @@ thead , tr {
 
 .table-scroll th,
 .table-scroll td {
-    /*padding: 5px 10px;*/
-    /*border: 1px solid #000;*/
-    /*vertical-align: top;*/
-    border-top-width: 0px;
+  /*padding: 5px 10px;*/
+  /*border: 1px solid #000;*/
+  /*vertical-align: top;*/
+  border-top-width: 0px;
 }
 
 .table-scroll thead th {
@@ -363,8 +398,10 @@ thead , tr {
     color:gray !important;
 }
 
-.nomal-chk, .change-pro-chk, .change-pro {
-    cursor: pointer;
+.nomal-chk,
+.change-pro-chk,
+.change-pro {
+  cursor: pointer;
 }
 
 .nomal-chk {
@@ -442,4 +479,8 @@ thead , tr {
 }
 .grp-color-off {
     background: #e2e3e5 !important;
+}
+
+.empty-plan {
+    background-color: #ffeb002b !important;
 }

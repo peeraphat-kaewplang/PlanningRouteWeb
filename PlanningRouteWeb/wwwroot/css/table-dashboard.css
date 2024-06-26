@@ -1,0 +1,103 @@
+﻿:root {
+    --table-border-color: #dee2e6;
+    --table-font-md: 14px;
+    --table-font-sm: 12px;
+    --table-hover-color: #cfe2ff;
+    --color-error: red;
+    --colot-success: green;
+}
+
+.table-wraper {
+    overflow: auto;
+    height: auto;
+    width: 100%;
+    max-height: calc(100Vh - 170px);
+}
+
+.table tbody {
+    background-color: white;
+}
+
+.table-hover tbody tr:hover td,
+.table-hover tbody tr:hover th {
+    background-color: var(--table-hover-color);
+}
+
+table.table-dashboard {
+    border-collapse: collapse;
+}
+
+table.table-dashboard thead {
+    top: 0;
+}
+
+table.table-dashboard thead,
+table.table-dashboard thead {
+    position: -webkit-sticky;
+    position: sticky;
+    z-index: 1;
+    background-color: white;
+}
+
+table.table-dashboard tbody:nth-of-type(1) tr:nth-of-type(1) td {
+    border-top: none !important;
+}
+
+table.table-dashboard thead th {
+    box-shadow: inset 0 0 0 var(--table-border-color), inset 0 0.5px 0 var(--table-border-color), inset 0 0 0 var(--table-border-color), inset 0.5px 0 0 var(--table-border-color) !important;
+}
+
+table.table-dashboard thead th,
+.table-dashboard tfoot td {
+    border-top: none !important;
+    border-bottom: none !important;
+}
+
+.table-dashboard th,
+.table-dashboard td {
+    font-size: var(--table-font-sm);
+}
+
+.table-wraper table.table-dashboard thead {
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
+}
+
+/* ========================== table body ============================= */
+.table-wraper table.table-dashboard tbody tr td:not(:first-child) {
+    text-align: end;
+}
+
+table.table-dashboard tbody tr:last-child td {
+    border-bottom: none !important;
+}
+
+.table-wraper table.table-dashboard tbody tr td .btn-sm {
+    /*padding: 0.75rem 0.5rem !important;*/
+}
+
+/* ========================== table footer =========================== */
+.table-dashboard tfoot,
+.table-dashboard tfoot th,
+.table-dashboard tfoot td {
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+    background-color: white;
+}
+
+.table-dashboard tfoot {
+    box-shadow: rgba(0, 0, 0, 0.15) 0px -3px 3px 0px !important;
+}
+
+.table-dashboard tfoot tr td {
+    box-shadow: inset 0px 0px 0px 0.5px #dee2e6 !important;
+}
+
+.value-error {
+    color: var(--color-error) !important;
+}
+
+.value-success {
+    color: var(--colot-success) !important;
+}
