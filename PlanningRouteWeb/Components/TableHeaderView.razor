@@ -107,11 +107,15 @@
                                               ButtonStyle="ButtonStyle.Secondary"
                                               Style="@($"{StyleHeaderButton(chk2)}text-transform: none;")"
                                               Size="Radzen.ButtonSize.Small"
-                                              Click="@(args => CalPlaaning(chk2 ,  obj.Key , ActionButton.Action))" />
+                                              Click="@(args => CalPlaaning(chk2 ,  obj.Key , "create"))"
+                                              Disabled="@(Target.SYSTEMCART && disable > 0 ? true : false)" />
                             }
-                            else
+                        }
+                        else
+                        {
+                            if ((WeekValue.Week2 || !WeekValue.Week2) && WeekValue.Week2Value)
                             {
-                                <RadzenButton Text=@(ActionButton.Action == "create" ? "สร้าง" : ActionButton.Action == "recreate" ? "ล้างค่า สร้างใหม่" : "บันทึก")
+                                <RadzenButton Text="บันทึก"
                                               ButtonStyle="ButtonStyle.Secondary"
                                               Style="@($"{StyleHeaderButton(chk2)}text-transform: none;")"
                                               Size="Radzen.ButtonSize.Small"
@@ -223,19 +227,25 @@
     public MonthObject SelectMonth { get; set; } = new();
 
     [Parameter]
+    public Target2 Target { get; set; } = new();
+
+    [Parameter]
+    public Week WeekValue { get; set; } = new();
+
+    [Parameter]
     public IDictionary<string, ColumnProperty> Columns { get; set; } = new Dictionary<string, ColumnProperty>();
 
     [Parameter]
     public bool HideMaster { get; set; }
 
     [Parameter]
-    public EventCallback OnClickSavePlanCallback { get; set; }
+    public EventCallback<(string, string)> OnClickSavePlanCallback { get; set; }
 
     [Parameter]
     public EventCallback SortRankCallback { get; set; }
 
     [Parameter]
-    public EventCallback<(string , string ,string)> OnCalPlanningCallback { get; set; }
+    public EventCallback<(string, string, string)> OnCalPlanningCallback { get; set; }
 
     [Parameter]
     public ChangeActionButton ActionButton { get; set; } = new();
@@ -245,6 +255,8 @@
         // var aa = ActionButton.Date.Find(x => x.Date == obj.Key);
         StateContainer.OnChange += StateHasChanged;
     }
+
+    private void ShowTooltip(ElementReference elementReference, string text, TooltipOptions? options = null) => TooltipService.Open(elementReference, $"{text}", new TooltipOptions { Style = "font-size: 16px" });
 
     private string StyleHeaderButton(bool chk)
     {
@@ -263,24 +275,24 @@
             switch (con)
             {
                 case 1:
-                    style = $"width: {13.6 * con}%;";
+                    style = $"width: {13 * con}%;";
                     break;
                 case 2:
-                    style = $"width: {14 * con}%;";
+                    style = $"width: {13 * con}%;";
                     break;
                 case 3:
-                    style = $"width: {14.2 * con + 1}%;";
+                    style = $"width: {13.5 * con + 1}%;";
                     break;
                 case 4:
-                    style = $"width: {14.3 * con + 1}%;";
+                    style = $"width: {13.5 * con + 1}%;";
                     break;
                 case 5:
-                    style = $"width: {14.3 * con + 1}%;";
+                    style = $"width: {13.5 * con + 1}%;";
                     break;
                 case 6:
-                    style = $"width: {14.3 * con }%;";
+                    style = $"width: {14 * con}%;";
                     break;
-                default :
+                default:
                     style = $"width: 0%;display:none;";
                     break;
             }
@@ -289,14 +301,14 @@
         return style;
     }
 
-    private async Task CalPlaaning(bool chk , string date, string action = "create")
+    private async Task CalPlaaning(bool chk, string date, string action = "create")
     {
-        if (action == "save")
-        {
-            await OnClickSavePlanCallback.InvokeAsync();
-        }
-        else 
-        {
+        // if (action == "save")
+        // {
+        //     await OnClickSavePlanCallback.InvokeAsync();
+        // }
+        // else
+        // {
             DateTime start;
             DateTime end;
             if (!chk)
@@ -310,7 +322,7 @@
                 end = start.AddDays(6);
             }
             await OnCalPlanningCallback.InvokeAsync((start.ToStringDate(), end.ToStringDate(), action));
-        }
+        // }
     }
 
     public string ClassHeader(int f, DateTime date, KeyValuePair<string, ColumnProperty> obj)
@@ -324,4 +336,3 @@
         StateContainer.OnChange -= StateHasChanged;
     }
 }
- 

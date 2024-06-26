@@ -51,6 +51,7 @@ namespace PlanningRouteWeb.Models
         public string DROP_PER_DAY { get; set; } = string.Empty;
         public string VALUE_PER_DAY { get; set; } = string.Empty;
         public string VALUE_PER_MONTH { get; set; } = string.Empty;
+        public string BASKET_SYSTEM { get; set; } = string.Empty;
     }
 
     public class Target2
@@ -58,6 +59,7 @@ namespace PlanningRouteWeb.Models
         public int DROP_PER_DAY { get; set; } 
         public int VALUE_PER_DAY { get; set; } 
         public int VALUE_PER_MONTH { get; set; }
+        public bool SYSTEMCART { get;set; }
     }
 
     public class TargetSave : Target
@@ -81,6 +83,16 @@ namespace PlanningRouteWeb.Models
         public string ORGANIZATION_CODE { get; set; } = string.Empty;
         public string ROUTE_CODE { get; set; } = string.Empty;
         public string ROUTE_NAME { get; set; } = string.Empty;
+        public static RouteData ConverModel(RouteData model)
+        {
+            string[] ro = model.ROUTE_NAME.Split(new string[] { model.ROUTE_CODE }, StringSplitOptions.None);
+            return new RouteData
+            {
+                ORGANIZATION_CODE = model.ORGANIZATION_CODE,
+                ROUTE_CODE = model.ROUTE_CODE,
+                ROUTE_NAME = $"{model.ROUTE_CODE} : {(ro.Count() == 1 ? model.ROUTE_NAME : ro[1])}"
+            };
+        }
     }
 
     public class PlanningMasterData : DayMaster
@@ -112,7 +124,10 @@ namespace PlanningRouteWeb.Models
         public string TOTAL_COST_SALEPRICE { get;set; } = string.Empty;  
         public string GP_PRODUCT { get;set; } = string.Empty;  
         public List<PlanningDetail> GETPLAN_DETAIL { get; set; } = new();
+        public Dictionary<string, List<string>> Week1 { get; set; } = new();
+        public Dictionary<string, List<string>> Week2 { get; set; } = new();
     }
+
 
     public class PlanningMasterSave : DayMaster
     {
@@ -178,6 +193,8 @@ namespace PlanningRouteWeb.Models
     {
         public List<PlanningDetail2> GETPLAN_DETAIL { get; set; } = new();
         public List<Group2> GroupData { get; set; } = new();
+        public Dictionary<string, List<string>> Week1 { get; set; } = new();
+        public Dictionary<string, List<string>> Week2 { get; set; } = new();
     }
 
     public class PlanningDataMapter
@@ -201,6 +218,7 @@ namespace PlanningRouteWeb.Models
         public int DROPDAY { get; set; }
         public string REMARK { get; set; } = string.Empty;
         public List<ItemGroup> ITEMS_GROUP { get; set; } = new();
+        
     }
 
     public class ItemGroup : DayMaster2

@@ -315,7 +315,7 @@
                     ORG = $"{ORG}",
                     Route = $"{route}"
                 };
-        // target = await PlanningService.PlanningGetTarget(req);
+        target = await PlanningService.PlanningGetTarget(req);
         StateContainer.IsLoading = false;
         var result = await DialogService.OpenAsync("ตั้งค่าเริ่มต้น", ds =>
         @<RadzenStack Gap="1.5rem">
@@ -347,7 +347,7 @@
                 DROP_PER_DAY = target.DROP_PER_DAY.ToString(),
                 VALUE_PER_DAY = target.VALUE_PER_DAY.ToString(),
                 VALUE_PER_MONTH = target.VALUE_PER_MONTH.ToString(),
-                // BASKET_SYSTEM = target.SYSTEMCART ? "1" : "0"
+                BASKET_SYSTEM = target.SYSTEMCART ? "1" : "0"
             };
         var response = await PlanningService.PlanningSaveTarget(req);
 

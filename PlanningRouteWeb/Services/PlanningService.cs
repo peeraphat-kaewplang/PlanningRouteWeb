@@ -77,10 +77,12 @@ namespace PlanningRouteWeb.Services
                 throw new ApplicationException(content);
             }
 
-            var organizations = JsonSerializer.Deserialize<RouteResponse>(content, _options);
-            return organizations;
+            var res = JsonSerializer.Deserialize<RouteResponse>(content, _options);
+
+            res!.Data = res.Data.Select(x => Models.RouteData.ConverModel(x)).ToList();
+            return res;
         }
-        public async Task<Tuple<IDictionary<string, ColumnProperty>, List<PlanningMasterData2> , Target>> PlanningGetMaster(PanningMasterRequest body)
+        public async Task<Tuple<columnSet, List<PlanningMasterData2>, Target2>> PlanningGetMaster(PanningMasterRequest body)
         {
             try
             {
@@ -128,6 +130,8 @@ namespace PlanningRouteWeb.Services
                             IsCurrent = _commonService.CheckDateInCurrentWeek(DateTime.ParseExact(item.CALENDAR_DATE, "dd/MM/yyyy", null)),
                         });
                     }
+
+                    var col = new Week { };
 
                     var mapModel = plannings?.Data.Plan
                         .Select(x =>
@@ -181,7 +185,7 @@ namespace PlanningRouteWeb.Services
                                 })
                         .ToList();
 
-                    var data = mapModel!.Select(x =>
+                    var data = mapModel!.Select((x, idx) =>
                     {
                         var calData = new List<PlanningDetail2>();
                         foreach (var item in x.GETPLAN_DETAIL)
@@ -192,6 +196,8 @@ namespace PlanningRouteWeb.Services
                         x.GETPLAN_DETAIL = calData;
                         return x;
                     })
+                    .OrderBy(x => x.LOCATION_CODE)
+                    .ThenBy(x => int.Parse(x.MSORT))
                     .ToList();
                     
                     return Tuple.Create(new columnSet { column = columns, Week = col }, data, target);

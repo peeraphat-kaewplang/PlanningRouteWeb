@@ -5,6 +5,16 @@ namespace PlanningRouteWeb.Helpers
 {
     public static class ConvertModel
     {
+        public static Target2 TargetModelToTarget2Model(Target model)
+        {
+            return new Target2
+            {
+                VALUE_PER_DAY = !string.IsNullOrWhiteSpace(model.VALUE_PER_DAY) ? int.Parse(model.VALUE_PER_DAY) : 0,
+                VALUE_PER_MONTH = !string.IsNullOrWhiteSpace(model.VALUE_PER_MONTH) ? int.Parse(model.VALUE_PER_MONTH) : 0,
+                DROP_PER_DAY = !string.IsNullOrWhiteSpace(model.DROP_PER_DAY) ? int.Parse(model.DROP_PER_DAY) : 0,
+                SYSTEMCART = !string.IsNullOrWhiteSpace(model.BASKET_SYSTEM) ? model.BASKET_SYSTEM == "1" ? true : false : false
+            };
+        }
         public static PlanningDetail PlanningDetail2ModeltoModel(PlanningDetail2 model)
         {
             return new PlanningDetail

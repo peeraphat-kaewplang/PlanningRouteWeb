@@ -1,4 +1,6 @@
-﻿@foreach (var (item, index) in data.WithIndex())
+﻿@inject StateContainer StateContainer
+
+@foreach (var (item, index) in data.WithIndex())
 {
     var countDropMonth = item.GETPLAN_DETAIL.Count(x => x.STATUS_MANUAL);
     var styleMachine = item.CHANGE_ACTION == "C" ? "change-machine" : item.CHANGE_ACTION == "R" ? "return-machine" : item.CHANGE_ACTION == "N" ? "new-machine" : null;
@@ -60,11 +62,11 @@
         <td class="text-end" style="font-size: 12px;">
             <div class="d-inline-block" style="width:99%">
                 @(
-                    !string.IsNullOrWhiteSpace(item.TOTAL_FEE) ? 
+                    !string.IsNullOrWhiteSpace(item.TOTAL_FEE) ?
                     double.Parse(item.TOTAL_FEE) == 0 ? item.TOTAL_FEE :
-                    double.Parse(item.TOTAL_FEE).ToString("0,0.00", CultureInfo.InvariantCulture) : 
+                    double.Parse(item.TOTAL_FEE).ToString("0,0.00", CultureInfo.InvariantCulture) :
                     item.TOTAL_FEE
-                 )
+                    )
             </div>
         </td> *@
         @* <td class="text-end fw-bold sticky-col six-col" style="font-size: 8px;"> *@
@@ -77,7 +79,7 @@
         <td class="text-end fw-bold" style="font-size: 8px;">
             <div class="d-inline-block" style="width:99%">
                 @(!string.IsNullOrWhiteSpace(item.BEFORE_MTD) ? double.Parse(item.BEFORE_MTD).ToString("0,0", CultureInfo.InvariantCulture) : item.BEFORE_MTD)
-             </div>
+            </div>
         </td>
         @* <td class="text-end fw-bold sticky-col eight-col" style="font-size: 8px;"> *@
         <td class="text-end fw-bold" style="font-size: 8px;">
@@ -206,17 +208,16 @@
                         }
                     }
             </td>
-            <td class="text-center" >
-                <RadzenButton 
-                 Click=@(()=> ShowdialogBestProductCallback.InvokeAsync(new BestProductRequest{
+            <td class="text-center">
+                <RadzenButton Click=@(()=> ShowdialogBestProductCallback.InvokeAsync(new BestProductRequest{
                       Location = item.LOCATION_CODE ,
                       Machine = item.MACHINE_CODE ,
                       ORG = item.ORGANIZATION_CODE
-                 }))
-                Icon="pageview"
-                ButtonStyle="ButtonStyle.Primary"
-                Size="ButtonSize.ExtraSmall"
-                Style="text-transform: none;" />
+                      }))
+                              Icon="pageview"
+                              ButtonStyle="ButtonStyle.Primary"
+                              Size="ButtonSize.ExtraSmall"
+                              Style="text-transform: none;" />
             </td>
         }
 
@@ -242,6 +243,23 @@
             !i.STATUS_MANUAL && i.SALETOTAL != 0 ? "plan-out" :
             boolToday && string.IsNullOrWhiteSpace(i.DOC_TYPE) ? "plan-notdue" : i.IsCurrent && i.STATUS_MANUAL ? "plan-change" : "";
 
+
+            var dateDetail = i.CALENDAR_DATE.StringToDateTime("dd/MM/yyyy");
+            int week = StateContainer.DateCurrent.GetWeekNumberOfMonth();
+            int detailWeek = dateDetail.GetWeekNumberOfMonth();
+
+            var isEmptyPlan ="";
+
+            if (week == detailWeek)
+            {
+                isEmptyPlan = item.Week1[item.MACHINE_CODE].Count() == 7 ? "empty-plan" : null;
+            }
+            else if (week + 1 == detailWeek)
+            {
+                isEmptyPlan = item.Week2[item.MACHINE_CODE].Count() == 7 ? "empty-plan" : null;
+            }
+
+
             @if (i.IsCurrent)
             {
                 <td class=@($"{today} {stylePlan} {isEmptyPlan!} text-center") >
@@ -261,7 +279,7 @@
                             var changePrd = i.CHANGEPRODUCT == "1" ? "change-pro" : "change-pro-chk";
                             var flex = !ActionChangeProduct ? "d-flex justify-content-between" : "text-end";
                             <div class=@($"{flex}")>
-                                @if(!ActionChangeProduct)
+                                @if (!ActionChangeProduct)
                                 {
                                     @if (i.REQUISITION != "1")
                                     {
@@ -288,15 +306,15 @@
                         {
                             <p class="m-0 text-amount">
                                 @(i.SALETOTAL == 0 ? i.AMOUNT == 0 ? i.AMOUNT : i.AMOUNT.ToString("0,0", CultureInfo.InvariantCulture) : i.SALETOTAL.ToString("0,0", CultureInfo.InvariantCulture))
-                            </p>    
+                            </p>
                         }
                     </RadzenText>
                 </td>
-                <td class=@($"{today} text-center p-0")>
+                <td class=@($"{today} {isEmptyPlan!} text-center p-0")>
                     @if (i.STATUS_MANUAL)
                     {
                         <div class="d-flex flex-column">
-                          
+
                             @foreach (var (g, seq) in item.GroupData.WithIndex())
                             {
                                 var borderGrp = seq == item.GroupData.Count() - 1 ? null : "border-bottom border-dark";
@@ -343,7 +361,7 @@
                             <div class="d-flex flex-column">
                                 @foreach (var (g, seq) in item.GroupData.WithIndex())
                                 {
-                                    var val = g.GETPLAN_DETAIL.Single(x => x.CALENDAR_DATE == i.CALENDAR_DATE);
+                                    var val = g.GETPLAN_DETAIL.SingleOrDefault(x => x.CALENDAR_DATE == i.CALENDAR_DATE);
                                     var borderGrp = seq == item.GroupData.Count() - 1 ? null : "border-bottom border-dark";
                                     <div class=@($"{borderGrp}")>
                                         <div class="d-flex align-items-center justify-content-center w-100" style="height: 2rem;">
@@ -452,7 +470,7 @@
     [Parameter]
     public EventCallback<PlanningMasterData2> OnChangeMasterCallback { get; set; }
     [Parameter]
-    public EventCallback<(ChangeProductRequest ,bool)> ShowdialogChangeProductCallback { get; set; }
+    public EventCallback<(ChangeProductRequest, bool)> ShowdialogChangeProductCallback { get; set; }
     [Parameter]
     public EventCallback<string> ShowdialogProductLowQtyCallback { get; set; }
     [Parameter]
@@ -464,7 +482,7 @@
     [Parameter]
     public ChangeActionButton? ActionButton { get; set; }
     [Parameter]
-    public bool ActionChangeProduct { get; set;}
+    public bool ActionChangeProduct { get; set; }
 
     // private void ShowTooltip(ElementReference elementReference, string text, TooltipOptions? options = null) => TooltipService.Open(elementReference, $"{text}", new TooltipOptions { Duration = 1500, Style = "font-size: 16px" });
 
@@ -479,11 +497,11 @@
 
     private void ShowTooltipValue(ElementReference elementReference, string text) => TooltipService.Open(elementReference, $"ยอดขายประมาณการณ์ : {text}", new TooltipOptions { Duration = 1000, Style = "font-size: 12px" });
 
-    private async Task ChageRank(int? rank, string date, string location, int index = 0, int seq = 0 ,bool fbool = false)
+    private async Task ChageRank(int? rank, string date, string location, int index = 0, int seq = 0, bool fbool = false)
     {
         var aaa = data[index].GroupData[seq].GETPLAN_DETAIL.FindIndex(x => x.CALENDAR_DATE == date);
         data[index].GroupData[seq].GETPLAN_DETAIL[aaa].RANK = rank;
-        
+
         await OnChageRankCallback.InvokeAsync((rank, date, location));
     }
 
@@ -514,7 +532,7 @@
 
         return false;
     }
-    
+
     private double CalSaleWeek(List<PlanningDetail2> row, int index, PlanningMasterData2? plan = null)
     {
         var task = 7;
@@ -537,7 +555,7 @@
             {
                 var totalWeek = row.Skip(skip).Take(task).Sum(s => !s.IsCurrent && string.IsNullOrWhiteSpace(s.DOC_TYPE) ? 0 : s.SALETOTAL);
                 var lastWeek = row.Skip(skip - task).Take(task).Sum(s => !s.IsCurrent && string.IsNullOrWhiteSpace(s.DOC_TYPE) ? 0 : s.SALETOTAL);
-                sum = totalWeek -lastWeek ;
+                sum = totalWeek - lastWeek;
                 return sum;
             }
         }

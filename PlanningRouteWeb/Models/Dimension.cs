@@ -8,6 +8,18 @@ namespace PlanningRouteWeb.Models
         public int Height { get; set; }
     }
 
+    public class columnSet
+    {
+        public Week Week { get; set; } = new Week();
+        public IDictionary<string, ColumnProperty> column { get; set; } = new Dictionary<string, ColumnProperty>();
+    }
+    public class Week
+    {
+        public bool Week1 { get; set; }
+        public bool Week1Value { get; set; }
+        public bool Week2 { get; set; }
+        public bool Week2Value { get; set;}
+    }
     public class ColumnProperty
     {
         public string FieldDate { get; set; } = string.Empty;
