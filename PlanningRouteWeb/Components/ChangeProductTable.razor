@@ -16,6 +16,10 @@
     th.rz-col-icon {
        width: 0px !important;
     }
+
+    td.text-off-row .rz-cell-data {
+        color: var(--rz-white);
+    }
 </style>
 
 
@@ -111,7 +115,6 @@
             {
                 var lastItem = Data.Last();
                 var lastIndex = Data.FindLastIndex(x => x.SLOT_NO == lastItem.SLOT_NO && x.PRODUCT_CODE == lastItem.PRODUCT_CODE);
-
                 <RadzenDataGridColumn Context="item" Filterable="false" Sortable="false" TextAlign="TextAlign.Left" Width="60px" >
                     <Template Context="item">
                         @{
@@ -148,7 +151,7 @@ else
     #region ตู้กลุ่ม
     var slot = Data.GroupBy(x => x.SLOT_NO).Select(g => g.Key).ToList();
     <RadzenDataGrid @ref="changeGrid"  AllowVirtualization="true" Style="min-height:100px;max-height:450px;" IsLoading=@IsLoading AllowFiltering="false" AllowColumnResize="false" AllowAlternatingRows="false" AllowSorting="false" AllowPaging="false"
-                    Data="@Data" HideGroupedColumn="false" AllowGrouping="true" Render="@OnRender" GroupRowRender="OnGroupRowRender" TItem="ChangeProductDetailView" ColumnWidth="450px" EditMode="DataGridEditMode.Single" GridLines="DataGridGridLines.Both" Density="Density.Compact">
+                    Data="@Data" HideGroupedColumn="false" AllowGrouping="true" RowRender="@RowRender" CellRender="@CellRender" Render="@OnRender" GroupRowRender="OnGroupRowRender" TItem="ChangeProductDetailView" ColumnWidth="450px" EditMode="DataGridEditMode.Single" GridLines="DataGridGridLines.Both" Density="Density.Compact">
                     <HeaderTemplate>
                         @if (ModeAction != "view")
                         {
@@ -163,18 +166,19 @@ else
                         @{
                             var key = (int)context.Data.Key;
                             var price = context.Data.Items.Cast<ChangeProductDetailView>().Where(x => x.SLOT_NO == key).FirstOrDefault()!.SLOT_REALPRICE;
+                            var isOffRow = context.Data.Items.Cast<ChangeProductDetailView>().Where(x => x.SLOT_NO == key && !x.SLOTSTATUS).Count() != 0 ;
                         }
                         @context.GroupDescriptor.GetTitle(): @(context.Data.Key ?? "")
                         @("กลุ่มราคาขาย : " + price)
                         @if (ModeAction != "view")
                         {
-                            <RadzenButton ButtonStyle="ButtonStyle.Success" Text="ON" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" />
+                            <RadzenButton Click="@(() => OnSLotStatusChangeGroup(key , isOffRow))" ButtonStyle="@(isOffRow ? ButtonStyle.Success : ButtonStyle.Danger)" Text="@(isOffRow ? "ON" : "OFF")" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" />
                             <RadzenButton 
                                       Text="เพิ่มสินค้า"
                                       ButtonStyle="ButtonStyle.Secondary"
                                       Size="ButtonSize.ExtraSmall"
                                       Style="text-transform: none;width:4.5rem;"
-                                        Click="@(()=> InsertNewProduct(key , price))" />
+                                      Click="@(()=> InsertNewProduct(key , price))" />
                             <RadzenDropDown class="dropdown-sm fw-bold"
                                             Style="width:8rem;"
                                             Placeholder="ย้ายกลุ่มสินค้า"
@@ -299,18 +303,19 @@ else
                     <Template Context="item">
                         @if (item.SLOTSTATUS)
                         {
-                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Text="OFF" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.ExtraSmall" Click="@(args => OnSLotStatusChange(item))" class="my-1 ms-1">
+                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Text="OFF" Variant="Variant.Flat"  Size="ButtonSize.ExtraSmall" Click="@(args => OnSLotStatusChange(item))" class="my-1 ms-1">
                             </RadzenButton>
                         }
                         else
                         {
-                            <RadzenButton ButtonStyle="ButtonStyle.Success" Text="ON" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.ExtraSmall" Click="@(args => OnSLotStatusChange(item))" class="my-1 ms-1">
+                            <RadzenButton ButtonStyle="ButtonStyle.Success" Text="ON" Variant="Variant.Flat"  Size="ButtonSize.ExtraSmall" Click="@(args => OnSLotStatusChange(item))" class="my-1 ms-1">
                             </RadzenButton>
                         }
                         <RadzenDropDown class="dropdown-sm fw-bold"
                                         Style="width:7rem;"
                                         Placeholder="ย้ายกลุ่มสินค้า"
                                         TValue="int"
+                                        Disabled="@(!item.SLOTSTATUS ? true : false)"
                                         Data="@slot.Where(s => s != item.SLOT_NO)" />
                     </Template>
                     <EditTemplate Context="item">
@@ -363,10 +368,6 @@ else
 
     public List<RawproductDetail2> products = new();
 
-    bool ValidateNewEmail()
-    {
-        return false;
-    }
 
     private async Task<List<RawproductDetail2>> LoadProductDetail(string code)
     {
@@ -394,6 +395,20 @@ else
         products = await LoadProductDetail(item.RAWPRODUCTCODE);
 
         StateHasChanged();
+    }
+
+    void OnSLotStatusChangeGroup(int slot , bool isOffRow)
+    {
+        var itemsInSlot = Data.Where(x => x.SLOT_NO == slot);
+        if (itemsInSlot.Count() != 0)
+        {
+            foreach (var item in itemsInSlot)
+            {
+                var index = Data.FindIndex(x => x == item);
+                // Data[index].SLOTSTATUS = !Data[index].SLOTSTATUS;
+                Data[index].SLOTSTATUS = isOffRow;
+            }
+        }
     }
 
     async Task OnSLotStatusChange(ChangeProductDetailView item)
@@ -493,7 +508,15 @@ else
         await changeGrid.EditRow(item);
     }
 
-
+    void RowRender(RowRenderEventArgs<ChangeProductDetailView> args)
+    {
+        args.Attributes.Add("style", $"background-color: {(!args.Data.SLOTSTATUS ? "var(--rz-base-700)" : "var(--rz-base-background-color)")};");
+        
+    }
+    void CellRender(DataGridCellRenderEventArgs<ChangeProductDetailView> args)
+    {
+        args.Attributes.Add("class", !args.Data.SLOTSTATUS ? "text-off-row" : "");
+    }
     // void RowRender(RowRenderEventArgs<ChangeProductDetailView> args)
     // {
     //     args.Attributes.Add("title", "Drag row to reorder");
